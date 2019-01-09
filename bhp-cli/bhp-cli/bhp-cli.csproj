@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Copyright>2018-2019 The Bhp Project</Copyright>
+    <AssemblyTitle>Bhp.CLI</AssemblyTitle>
+    <Version>1.2.0</Version>
+    <Authors>The Bhp Project</Authors>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyName>bhp-cli</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>Bhp.CLI</PackageId>
+    <RootNamespace>Bhp</RootNamespace>
+    <Company>The Bhp Project</Company>
+    <Product>Bhp.CLI</Product>
+    <Description>Bhp.CLI</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>False</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="config.json;config.mainnet.json;config.testnet.json;protocol.json;protocol.mainnet.json;protocol.testnet.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\bhp\bhp\bhp.csproj" />
+  </ItemGroup>
+
+</Project>

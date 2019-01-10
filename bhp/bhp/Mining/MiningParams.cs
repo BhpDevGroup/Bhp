@@ -5,27 +5,27 @@ namespace Bhp.Mining
     {
         // Mining Pool Address  
         private static readonly string[] PoSAddressOfMainNet = {
-            "AM9kJGBWxnxkxKQF7PE9Wq3UVY31nDw1ap",
-            "AKVXYof7akUTbRUADpazkbr1AL88XYGeGA",
-            "AScZt956PyUEQd2BuUGLtLJRZQA3e2dww6",
-            "AZpwoP5EgiaBTXr4izsKD95FTopWanJdQX",
-            "ARrbmz2QsEVGGmVpPqEkrFcFcRCqzdq8c9",
-            "ALBhFsRbwdvrvDTM5QEcVNVPdKsjVYHbEo",
-            "AdhXwQB44G1HeE5kAFEtBVo4wiEiho5GEt",
-            "ASRJBGaMuSdDDtEWFqNAq8Vm2Z2CZ5oyyQ",
-            "AQchkVLdGUrEZVE8Au5Vew3iPv964KP1nc",
-            "AbqYapkL3G1sCgXZc8z3QGHfUEhXKnipCi",
-            "ALEuFhQdmovydsKsYbARTeNbuZHQAxjyig",
-            "AVkMQn2aaRvVNNbpzd5jYADrhcbnxRSFKs",
-            "AY3aGwCBGazNxHcgaJ8E3FCDgJtc7tZCYU",
-            "AZDGknuMZjz4iK95DA9MwnhStWAT6LEqwp",
-            "AcEq8Ris6qybFzbb2isVXDE7iN4ds1JYFv",
-            "AUg5PCoEcjmH1r68PJdnPD7HE5TBgSTaCJ",
-            "AUULHMxnRoxHBgDKi64ujNhmiF6ASa7PZV",
-            "AbTJgr5snvYgUkvNj45g8X8fq6ZTaq7mBw",
-            "AG9inJaAaC6bRs4Zjx1mC6ATDDwcYhsjLS",
-            "ALPR47yuwhG1vK2CUxt97pV8bX4aCEuWeL",
-            "ATyjYRAJb3G4DUDzZUitJTBokhuEDQCzPc"
+            "AVEyg4dL87G5uSH7CKBs2sVZnUYC2D9rH4",
+            "AMGMhuVB1tXQkEzjGovMpVs4FzWUd3NsF8",
+            "ANDYCwRJCg7thnEnoLC9D2vTB4BDjWepsz",
+            "Abe4jqq5c6epJSrBWq3MjbFt9Bv843N7uY",
+            "Aevfcn3n3KXuvnwAcxgpFWxqBe6szfsejC",
+            "AGpKkzDBxMbvXJvhFH49JwqfpUMoJhHqU6",
+            "AXtz7j3KsE6BkyM22YaQJkcNLPyJRnwNLY",
+            "Aeqg7HmxWkZfD43ybcQxVwga828EL2wRnx",
+            "AXA5yRZKPEVHzq3sNcY3SosunHXThBX5LW",
+            "AUw8aV91s16G5mF9Xus8GD5BYBxLrPgY4E",
+            "ASWWVYAminx4abr3WNdRWULmUiLUTd6xUm",
+            "AUdeaT2vyr5R24Z3xTxo5FR3jmNEQaCUab",
+            "ARmME58JEQs7jbW41CCVcKRmq5KBMKcqNf",
+            "AXheHGBcekdixgCT6cGvU1C1WcjHFmaVX6",
+            "ANonmucLMCfydQX86Lf1AdS792d7DYHPjL",
+            "AM5caPk9W5wnUfPijWu482rjsssRALkNQX",
+            "AXJ47rjpimxz8f3PBhhtqN8cuaSF1GVAWQ",
+            "AZTkLYcBz4VRZs8ZudCCGRkhiDaD8sMu7V",
+            "AJevASKunBpjeiGintLf4Dga8qcwKKLZ6k",
+            "AXP7kEPu76UDL7dGoQWnyuD2N52Ko6BtDV",
+            "AQZcXyFTT4yGQT1NQBGjChVg8duDsxxnTM"
         };
 
         private static readonly string[] PoSAddressOfTestNet = {
@@ -51,6 +51,6 @@ namespace Bhp.Mining
             "ARQB5sxyF8fQerps92yAV9weAxBTgWREcL"
         };
 
-        public static readonly string[] PoSAddress = PoSAddressOfTestNet;
+        public static readonly string[] PoSAddress = PoSAddressOfMainNet;
     }
 }

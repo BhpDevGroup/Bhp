@@ -28,8 +28,8 @@
     <ProjectGuid>{6F0591A9-B218-49BB-B666-CE6D1FA8F990}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Neo.SmartContract.Template</RootNamespace>
-    <AssemblyName>Neo.SmartContract.Template.CSharp</AssemblyName>
+    <RootNamespace>Bhp.SmartContract.Template</RootNamespace>
+    <AssemblyName>Bhp.SmartContract.Template.CSharp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>

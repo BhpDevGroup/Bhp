@@ -37,7 +37,7 @@ namespace Bhp.Shell
         private WalletIndexer indexer;
 
         protected override string Prompt => "bhp";
-        public override string ServiceName => $"BHP-CLI [v{Assembly.GetEntryAssembly().GetName().Version.ToString()}]";
+        public override string ServiceName => $"BHP-CLI V{Assembly.GetEntryAssembly().GetName().Version.ToString()}";
 
         private WalletIndexer GetIndexer()
         {

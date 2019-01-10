@@ -487,7 +487,7 @@ namespace Bhp.UI
                                 new ListViewItem.ListViewSubItem
                                 {
                                     Name = "type",
-                                    Text = "NEP-5"
+                                    Text = "BRC20"
                                 },
                                 new ListViewItem.ListViewSubItem
                                 {

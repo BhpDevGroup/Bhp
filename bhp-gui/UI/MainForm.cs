@@ -59,6 +59,11 @@ namespace Bhp.UI
             }
         }
 
+        private string CalcuAmount(Transaction tx)
+        { 
+            return tx.Outputs.Sum(p=>p.Value).ToString() ;
+        }
+
         private void AddAccount(WalletAccount account, bool selected = false)
         {
             ListViewItem item = listView1.Items[account.Address];
@@ -125,7 +130,7 @@ namespace Bhp.UI
                              new ListViewItem.ListViewSubItem
                             {
                                 Name = "amount",
-                                Text = tx.Outputs.Sum(p=>p.Value).ToString()
+                                Text = CalcuAmount(tx)
                             },
                             new ListViewItem.ListViewSubItem
                             {

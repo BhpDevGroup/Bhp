@@ -104,7 +104,7 @@ namespace Bhp.Mining
                 Value = amount_netfee,
                 ScriptHash = wallet.GetChangeAddress()
             };
-        } 
+        }
          
         private TransactionOutput TransactionFeeOutput(Fixed8 service_netfee, uint blockIndex)
         {

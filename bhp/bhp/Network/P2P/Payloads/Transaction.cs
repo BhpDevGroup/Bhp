@@ -1,3 +1,4 @@
+using Bhp.BhpExtensions.Fees;
 using Bhp.BhpExtensions.Transactions;
 using Bhp.Cryptography;
 using Bhp.IO;
@@ -346,9 +347,10 @@ namespace Bhp.Network.P2P.Payloads
             TransactionResult[] results = GetTransactionResults()?.ToArray();
             if (results == null) return false;
             TransactionResult[] results_destroy = results.Where(p => p.Amount > Fixed8.Zero).ToArray();
-            if (results_destroy.Length > 1) return false;
-            if (results_destroy.Length == 1 && results_destroy[0].AssetId != Blockchain.UtilityToken.Hash)
-                return false;
+
+            //By BHP
+            if (ServiceFee.Verify(this, results_destroy, SystemFee) == false) return false;
+          
             if (SystemFee > Fixed8.Zero && (results_destroy.Length == 0 || results_destroy[0].Amount < SystemFee))
                 return false;
             TransactionResult[] results_issue = results.Where(p => p.Amount < Fixed8.Zero).ToArray();
@@ -375,6 +377,8 @@ namespace Bhp.Network.P2P.Payloads
             if (Attributes.Count(p => p.Usage == TransactionAttributeUsage.ECDH02 || p.Usage == TransactionAttributeUsage.ECDH03) > 1)
                 return false;
             if (!VerifyReceivingScripts()) return false;
+            //By BHP
+            if (VerifyTransactionContract.Verify(snapshot, this) == false) return false;
             return this.VerifyWitnesses(snapshot);
         }
 

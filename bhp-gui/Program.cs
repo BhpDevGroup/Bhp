@@ -89,7 +89,7 @@ namespace Bhp
             /*
             try
             {
-                xdoc = XDocument.Load("https://Bhp.org/client/update.xml");
+                xdoc = XDocument.Load("https://bhp.io/client/update.xml");
             }
             catch { }
             if (xdoc != null)

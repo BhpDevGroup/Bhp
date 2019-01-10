@@ -11,6 +11,7 @@ namespace Bhp
         public RPCSettings RPC { get; }
         public UnlockWalletSettings UnlockWallet { get; }
         public string PluginURL { get; }
+        public DataRPCSettings DataRPC { get; set; }
 
         public static Settings Default { get; }
 
@@ -27,6 +28,7 @@ namespace Bhp
             this.RPC = new RPCSettings(section.GetSection("RPC"));
             this.UnlockWallet = new UnlockWalletSettings(section.GetSection("UnlockWallet"));
             this.PluginURL = section.GetSection("PluginURL").Value;
+            DataRPC = new DataRPCSettings(section.GetSection("DataRPC"));
         }
     }
 
@@ -76,6 +78,7 @@ namespace Bhp
         public string Password { get; }
         public bool StartConsensus { get; }
         public bool IsActive { get; }
+        public bool AutoLock { get; }
 
         public UnlockWalletSettings(IConfigurationSection section)
         {
@@ -85,6 +88,20 @@ namespace Bhp
                 this.Password = section.GetSection("Password").Value;
                 this.StartConsensus = bool.Parse(section.GetSection("StartConsensus").Value);
                 this.IsActive = bool.Parse(section.GetSection("IsActive").Value);
+                this.AutoLock = bool.Parse(section.GetSection("AutoLock").Value);
+            }
+        }
+    }
+
+    internal class DataRPCSettings
+    {
+        public string Host { get; }
+
+        public DataRPCSettings(IConfigurationSection section)
+        {
+            if (section != null)
+            {
+                Host = section.GetSection("Host").Value;
             }
         }
     }

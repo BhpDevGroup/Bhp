@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Bhp.BhpExtensions;
 using Bhp.Consensus;
 using Bhp.IO;
 using Bhp.Ledger;
@@ -915,6 +916,14 @@ namespace Bhp.Shell
                     OnStartConsensusCommand(null);
                 }
             }
+
+            //By BHP
+            ExtensionSettings.Default.DataRPCServer.Host = Settings.Default.DataRPC.Host;
+            ExtensionSettings.Default.WalletConfig.Index = Settings.Default.Paths.Index;
+            ExtensionSettings.Default.WalletConfig.Path = Settings.Default.UnlockWallet.Path;
+            ExtensionSettings.Default.WalletConfig.AutoLock = Settings.Default.UnlockWallet.AutoLock;
+            ExtensionSettings.Default.WalletConfig.Indexer = GetIndexer();
+
             if (useRPC)
             {
                 system.StartRpc(Settings.Default.RPC.BindAddress,

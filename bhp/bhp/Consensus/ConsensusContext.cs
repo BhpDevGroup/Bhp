@@ -1,3 +1,4 @@
+using Bhp.BhpExtensions.Fees;
 using Bhp.Cryptography;
 using Bhp.Cryptography.ECC;
 using Bhp.IO;
@@ -248,8 +249,8 @@ namespace Bhp.Consensus
             List<Transaction> transactions = mem_pool.ToList();
             Fixed8 amount_netfee = Block.CalculateNetFee(transactions);
 
-            //By BHP
-            Fixed8 amount_servicefee = Fixed8.Zero;
+            //By BHP 
+            Fixed8 amount_servicefee = ServiceFee.CalcuServiceFee(transactions);
 
             while (true)
             {
@@ -277,6 +278,7 @@ namespace Bhp.Consensus
             return nonce.ToUInt64(0);
         }
 
+        /*
         public bool VerifyRequest()
         {
             if (!State.HasFlag(ConsensusState.RequestReceived))
@@ -285,11 +287,29 @@ namespace Bhp.Consensus
                 return false;
             Transaction tx_gen = Transactions.Values.FirstOrDefault(p => p.Type == TransactionType.MinerTransaction);
             Fixed8 amount_netfee = Block.CalculateNetFee(Transactions.Values);
-            //if (tx_gen?.Outputs.Sum(p => p.Value) != amount_netfee) return false;
+            if (tx_gen?.Outputs.Sum(p => p.Value) != amount_netfee) return false;
+            return true;
+        }
+        */
+
+        //By BHP
+        public bool VerifyRequest()
+        {
+            if (!State.HasFlag(ConsensusState.RequestReceived))
+                return false;
+            if (!Blockchain.GetConsensusAddress(snapshot.GetValidators(Transactions.Values).ToArray()).Equals(NextConsensus))
+                return false;
+
+            Transaction tx_gen = Transactions.Values.FirstOrDefault(p => p.Type == TransactionType.MinerTransaction);
 
             //By BHP
-            //挖矿交易和手续费单独计算 
+            //挖矿交易
+            Fixed8 amount_netfee = Block.CalculateNetFee(Transactions.Values);
             if (tx_gen?.Outputs.Where(p => p.AssetId == Blockchain.UtilityToken.Hash).Sum(p => p.Value) != amount_netfee) return false;
+
+            // 手续费单独计算
+            //Fixed8 amount_servicefee = ServiceFee.CalcuServiceFee(Transactions.Values.ToList());
+            //if (tx_gen?.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value) - MiningSubsidy.GetMiningSubsidy(BlockIndex) != amount_servicefee) return false;
 
             return true;
         }

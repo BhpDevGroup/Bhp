@@ -28,6 +28,37 @@ namespace BhpDemo
             Console.WriteLine($"Address: {keyPair.PublicKeyHash.ToAddress() }");
         } 
 
+        static void CreateAddressList(int count)
+        {
+            string path = $"{Directory.GetCurrentDirectory()}\\address.txt";
+
+            FileStream fs = new FileStream(path, FileMode.Append);
+            StreamWriter sw = new StreamWriter(fs); 
+
+            for (int i = 0; i < count; i++)
+            {
+                byte[] privateKey = new byte[32];
+                using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(privateKey);
+                }
+                KeyPair keyPair = new KeyPair(privateKey);
+
+                //开始写入
+                sw.WriteLine($"{BytesToHex(keyPair.PrivateKey)} {keyPair.PublicKey.ToString()} {keyPair.PublicKeyHash.ToAddress()}");
+                //清空缓冲区
+                sw.Flush();
+                //keyPair.Export(); 
+               
+                //Console.WriteLine($"PrivateKey: {keyPair.GetPrivateKeyHex()}"); 
+                Console.WriteLine($"Index: {i} PublicKey: {keyPair.PublicKey.ToString()} Address: {keyPair.PublicKeyHash.ToAddress() }");
+             }
+
+            //关闭流
+            sw.Close();
+            fs.Close();
+        }
+
         public static byte[] HexToBytes(string value)
         {
             if (value == null || value.Length == 0)
@@ -123,7 +154,7 @@ namespace BhpDemo
 
         static void WritFile(string msg)
         {
-            string path = $"{System.IO.Directory.GetCurrentDirectory()}\\log.txt";
+            string path = $"{Directory.GetCurrentDirectory()}\\log.txt";
   
             FileStream fs = new FileStream(path, FileMode.Append);
             StreamWriter sw = new StreamWriter(fs);
@@ -149,14 +180,10 @@ namespace BhpDemo
 
         static void Main(string[] args)
         {
-            for (int i = 10; i < 10; i++)
-            {
-                CreateAddress();
-            }
-
             //SignR1();
             SignK1();
 
+            //CreateAddressList(100000);
             Console.ReadLine();
         }
     }

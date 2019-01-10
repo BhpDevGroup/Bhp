@@ -1,4 +1,5 @@
-﻿using Bhp.Cryptography;
+﻿using Bhp.BhpExtensions.Transactions;
+using Bhp.Cryptography;
 using Bhp.Ledger;
 using Bhp.Network.P2P.Payloads;
 using Bhp.SmartContract;
@@ -19,6 +20,9 @@ namespace Bhp.Wallets
         public abstract event EventHandler<WalletTransactionEventArgs> WalletTransaction;
 
         private static readonly Random rand = new Random();
+
+        //By BHP
+        TransactionContract transactionContract = new TransactionContract();
 
         public abstract string Name { get; }
         public abstract Version Version { get; }
@@ -71,6 +75,7 @@ namespace Bhp.Wallets
         protected static Coin[] FindUnspentCoins(IEnumerable<Coin> unspents, UInt256 asset_id, Fixed8 amount)
         {
             Coin[] unspents_asset = unspents.Where(p => p.Output.AssetId == asset_id).ToArray();
+            unspents_asset = VerifyTransactionContract.checkUtxo(unspents_asset);//By BHP
             Fixed8 sum = unspents_asset.Sum(p => p.Output.Value);
             if (sum < amount) return null;
             if (sum == amount) return unspents_asset;
@@ -379,7 +384,8 @@ namespace Bhp.Wallets
                     Outputs = itx.Outputs
                 };
             }
-            tx = MakeTransaction(tx, from, change_address, fee);
+            //tx = MakeTransaction(tx, from, change_address, fee);
+            tx = transactionContract.MakeTransaction(this, tx, from, change_address, fee);//By BHP
             return tx;
         }
 

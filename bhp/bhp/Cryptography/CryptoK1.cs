@@ -39,7 +39,6 @@ namespace Bhp.Cryptography
 
         public bool VerifySignature(byte[] message, byte[] signature, byte[] pubkey)
         {
-            DateTime start = DateTime.Now;
             using (ECC.ECDsa ecdsa = new ECC.ECDsa(ECC.ECPoint.DecodePoint(pubkey, ECC.ECCurve.Secp256)))
             {
                 byte[] rb = new byte[32];
@@ -51,10 +50,7 @@ namespace Bhp.Cryptography
                 BigInteger r = rb.ToBigIntegerUnsigned(true);
                 BigInteger s = sb.ToBigIntegerUnsigned(true);
 
-                bool ok = ecdsa.VerifySignature(hash, r, s);
-                DateTime end = DateTime.Now;
-                Console.WriteLine($"VerifySignature {ok},Cost {(end - start).TotalMilliseconds} ms.");
-                return ok;
+                return ecdsa.VerifySignature(hash, r, s);
             }
         }
 

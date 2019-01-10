@@ -67,16 +67,7 @@ namespace Bhp.Cryptography
                 }
             }))
             {
-                bool ok = ecdsa.VerifyData(message, signature, HashAlgorithmName.SHA256);
-                if (ok == false)
-                {
-                    Console.WriteLine($"***** VerifySignature is {ok}");
-                }
-                else
-                {
-                    Console.WriteLine($"VerifySignature is {ok}");
-                }
-                return ok;
+                return ecdsa.VerifyData(message, signature, HashAlgorithmName.SHA256);
             }
         }
     }

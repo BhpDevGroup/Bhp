@@ -31,7 +31,7 @@ namespace Bhp.BhpExtensions.RPC
 
         public RpcExtension()
         {
-            walletTimeLock = new WalletTimeLock(ExtensionSettings.Default.WalletConfig.AutoLock);
+            walletTimeLock = new WalletTimeLock();
             Unlocking = false;
         }
 
@@ -39,7 +39,7 @@ namespace Bhp.BhpExtensions.RPC
         {
             this.system = system;
             this.wallet = wallet;
-            walletTimeLock = new WalletTimeLock(ExtensionSettings.Default.WalletConfig.AutoLock);
+            walletTimeLock = new WalletTimeLock();
             Unlocking = false;                        
         }
 

@@ -7,23 +7,16 @@ namespace Bhp.BhpExtensions.Wallets
     public class WalletTimeLock
     {
         private int Duration = 10; // seconds 
-        private DateTime UnLockTime;        
-        private bool IsAutoLock;
+        private DateTime UnLockTime;    
         private ReaderWriterLockSlim rwlock;
 
-        public WalletTimeLock(bool isAutoLock)
+        public WalletTimeLock()
         {
             UnLockTime = DateTime.UtcNow;
-            Duration = 10;
-            IsAutoLock = isAutoLock;
+            Duration = 10;           
             rwlock = new ReaderWriterLockSlim();
         }
-
-        public void SetAutoLock(bool isAutoLock)
-        {
-            IsAutoLock = isAutoLock;
-        }
-
+        
         public void SetDuration(int Duration)
         {
             try
@@ -67,7 +60,7 @@ namespace Bhp.BhpExtensions.Wallets
 
         public bool IsLocked()
         {
-            if (IsAutoLock == false)
+            if (ExtensionSettings.Default.WalletConfig.AutoLock == false)
             {
                 return false;
             }

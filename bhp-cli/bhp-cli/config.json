@@ -15,11 +15,11 @@
       "SslCertPassword": ""
     },
     "UnlockWallet": {
-      "Path": "1.json",
+      "Path": "t1.json",
       "Password": "1",
       "StartConsensus": false,
-      "IsActive": false,
-      "AutoLock": false
+      "IsActive": true,
+      "AutoLock": true
     },
     "DataRPC": {
       "Host": "https://texp.bhpa.io/"

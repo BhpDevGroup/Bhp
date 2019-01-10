@@ -46,7 +46,6 @@ namespace Bhp.Cryptography
 
         public bool VerifySignature(byte[] message, byte[] signature, byte[] pubkey)
         {
-            DateTime start = DateTime.Now;
             if (pubkey.Length == 33 && (pubkey[0] == 0x02 || pubkey[0] == 0x03))
             {
                 try
@@ -76,9 +75,7 @@ namespace Bhp.Cryptography
                 }
             }))
             {
-                bool ok = ecdsa.VerifyData(message, signature, HashAlgorithmName.SHA256); 
-                Console.WriteLine($"MS K1 VerifySignature {ok},Cost {(DateTime.Now - start).TotalMilliseconds} ms."); 
-                return ok;
+                return ecdsa.VerifyData(message, signature, HashAlgorithmName.SHA256); 
             }
         }
     }

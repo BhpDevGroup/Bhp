@@ -79,6 +79,8 @@
     <Compile Include="Cryptography\CertificateQueryResultType.cs" />
     <Compile Include="Cryptography\CertificateQueryService.cs" />
     <Compile Include="IO\Actors\EventWrapper.cs" />
+    <Compile Include="Model\WalletTx.cs" />
+    <Compile Include="Model\WalletTxQueue.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -530,9 +532,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\OpenWalletDialog.resx">
       <DependentUpon>OpenWalletDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\OpenWalletDialog.zh-Hans.resx">
       <DependentUpon>OpenWalletDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\OptionsDialog.es-ES.resx">
       <DependentUpon>OptionsDialog.cs</DependentUpon>
@@ -691,7 +695,6 @@
     <None Include="protocol.testnet.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\Onchain Certification Authority.cer" />
     <None Include="Resources\update.bat" />
   </ItemGroup>
   <ItemGroup>

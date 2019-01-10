@@ -26,6 +26,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Bhp.BhpExtensions.RPC;
 
 namespace Bhp.Network.RPC
 {
@@ -36,11 +37,15 @@ namespace Bhp.Network.RPC
         private IWebHost host;
         private Fixed8 maxGasInvoke;
 
+        private RpcExtension rpcExtension;
+
         public RpcServer(BhpSystem system, Wallet wallet = null, Fixed8 maxGasInvoke = default(Fixed8))
         {
             this.system = system;
             this.wallet = wallet;
             this.maxGasInvoke = maxGasInvoke;
+
+            rpcExtension = new RpcExtension(system, wallet);
         }
 
         private static JObject CreateErrorResponse(JObject id, int code, string message, JObject data = null)
@@ -134,6 +139,7 @@ namespace Bhp.Network.RPC
         public void OpenWallet(Wallet wallet)
         {
             this.wallet = wallet;
+            rpcExtension.SetWallet(wallet);
         }
 
         private JObject Process(string method, JArray _params)
@@ -141,7 +147,7 @@ namespace Bhp.Network.RPC
             switch (method)
             {
                 case "dumpprivkey":
-                    if (wallet == null)
+                    if (wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied");
                     else
                     {
@@ -162,7 +168,7 @@ namespace Bhp.Network.RPC
                         return asset?.ToJson() ?? throw new RpcException(-100, "Unknown asset");
                     }
                 case "getbalance":
-                    if (wallet == null)
+                    if (wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied.");
                     else
                     {
@@ -267,7 +273,7 @@ namespace Bhp.Network.RPC
                         return contract?.ToJson() ?? throw new RpcException(-100, "Unknown contract");
                     }
                 case "getnewaddress":
-                    if (wallet == null)
+                    if (wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied");
                     else
                     {
@@ -359,7 +365,7 @@ namespace Bhp.Network.RPC
                         return json;
                     }
                 case "getwalletheight":
-                    if (wallet == null)
+                    if (wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied.");
                     else
                         return (wallet.WalletHeight > 0) ? wallet.WalletHeight - 1 : 0;
@@ -392,7 +398,7 @@ namespace Bhp.Network.RPC
                         return GetInvokeResult(script);
                     }
                 case "listaddress":
-                    if (wallet == null)
+                    if (wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied.");
                     else
                         return wallet.GetAccounts().Select(p =>
@@ -405,7 +411,7 @@ namespace Bhp.Network.RPC
                             return account;
                         }).ToArray();
                 case "sendfrom":
-                    if (wallet == null)
+                    if (wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied");
                     else
                     {
@@ -446,7 +452,7 @@ namespace Bhp.Network.RPC
                         }
                     }
                 case "sendmany":
-                    if (wallet == null)
+                    if (wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied");
                     else
                     {
@@ -495,7 +501,7 @@ namespace Bhp.Network.RPC
                         return GetRelayResult(reason);
                     }
                 case "sendtoaddress":
-                    if (wallet == null)
+                    if (wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied");
                     else
                     {
@@ -557,7 +563,7 @@ namespace Bhp.Network.RPC
                         return json;
                     }
                 default:
-                    throw new RpcException(-32601, "Method not found");
+                    return rpcExtension.Process(method, _params);
             }
         }
 

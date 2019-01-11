@@ -7,11 +7,27 @@ using System.Text;
 
 namespace Bhp.BhpExtensions.Fees
 {
+
     /// <summary>
     /// ServiceFee of transaction
     /// </summary>
     public class ServiceFee
     {
+        /// <summary>
+        /// 手续费收取字节基数
+        /// </summary>
+        public const int SizeRadix = 512;
+
+        /// <summary>
+        /// 最小手续费
+        /// </summary>
+        public static readonly Fixed8 MinServiceFee = Fixed8.FromDecimal(0.0001m);
+
+        /// <summary>
+        /// 最大手续费
+        /// </summary>
+        public static readonly Fixed8 MaxServceFee = Fixed8.FromDecimal(0.0005m);
+
         /*
         public static Fixed8 CalcuServiceFee(List<Transaction> transactions)
         {
@@ -97,12 +113,13 @@ namespace Bhp.BhpExtensions.Fees
             Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             if (inputSum != Fixed8.Zero)
             {
-                decimal serviceFee = ConstantClass.MinServiceFee;
+                Fixed8 serviceFee = MinServiceFee;
                 int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                serviceFee = (tx_size / ConstantClass.SizeRadix + (tx_size % ConstantClass.SizeRadix == 0 ? 0:1)) * ConstantClass.MinServiceFee; ;
-                serviceFee = serviceFee <= ConstantClass.MaxServceFee ? serviceFee : ConstantClass.MaxServceFee ;
-                decimal payFee = (decimal)inputSum - (decimal)outputSum;
-                return payFee >= serviceFee;
+                serviceFee = Fixed8.FromDecimal(tx_size / SizeRadix + (tx_size % SizeRadix == 0 ? 0:1)) * MinServiceFee; ;
+                serviceFee = serviceFee <= MaxServceFee ? serviceFee : MaxServceFee ;
+                Fixed8 payFee = inputSum - outputSum;
+
+                return serviceFee <= payFee && payFee <= MaxServceFee;
             }
             return true;
         }

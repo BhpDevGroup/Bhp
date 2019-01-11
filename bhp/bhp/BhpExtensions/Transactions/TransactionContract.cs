@@ -1,4 +1,5 @@
-﻿using Bhp.Ledger;
+﻿using Bhp.BhpExtensions.Fees;
+using Bhp.Ledger;
 using Bhp.Network.P2P.Payloads;
 using Bhp.VM;
 using Bhp.Wallets;
@@ -104,24 +105,24 @@ namespace Bhp.BhpExtensions.Transactions
             //By BHP
             if (tx.Type == TransactionType.ContractTransaction)
             {
-                decimal serviceFee = ConstantClass.MinServiceFee;
+                Fixed8 serviceFee = ServiceFee.MinServiceFee;
                 int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                serviceFee = (tx_size / ConstantClass.SizeRadix + (tx_size % ConstantClass.SizeRadix == 0 ? 0 : 1)) * ConstantClass.MinServiceFee;
-                serviceFee = serviceFee <= ConstantClass.MaxServceFee ? serviceFee : ConstantClass.MaxServceFee;
+                serviceFee = Fixed8.FromDecimal(tx_size / ServiceFee.SizeRadix + (tx_size % ServiceFee.SizeRadix == 0 ? 0 : 1)) * ServiceFee.MinServiceFee;
+                serviceFee = serviceFee <= ServiceFee.MaxServceFee ? serviceFee : ServiceFee.MaxServceFee;
                 TransactionOutput[] tx_changeout = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash && p.ScriptHash == change_address).OrderByDescending(p => p.Value).ToArray();
                 //exist changeaddress
-                if (tx_changeout.Count() > 0 && (decimal)tx_changeout[0].Value > serviceFee)
+                if (tx_changeout.Count() > 0 && tx_changeout[0].Value > serviceFee)
                 {
-                    tx_changeout[0].Value = Fixed8.FromDecimal((decimal)tx_changeout[0].Value - serviceFee);
+                    tx_changeout[0].Value = tx_changeout[0].Value - serviceFee;
                 }
                 else
                 {
                     TransactionOutput[] tx_out = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).OrderByDescending(p => p.Value).ToArray();
                     if (tx_out.Count() > 0)
                     {
-                        if ((decimal)tx_out[0].Value > serviceFee)
+                        if (tx_out[0].Value > serviceFee)
                         {
-                            tx_out[0].Value = Fixed8.FromDecimal((decimal)tx_out[0].Value - serviceFee);
+                            tx_out[0].Value = tx_out[0].Value - serviceFee;
                         }
                         else
                         {

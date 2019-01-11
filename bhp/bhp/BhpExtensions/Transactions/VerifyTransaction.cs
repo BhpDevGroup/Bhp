@@ -1,4 +1,5 @@
-﻿using Bhp.Ledger;
+﻿using Bhp.BhpExtensions.Fees;
+using Bhp.Ledger;
 using Bhp.Network.P2P.Payloads;
 using Bhp.Persistence;
 using Bhp.SmartContract;
@@ -169,18 +170,25 @@ namespace Bhp.BhpExtensions.Transactions
             Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             if (inputSum != Fixed8.Zero)
             {
-                decimal serviceFee = ConstantClass.MinServiceFee;
+                Fixed8 serviceFee = ServiceFee.MinServiceFee;
                 int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                serviceFee = (tx_size / ConstantClass.SizeRadix + (tx_size % ConstantClass.SizeRadix == 0 ? 0 : 1)) * ConstantClass.MinServiceFee; ;
-                serviceFee = serviceFee <= ConstantClass.MaxServceFee ? serviceFee : ConstantClass.MaxServceFee;
-                decimal payFee = (decimal)inputSum - (decimal)outputSum;
-                if (payFee >= serviceFee)
+                serviceFee = Fixed8.FromDecimal(tx_size / ServiceFee.SizeRadix + (tx_size % ServiceFee.SizeRadix == 0 ? 0 : 1)) * ServiceFee.MinServiceFee; ;
+                serviceFee = serviceFee <= ServiceFee.MaxServceFee ? serviceFee : ServiceFee.MaxServceFee;
+                Fixed8 payFee = inputSum - outputSum;
+
+                if (serviceFee <= payFee && payFee <= ServiceFee.MaxServceFee)
                 {
                     return "success";
                 }
-                else
+
+                if(payFee < ServiceFee.MinServiceFee)
                 {
                     return "ServiceFee is not enough!";
+                }
+
+                if (payFee > ServiceFee.MaxServceFee)
+                {
+                    return "ServiceFee is too much!";
                 }
             }
             return "success";

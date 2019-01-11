@@ -309,7 +309,6 @@ namespace Bhp.Consensus
 
             // 手续费单独计算
             Fixed8 amount_servicefee = ServiceFee.CalcuServiceFee(Transactions.Values.ToList());
-            if (amount_servicefee < ServiceFee.MinServiceFee || amount_servicefee > ServiceFee.MaxServceFee) return false;
             if (tx_gen?.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value) - MiningSubsidy.GetMiningSubsidy(BlockIndex) != amount_servicefee) return false;
 
             return true;

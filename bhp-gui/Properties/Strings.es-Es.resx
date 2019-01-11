@@ -129,6 +129,9 @@
   <data name="AddContractFailedMessage" xml:space="preserve">
     <value>Fallo al añadir el contrato inteligente. Falta la correspondiente clave privada en el monedero.</value>
   </data>
+  <data name="AddContractFailedMessage2" xml:space="preserve">
+    <value>Fallo al añadir el contrato inteligente. Falta la correspondiente clave privada en el monedero or lockout time that signed the contract is less than or equal to the current time.</value>
+  </data>
   <data name="Address" xml:space="preserve">
     <value>Dirección</value>
   </data>
@@ -185,6 +188,9 @@
   </data>
   <data name="InvalidCertificate" xml:space="preserve">
     <value>Inválido</value>
+  </data>
+  <data name="LockTime" xml:space="preserve">
+    <value>Lock lock time must be greater than current time.</value>
   </data>
   <data name="MigrateWalletCaption" xml:space="preserve">
     <value>Migrar monedero</value>

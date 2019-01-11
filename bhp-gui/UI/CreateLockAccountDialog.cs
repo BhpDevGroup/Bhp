@@ -18,6 +18,9 @@ namespace Bhp.UI
         public Contract GetContract()
         {
             uint timestamp = dateTimePicker1.Value.ToTimestamp();
+
+            if (dateTimePicker1.Value <= DateTime.Now) return null;//BY BHP
+
             using (ScriptBuilder sb = new ScriptBuilder())
             {
                 sb.EmitPush(GetKey().PublicKey);

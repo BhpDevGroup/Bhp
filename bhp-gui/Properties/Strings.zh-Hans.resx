@@ -129,6 +129,9 @@
   <data name="AddContractFailedMessage" xml:space="preserve">
     <value>无法添加智能合约，因为当前钱包中不包含签署该合约的私钥。</value>
   </data>
+  <data name="AddContractFailedMessage2" xml:space="preserve">
+    <value>无法添加智能合约，因为当前钱包中不包含签署该合约的私钥或锁仓时间小于等于当前时间。</value>
+  </data>
   <data name="Address" xml:space="preserve">
     <value>地址</value>
   </data>
@@ -171,12 +174,14 @@
   <data name="IncompletedSignatureTitle" xml:space="preserve">
     <value>签名不完整</value>
   </data>
-  
   <data name="InsufficientFunds" xml:space="preserve">
     <value>余额不足，无法创建交易。</value>
   </data>
   <data name="InvalidCertificate" xml:space="preserve">
     <value>证书错误</value>
+  </data>
+  <data name="LockTime" xml:space="preserve">
+    <value>锁仓时间必须大于当前时间</value>
   </data>
   <data name="MigrateWalletCaption" xml:space="preserve">
     <value>钱包文件升级</value>

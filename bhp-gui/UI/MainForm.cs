@@ -881,7 +881,8 @@ namespace Bhp.UI
                 Contract contract = dialog.GetContract();
                 if (contract == null)
                 {
-                    MessageBox.Show(Strings.AddContractFailedMessage);
+                    MessageBox.Show(Strings.AddContractFailedMessage2);//BY BHP
+                    //MessageBox.Show(Strings.AddContractFailedMessage);
                     return;
                 }
                 WalletAccount account = Program.CurrentWallet.CreateAccount(contract, dialog.GetKey());

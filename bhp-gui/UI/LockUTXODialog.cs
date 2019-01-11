@@ -12,11 +12,15 @@ namespace Bhp.UI
 {
     public partial class LockUTXODialog : Form
     {
-        public LockUTXODialog()
+        public LockUTXODialog(DateTime timestamp)
         {
             InitializeComponent();
+            if (timestamp > new DateTime())
+            {
+                this.dateTimePicker1.Value = timestamp;
+            }
         }
 
-        public uint GetUXTOLockTime { get => this.dateTimePicker1.Value.ToTimestamp(); }
+        public DateTime GetUXTOLockTime { get => this.dateTimePicker1.Value; }
     }//end of class
 }

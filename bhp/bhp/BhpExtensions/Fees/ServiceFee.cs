@@ -12,6 +12,7 @@ namespace Bhp.BhpExtensions.Fees
     /// </summary>
     public class ServiceFee
     {
+        /*
         public static Fixed8 CalcuServiceFee(List<Transaction> transactions)
         {
             return Fixed8.Zero;
@@ -24,9 +25,9 @@ namespace Bhp.BhpExtensions.Fees
                 return false;
             return true;
         }
+        */
 
-        /* 
-         public static Fixed8 CalcuServiceFee(List<Transaction> transactions)
+        public static Fixed8 CalcuServiceFee(List<Transaction> transactions)
         { 
             Transaction[] ts = transactions.Where(p => p.Type == TransactionType.ContractTransaction).ToArray();
             Fixed8 inputsum = Fixed8.Zero;
@@ -90,15 +91,7 @@ namespace Bhp.BhpExtensions.Fees
         } 
       
         public static bool CheckServiceFee(Transaction tx)
-        { 
-            //if (tx.References == null) return false;
-            //Fixed8 inputSum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
-            //Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
-            //decimal serviceFee = (decimal)inputSum * 0.0001m;
-            //decimal payFee = (decimal)inputSum - (decimal)outputSum;
-            //return payFee >= serviceFee;
-             
-
+        {   
             if (tx.References == null) return false;
             Fixed8 inputSum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
@@ -113,6 +106,6 @@ namespace Bhp.BhpExtensions.Fees
             }
             return true;
         }
-        */
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using Bhp.Network.P2P.Payloads;
+﻿using Bhp.BhpExtensions.Transactions;
+using Bhp.Network.P2P.Payloads;
 using Bhp.Properties;
 using Bhp.SmartContract;
 using Bhp.VM;
@@ -16,6 +17,9 @@ namespace Bhp.UI
     public partial class TransferDialog : Form
     {
         private string remark = "";
+
+        //By BHP
+        TransactionContract transactionContract = new TransactionContract();
 
         public Fixed8 Fee => Fixed8.Parse(textBox1.Text);
         public UInt160 ChangeAddress => ((string)comboBox1.SelectedItem).ToScriptHash();
@@ -117,8 +121,10 @@ namespace Bhp.UI
                 });
             tx.Attributes = attributes.ToArray();
             tx.Outputs = txOutListBox1.Items.Where(p => p.AssetId is UInt256).Select(p => p.ToTxOutput()).ToArray();
+            tx.Witnesses = new Witness[0];
             if (tx is ContractTransaction ctx)
-                tx = Program.CurrentWallet.MakeTransaction(ctx, change_address: ChangeAddress, fee: Fee);
+                //tx = Program.CurrentWallet.MakeTransaction(ctx, change_address: ChangeAddress, fee: Fee);
+                tx = transactionContract.MakeTransaction(Program.CurrentWallet, ctx, change_address: ChangeAddress, fee: Fee);
             return tx;
         }
 

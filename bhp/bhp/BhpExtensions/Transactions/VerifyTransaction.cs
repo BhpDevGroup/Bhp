@@ -164,12 +164,6 @@ namespace Bhp.BhpExtensions.Transactions
         //By BHP
         public static string CheckServiceFee(Transaction tx)
         {
-            //if (tx.References == null) return "Transaction input must not be empty";
-            //Fixed8 inputSum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
-            //Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
-            //decimal serviceFee = (decimal)inputSum * 0.0001m;
-            //decimal payFee = (decimal)inputSum - (decimal)outputSum;
-
             if (tx.References == null) return "Transaction input must not be empty";
             Fixed8 inputSum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);

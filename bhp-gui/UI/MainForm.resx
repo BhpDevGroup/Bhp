@@ -808,7 +808,7 @@
     <value>482</value>
   </data>
   <data name="columnHeader12.Text" xml:space="preserve">
-    <value>Amout</value>
+    <value>Amount</value>
   </data>
   <data name="columnHeader12.Width" type="System.Int32, mscorlib">
     <value>80</value>

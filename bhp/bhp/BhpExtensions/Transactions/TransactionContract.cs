@@ -105,10 +105,10 @@ namespace Bhp.BhpExtensions.Transactions
             //By BHP
             if (tx.Type == TransactionType.ContractTransaction)
             {
-                Fixed8 serviceFee = ServiceFee.MinServiceFee;
+                Fixed8 serviceFee = BhpTxFee.MinServiceFee;
                 int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                serviceFee = Fixed8.FromDecimal(tx_size / ServiceFee.SizeRadix + (tx_size % ServiceFee.SizeRadix == 0 ? 0 : 1)) * ServiceFee.MinServiceFee;
-                serviceFee = serviceFee <= ServiceFee.MaxServceFee ? serviceFee : ServiceFee.MaxServceFee;
+                serviceFee = Fixed8.FromDecimal(tx_size / BhpTxFee.SizeRadix + (tx_size % BhpTxFee.SizeRadix == 0 ? 0 : 1)) * BhpTxFee.MinServiceFee;
+                serviceFee = serviceFee <= BhpTxFee.MaxServiceFee ? serviceFee : BhpTxFee.MaxServiceFee;
                 TransactionOutput[] tx_changeout = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash && p.ScriptHash == change_address).OrderByDescending(p => p.Value).ToArray();
                 //exist changeaddress
                 if (tx_changeout.Count() > 0 && tx_changeout[0].Value > serviceFee)

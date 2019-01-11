@@ -148,7 +148,7 @@ namespace Bhp.BhpExtensions.Transactions
                     Fixed8 amount = results_destroy.Where(p => p.AssetId == Blockchain.UtilityToken.Hash).Sum(p => p.Amount);
                     if (SystemFee > Fixed8.Zero && amount < SystemFee) return "BHPgas is not enough!";
 
-                    return CheckServiceFee(tx);
+                    return CheckTxFee(tx);
                 }
             }
             else
@@ -163,32 +163,32 @@ namespace Bhp.BhpExtensions.Transactions
         }
 
         //By BHP
-        public static string CheckServiceFee(Transaction tx)
+        public static string CheckTxFee(Transaction tx)
         {
             if (tx.References == null) return "Transaction input must not be empty";
             Fixed8 inputSum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             if (inputSum != Fixed8.Zero)
             {
-                Fixed8 serviceFee = ServiceFee.MinServiceFee;
+                Fixed8 serviceFee = BhpTxFee.MinTxFee;
                 int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                serviceFee = Fixed8.FromDecimal(tx_size / ServiceFee.SizeRadix + (tx_size % ServiceFee.SizeRadix == 0 ? 0 : 1)) * ServiceFee.MinServiceFee; ;
-                serviceFee = serviceFee <= ServiceFee.MaxServceFee ? serviceFee : ServiceFee.MaxServceFee;
+                serviceFee = Fixed8.FromDecimal(tx_size / BhpTxFee.SizeRadix + (tx_size % BhpTxFee.SizeRadix == 0 ? 0 : 1)) * BhpTxFee.MinTxFee; ;
+                serviceFee = serviceFee <= BhpTxFee.MaxTxFee ? serviceFee : BhpTxFee.MaxTxFee;
                 Fixed8 payFee = inputSum - outputSum;
 
-                if (serviceFee <= payFee && payFee <= ServiceFee.MaxServceFee)
+                if (serviceFee <= payFee && payFee <= BhpTxFee.MaxTxFee)
                 {
                     return "success";
                 }
 
-                if(payFee < ServiceFee.MinServiceFee)
+                if(payFee < BhpTxFee.MinTxFee)
                 {
-                    return "ServiceFee is not enough!";
+                    return "TxFee is not enough!";
                 }
 
-                if (payFee > ServiceFee.MaxServceFee)
+                if (payFee > BhpTxFee.MaxTxFee)
                 {
-                    return "ServiceFee is too much!";
+                    return "TxFee is too much!";
                 }
             }
             return "success";

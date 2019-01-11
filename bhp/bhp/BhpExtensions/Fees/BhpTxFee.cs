@@ -11,7 +11,7 @@ namespace Bhp.BhpExtensions.Fees
     /// <summary>
     /// ServiceFee of transaction
     /// </summary>
-    public class ServiceFee
+    public class BhpTxFee
     {
         /// <summary>
         /// 手续费收取字节基数
@@ -21,15 +21,15 @@ namespace Bhp.BhpExtensions.Fees
         /// <summary>
         /// 最小手续费
         /// </summary>
-        public static readonly Fixed8 MinServiceFee = Fixed8.FromDecimal(0.0001m);
+        public static readonly Fixed8 MinTxFee = Fixed8.FromDecimal(0.0001m);
 
         /// <summary>
         /// 最大手续费
         /// </summary>
-        public static readonly Fixed8 MaxServceFee = Fixed8.FromDecimal(0.0005m);
+        public static readonly Fixed8 MaxTxFee = Fixed8.FromDecimal(0.0005m);
 
         /*
-        public static Fixed8 CalcuServiceFee(List<Transaction> transactions)
+        public static Fixed8 CalcuTxFee(List<Transaction> transactions)
         {
             return Fixed8.Zero;
         }
@@ -43,26 +43,36 @@ namespace Bhp.BhpExtensions.Fees
         }
         */
 
-        public static Fixed8 CalcuServiceFee(List<Transaction> transactions)
-        { 
-            Transaction[] ts = transactions.Where(p => p.Type == TransactionType.ContractTransaction).ToArray();
+        public static Fixed8 CalcuTxFee(Transaction tx)
+        {
             Fixed8 inputsum = Fixed8.Zero;
             Fixed8 outputsum = Fixed8.Zero;
-            foreach (Transaction tr in ts)
+
+            foreach (CoinReference coin in tx.Inputs)
             {
-                foreach (CoinReference coin in tr.Inputs)
+                if (Blockchain.Singleton.GetTransaction(coin.PrevHash).Outputs[coin.PrevIndex].AssetId == Blockchain.GoverningToken.Hash)
                 {
-                    if (Blockchain.Singleton.GetTransaction(coin.PrevHash).Outputs[coin.PrevIndex].AssetId == Blockchain.GoverningToken.Hash)
-                    {
-                       inputsum += Blockchain.Singleton.GetTransaction(coin.PrevHash).Outputs[coin.PrevIndex].Value;
-                    }
-                }
-                foreach (TransactionOutput output in tr.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash))
-                {
-                    outputsum += output.Value; 
+                    inputsum += Blockchain.Singleton.GetTransaction(coin.PrevHash).Outputs[coin.PrevIndex].Value;
                 }
             }
+            foreach (TransactionOutput output in tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash))
+            {
+                outputsum += output.Value;
+            }
+
             return inputsum - outputsum;
+        }
+
+        public static Fixed8 CalcuTxFee(List<Transaction> transactions)
+        { 
+            Transaction[] ts = transactions.Where(p => p.Type == TransactionType.ContractTransaction).ToArray();
+            Fixed8 txFee = Fixed8.Zero;
+            
+            foreach (Transaction tx in ts)
+            {
+                txFee += CalcuTxFee(tx);
+            }
+            return txFee;
         }
 
         public static bool Verify(Transaction tx, TransactionResult[] results_destroy, Fixed8 SystemFee)
@@ -92,7 +102,7 @@ namespace Bhp.BhpExtensions.Fees
                     //verify gas
                     Fixed8 amount = results_destroy.Where(p => p.AssetId == Blockchain.UtilityToken.Hash).Sum(p => p.Amount);
                     if (SystemFee > Fixed8.Zero && amount < SystemFee) return false;
-                    return CheckServiceFee(tx);
+                    return CheckTxFee(tx);
                 }
             }
             else
@@ -106,20 +116,20 @@ namespace Bhp.BhpExtensions.Fees
             }
         } 
       
-        public static bool CheckServiceFee(Transaction tx)
+        public static bool CheckTxFee(Transaction tx)
         {   
             if (tx.References == null) return false;
             Fixed8 inputSum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             if (inputSum != Fixed8.Zero)
             {
-                Fixed8 serviceFee = MinServiceFee;
+                Fixed8 txFee = MinTxFee;
                 int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                serviceFee = Fixed8.FromDecimal(tx_size / SizeRadix + (tx_size % SizeRadix == 0 ? 0:1)) * MinServiceFee; ;
-                serviceFee = serviceFee <= MaxServceFee ? serviceFee : MaxServceFee ;
+                txFee = Fixed8.FromDecimal(tx_size / SizeRadix + (tx_size % SizeRadix == 0 ? 0:1)) * MinTxFee; ;
+                txFee = txFee <= MaxTxFee ? txFee : MaxTxFee;
                 Fixed8 payFee = inputSum - outputSum;
 
-                return serviceFee <= payFee && payFee <= MaxServceFee;
+                return txFee <= payFee && payFee <= MaxTxFee;
             }
             return true;
         }

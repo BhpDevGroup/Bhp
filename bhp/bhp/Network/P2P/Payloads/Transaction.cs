@@ -114,6 +114,15 @@ namespace Bhp.Network.P2P.Payloads
 
         public virtual Fixed8 SystemFee => ProtocolSettings.Default.SystemFee.TryGetValue(Type, out Fixed8 fee) ? fee : Fixed8.Zero;
 
+        //By BHP
+        public virtual Fixed8 TxFee
+        {
+            get
+            {
+                return Type == TransactionType.ContractTransaction ? BhpTxFee.CalcuTxFee(this) : Fixed8.Zero;
+            }
+        }
+
         protected Transaction(TransactionType type)
         {
             this.Type = type;
@@ -128,6 +137,7 @@ namespace Bhp.Network.P2P.Payloads
 
         protected virtual void DeserializeExclusiveData(BinaryReader reader)
         {
+
         }
 
         public static Transaction DeserializeFrom(byte[] value, int offset = 0)
@@ -260,6 +270,7 @@ namespace Bhp.Network.P2P.Payloads
             json["vout"] = Outputs.Select((p, i) => p.ToJson((ushort)i)).ToArray();
             json["sys_fee"] = SystemFee.ToString();
             json["net_fee"] = NetworkFee.ToString();
+            json["tx_fee"] = TxFee.ToString();
             json["scripts"] = Witnesses.Select(p => p.ToJson()).ToArray();
             return json;
         }
@@ -349,7 +360,7 @@ namespace Bhp.Network.P2P.Payloads
             TransactionResult[] results_destroy = results.Where(p => p.Amount > Fixed8.Zero).ToArray();
 
             //By BHP
-            if (ServiceFee.Verify(this, results_destroy, SystemFee) == false) return false;
+            if (BhpTxFee.Verify(this, results_destroy, SystemFee) == false) return false;
           
             if (SystemFee > Fixed8.Zero && (results_destroy.Length == 0 || results_destroy[0].Amount < SystemFee))
                 return false;

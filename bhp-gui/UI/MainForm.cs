@@ -178,8 +178,10 @@ namespace Bhp.UI
             }
             Program.CurrentWallet = wallet;
             listView3.Items.Clear();
+            
             if (Program.CurrentWallet != null)
             {
+                txQueue.Clear();
                 if (backgroundWorker1.IsBusy == false)
                 {
                     backgroundWorker1.RunWorkerAsync();
@@ -1315,6 +1317,12 @@ namespace Bhp.UI
         {
             ShowWalletInfo();
             高级AToolStripMenuItem.Visible = "1".Equals(Settings.Default.Configs.Development);
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ShowWalletInfo();
+            RefreshConfirmations();
         }
     }
 }

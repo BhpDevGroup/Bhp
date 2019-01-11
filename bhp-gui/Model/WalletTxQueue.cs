@@ -25,5 +25,10 @@ namespace Bhp.Model
         {
             return queue.IsEmpty;
         }
+
+        public void Clear()
+        {
+            queue = new ConcurrentQueue<WalletTx>();
+        }
     }
 }

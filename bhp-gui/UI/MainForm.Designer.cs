@@ -44,6 +44,8 @@
             this.交易TToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.签名SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            this.claToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.高级AToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.提取小蚁币CToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -198,7 +200,9 @@
             this.转账TToolStripMenuItem,
             this.交易TToolStripMenuItem1,
             this.toolStripSeparator5,
-            this.签名SToolStripMenuItem});
+            this.签名SToolStripMenuItem,
+            this.toolStripSeparator13,
+            this.claToolStripMenuItem});
             resources.ApplyResources(this.交易TToolStripMenuItem, "交易TToolStripMenuItem");
             this.交易TToolStripMenuItem.Name = "交易TToolStripMenuItem";
             // 
@@ -224,6 +228,17 @@
             this.签名SToolStripMenuItem.Name = "签名SToolStripMenuItem";
             resources.ApplyResources(this.签名SToolStripMenuItem, "签名SToolStripMenuItem");
             this.签名SToolStripMenuItem.Click += new System.EventHandler(this.签名SToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator13
+            // 
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            resources.ApplyResources(this.toolStripSeparator13, "toolStripSeparator13");
+            // 
+            // claToolStripMenuItem
+            // 
+            this.claToolStripMenuItem.Name = "claToolStripMenuItem";
+            resources.ApplyResources(this.claToolStripMenuItem, "claToolStripMenuItem");
+            this.claToolStripMenuItem.Click += new System.EventHandler(this.claToolStripMenuItem_Click);
             // 
             // 高级AToolStripMenuItem
             // 
@@ -852,6 +867,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader12;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
+        private System.Windows.Forms.ToolStripMenuItem claToolStripMenuItem;
     }
 }
 

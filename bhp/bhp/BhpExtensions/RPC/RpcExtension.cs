@@ -203,6 +203,7 @@ namespace Bhp.BhpExtensions.RPC
                         json["utxo"] = new JArray(jsons.Select(p =>
                         {
                             JObject peerJson = new JObject();
+                            peerJson["asset"] = p["asset"].ToString();
                             peerJson["txid"] = p["txid"].ToString();
                             peerJson["n"] = (int)p["n"];
                             peerJson["value"] = (double)p["value"];

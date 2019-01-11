@@ -1324,5 +1324,10 @@ namespace Bhp.UI
             ShowWalletInfo();
             RefreshConfirmations();
         }
+
+        private void claToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Helper.Show<ClaimForm>();
+        }
     }
 }

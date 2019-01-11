@@ -56,6 +56,10 @@
       <Project>{aa4ef6d2-adcc-470e-ba17-8cc69241ff2f}</Project>
       <Name>Bhp.SmartContract.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\bhp\bhp\bhp.csproj">
+      <Project>{f1f219bb-df6c-482c-bd6b-190a5d679bea}</Project>
+      <Name>bhp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="Build.tasks" />

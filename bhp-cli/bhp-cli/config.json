@@ -19,11 +19,11 @@
       "Password": "",
       "StartConsensus": false,
       "IsActive": false,
-      "AutoLock": false
+      "AutoLock": true
     },
     "PluginURL": "",
     "DataRPC": {
-      "Host": "https://exp.bhpa.io/"
+      "Host": "http://exp.bhpa.io:7070"
     }
   }
 }

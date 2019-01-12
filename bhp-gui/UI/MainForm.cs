@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Bhp.BhpExtensions.Transactions;
 using Bhp.Cryptography;
 using Bhp.IO;
 using Bhp.IO.Actors;
@@ -57,12 +58,7 @@ namespace Bhp.UI
                     toolStripStatusLabel3.Visible = true;
                 }
             }
-        }
-
-        private string CalcuAmount(Transaction tx)
-        { 
-            return tx.Outputs.Sum(p=>p.Value).ToString() ;
-        }
+        }  
 
         private void AddAccount(WalletAccount account, bool selected = false)
         {
@@ -130,7 +126,7 @@ namespace Bhp.UI
                              new ListViewItem.ListViewSubItem
                             {
                                 Name = "amount",
-                                Text = CalcuAmount(tx)
+                                Text = TransactionContract.CalcuAmount(tx).ToString()
                             },
                             new ListViewItem.ListViewSubItem
                             {

@@ -9,7 +9,7 @@ namespace Bhp.BhpExtensions.Fees
 {
 
     /// <summary>
-    /// ServiceFee of transaction
+    /// TxFee of transaction
     /// </summary>
     public class BhpTxFee
     {

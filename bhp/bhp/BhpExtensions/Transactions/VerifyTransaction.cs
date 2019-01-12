@@ -135,13 +135,13 @@ namespace Bhp.BhpExtensions.Transactions
                 {
                     if (results_destroy.Length == 0)
                     {
-                        return "ServiceFee is not enough!";
+                        return "TxFee is not enough!";
                     }
                     if (results_destroy.Length > 2)
                     {
                         return "Transaction input must equal to output!";
                     }
-                    if (results_destroy.Length == 1 && results_destroy[0].AssetId != Blockchain.GoverningToken.Hash) return "Must pay servicefee for transaction!";
+                    if (results_destroy.Length == 1 && results_destroy[0].AssetId != Blockchain.GoverningToken.Hash) return "Must pay TxFee for transaction!";
                     if (results_destroy.Any(p => p.AssetId != Blockchain.GoverningToken.Hash && p.AssetId != Blockchain.UtilityToken.Hash)) return "Transaction assetid error";
 
                     //verify gas
@@ -170,13 +170,13 @@ namespace Bhp.BhpExtensions.Transactions
             Fixed8 outputSum = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(p => p.Value);
             if (inputSum != Fixed8.Zero)
             {
-                Fixed8 serviceFee = BhpTxFee.MinTxFee;
+                Fixed8 txFee = BhpTxFee.MinTxFee;
                 int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                serviceFee = Fixed8.FromDecimal(tx_size / BhpTxFee.SizeRadix + (tx_size % BhpTxFee.SizeRadix == 0 ? 0 : 1)) * BhpTxFee.MinTxFee; ;
-                serviceFee = serviceFee <= BhpTxFee.MaxTxFee ? serviceFee : BhpTxFee.MaxTxFee;
+                txFee = Fixed8.FromDecimal(tx_size / BhpTxFee.SizeRadix + (tx_size % BhpTxFee.SizeRadix == 0 ? 0 : 1)) * BhpTxFee.MinTxFee; ;
+                txFee = txFee <= BhpTxFee.MaxTxFee ? txFee : BhpTxFee.MaxTxFee;
                 Fixed8 payFee = inputSum - outputSum;
 
-                if (serviceFee <= payFee && payFee <= BhpTxFee.MaxTxFee)
+                if (txFee <= payFee && payFee <= BhpTxFee.MaxTxFee)
                 {
                     return "success";
                 }

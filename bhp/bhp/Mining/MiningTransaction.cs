@@ -20,7 +20,7 @@ namespace Bhp.Mining
             if (blockIndex > 0)
             {
                 AddMiningTransaction(wallet, blockIndex, outputs, attributes);
-                AddServiceFee(outputs, amount_txfee, blockIndex);
+                AddTxFee(outputs, amount_txfee, blockIndex);
                 AddNetFee(wallet, outputs, amount_netfee);
             } 
 
@@ -74,7 +74,7 @@ namespace Bhp.Mining
             }
         }
 
-        private void AddServiceFee(List<TransactionOutput> outputs, Fixed8 amount_txfee, uint blockIndex)
+        private void AddTxFee(List<TransactionOutput> outputs, Fixed8 amount_txfee, uint blockIndex)
         { 
             if (amount_txfee != Fixed8.Zero)
             {

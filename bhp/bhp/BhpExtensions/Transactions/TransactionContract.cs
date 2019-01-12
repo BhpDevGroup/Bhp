@@ -105,24 +105,24 @@ namespace Bhp.BhpExtensions.Transactions
             //By BHP
             if (tx.Type == TransactionType.ContractTransaction)
             {
-                Fixed8 serviceFee = BhpTxFee.MinServiceFee;
+                Fixed8 txFee = BhpTxFee.MinTxFee;
                 int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                serviceFee = Fixed8.FromDecimal(tx_size / BhpTxFee.SizeRadix + (tx_size % BhpTxFee.SizeRadix == 0 ? 0 : 1)) * BhpTxFee.MinServiceFee;
-                serviceFee = serviceFee <= BhpTxFee.MaxServiceFee ? serviceFee : BhpTxFee.MaxServiceFee;
+                txFee = Fixed8.FromDecimal(tx_size / BhpTxFee.SizeRadix + (tx_size % BhpTxFee.SizeRadix == 0 ? 0 : 1)) * BhpTxFee.MinTxFee;
+                txFee = txFee <= BhpTxFee.MinTxFee ? txFee : BhpTxFee.MaxTxFee;
                 TransactionOutput[] tx_changeout = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash && p.ScriptHash == change_address).OrderByDescending(p => p.Value).ToArray();
                 //exist changeaddress
-                if (tx_changeout.Count() > 0 && tx_changeout[0].Value > serviceFee)
+                if (tx_changeout.Count() > 0 && tx_changeout[0].Value > txFee)
                 {
-                    tx_changeout[0].Value = tx_changeout[0].Value - serviceFee;
+                    tx_changeout[0].Value = tx_changeout[0].Value - txFee;
                 }
                 else
                 {
                     TransactionOutput[] tx_out = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).OrderByDescending(p => p.Value).ToArray();
                     if (tx_out.Count() > 0)
                     {
-                        if (tx_out[0].Value > serviceFee)
+                        if (tx_out[0].Value > txFee)
                         {
-                            tx_out[0].Value = tx_out[0].Value - serviceFee;
+                            tx_out[0].Value = tx_out[0].Value - txFee;
                         }
                         else
                         {
@@ -132,6 +132,40 @@ namespace Bhp.BhpExtensions.Transactions
                 }
             }
             return tx;
+        }
+
+        public static Fixed8 CalcuAmount(Transaction tx)
+        {
+            if(tx.Inputs.Count() == tx.Outputs.Count())
+            {
+                return tx.Outputs.Sum(p => p.Value);
+            }
+            Fixed8 amount = Fixed8.Zero;
+            List<string> inAddress = new List<string>();
+            foreach (CoinReference coin in tx.Inputs)
+            {
+                Transaction preTx = Blockchain.Singleton.GetTransaction(coin.PrevHash);
+                inAddress.Add(preTx.Outputs[coin.PrevIndex].ScriptHash.ToAddress());
+            }
+
+            foreach(TransactionOutput output in tx.Outputs)
+            {
+                bool found = false;
+                foreach(string address in inAddress)
+                {
+                    if (output.ScriptHash.ToAddress().Equals(address))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if(found == false)
+                {
+                    amount += output.Value;
+                }
+            }
+
+            return amount;
         }
     }
 }

@@ -492,6 +492,7 @@ namespace Bhp.Network.RPC
                             tx.Witnesses = context.GetWitnesses();
                             wallet.ApplyTransaction(tx);
                             system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
+                            //Console.WriteLine(tx.ToArray().ToHexString());
                             return tx.ToJson();
                         }
                         else

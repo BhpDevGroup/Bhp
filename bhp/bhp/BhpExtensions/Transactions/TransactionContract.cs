@@ -120,17 +120,15 @@ namespace Bhp.BhpExtensions.Transactions
 
         public static Fixed8 CalcuAmount(Transaction tx)
         {
-            if(tx.Inputs.Count() == tx.Outputs.Count())
-            {
-                return tx.Outputs.Sum(p => p.Value);
-            }
+
             Fixed8 amount = Fixed8.Zero;
             List<string> inAddress = new List<string>();
-            foreach (CoinReference coin in tx.Inputs)
-            {
-                Transaction preTx = Blockchain.Singleton.GetTransaction(coin.PrevHash);
-                inAddress.Add(preTx.Outputs[coin.PrevIndex].ScriptHash.ToAddress());
+            foreach (TransactionOutput output in tx.References.Values)
+            { 
+                inAddress.Add(output.ScriptHash.ToAddress());
             }
+
+            bool hasOther = false;
 
             foreach(TransactionOutput output in tx.Outputs)
             {
@@ -142,6 +140,11 @@ namespace Bhp.BhpExtensions.Transactions
                         found = true;
                         break;
                     }
+                    else
+                    {
+                        //有其它地址认为不是自已给自己转
+                        hasOther = true;
+                    }
                 }
                 if(found == false)
                 {
@@ -149,7 +152,14 @@ namespace Bhp.BhpExtensions.Transactions
                 }
             }
 
-            return amount;
+            if (hasOther)
+            {
+                return amount;
+            }
+            else
+            {
+                return tx.Outputs.Sum(p => p.Value);
+            }
         }
     }
 }

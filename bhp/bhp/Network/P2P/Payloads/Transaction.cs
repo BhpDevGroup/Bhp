@@ -115,6 +115,9 @@ namespace Bhp.Network.P2P.Payloads
         public virtual Fixed8 SystemFee => ProtocolSettings.Default.SystemFee.TryGetValue(Type, out Fixed8 fee) ? fee : Fixed8.Zero;
 
         //By BHP
+        public virtual int OutputSize => Outputs.GetVarSize();
+
+        //By BHP
         public virtual Fixed8 TxFee
         {
             get
@@ -358,12 +361,10 @@ namespace Bhp.Network.P2P.Payloads
             TransactionResult[] results = GetTransactionResults()?.ToArray();
             if (results == null) return false;
             TransactionResult[] results_destroy = results.Where(p => p.Amount > Fixed8.Zero).ToArray();
-
+            
             //By BHP
             if (BhpTxFee.Verify(this, results_destroy, SystemFee) == false) return false;
-          
-            if (SystemFee > Fixed8.Zero && (results_destroy.Length == 0 || results_destroy[0].Amount < SystemFee))
-                return false;
+
             TransactionResult[] results_issue = results.Where(p => p.Amount < Fixed8.Zero).ToArray();
             switch (Type)
             {

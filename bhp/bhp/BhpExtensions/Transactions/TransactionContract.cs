@@ -53,11 +53,23 @@ namespace Bhp.BhpExtensions.Transactions
                     });
                 }
             }
+            /*
             var pay_coins = pay_total.Select(p => new
             {
                 AssetId = p.Key,
                 Unspents = from == null ? wallet.FindUnspentCoins(p.Key, p.Value.Value) : wallet.FindUnspentCoins(p.Key, p.Value.Value, from)
             }).ToDictionary(p => p.AssetId);
+            */
+
+            //By BHP
+            //When transferring money, finding UTXO requires additional transaction fees
+            var pay_coins = pay_total.Select(p => new
+            {
+                AssetId = p.Key,
+                Unspents = from == null ? wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx)) : 
+                                          wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx), from)
+            }).ToDictionary(p => p.AssetId);
+
             if (pay_coins.Any(p => p.Value.Unspents == null)) return null;
             var input_sum = pay_coins.Values.ToDictionary(p => p.AssetId, p => new
             {
@@ -69,22 +81,23 @@ namespace Bhp.BhpExtensions.Transactions
 
             int n = -1;
 
-            //添加找零地址
+            //添加找零地址  By BHP        
             foreach (UInt256 asset_id in input_sum.Keys)
             {
-                if (input_sum[asset_id].Value > pay_total[asset_id].Value)
+                Fixed8 txFee = BhpTxFee.EstimateTxFee(tx, asset_id);
+                if (input_sum[asset_id].Value > (pay_total[asset_id].Value + txFee))
                 {
                     outputs_new.Add(new TransactionOutput
                     {
                         AssetId = asset_id,
-                        Value = input_sum[asset_id].Value - pay_total[asset_id].Value,
+                        Value = input_sum[asset_id].Value - pay_total[asset_id].Value - txFee,
                         ScriptHash = change_address
                     });
 
                     n = outputs_new.Count - 1;
                 }
-            } 
-             
+            }
+
             //By BHP
             for (int i = 0; i < tx.Attributes.Length; i++)
             {
@@ -97,40 +110,11 @@ namespace Bhp.BhpExtensions.Transactions
                         tx.Attributes[i].Data = sb.ToArray();
                     }
                 }
-            }           
+            }
 
             tx.Inputs = pay_coins.Values.SelectMany(p => p.Unspents).Select(p => p.Reference).ToArray();
             tx.Outputs = outputs_new.ToArray();
-
-            //By BHP
-            if (tx.Type == TransactionType.ContractTransaction)
-            {
-                Fixed8 txFee = BhpTxFee.MinTxFee;
-                int tx_size = tx.Size - tx.Witnesses.Sum(p => p.Size);
-                txFee = Fixed8.FromDecimal(tx_size / BhpTxFee.SizeRadix + (tx_size % BhpTxFee.SizeRadix == 0 ? 0 : 1)) * BhpTxFee.MinTxFee;
-                txFee = txFee <= BhpTxFee.MinTxFee ? txFee : BhpTxFee.MaxTxFee;
-                TransactionOutput[] tx_changeout = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash && p.ScriptHash == change_address).OrderByDescending(p => p.Value).ToArray();
-                //exist changeaddress
-                if (tx_changeout.Count() > 0 && tx_changeout[0].Value > txFee)
-                {
-                    tx_changeout[0].Value = tx_changeout[0].Value - txFee;
-                }
-                else
-                {
-                    TransactionOutput[] tx_out = tx.Outputs.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).OrderByDescending(p => p.Value).ToArray();
-                    if (tx_out.Count() > 0)
-                    {
-                        if (tx_out[0].Value > txFee)
-                        {
-                            tx_out[0].Value = tx_out[0].Value - txFee;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }
-                }
-            }
+                                    
             return tx;
         }
 

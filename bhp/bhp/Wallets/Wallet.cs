@@ -80,6 +80,7 @@ namespace Bhp.Wallets
             if (sum < amount) return null;
             if (sum == amount) return unspents_asset;
             Coin[] unspents_ordered = unspents_asset.OrderByDescending(p => p.Output.Value).ToArray();
+            //Coin[] unspents_ordered = unspents_asset.OrderBy(p => p.Output.Value).ToArray(); //By BHP
             int i = 0;
             while (unspents_ordered[i].Output.Value <= amount)
                 amount -= unspents_ordered[i++].Output.Value;
@@ -328,6 +329,7 @@ namespace Bhp.Wallets
                         if (sum != output.Value)
                         {
                             balances = balances.OrderByDescending(p => p.Value).ToList();
+                            //balances = balances.OrderBy(p => p.Value).ToList(); //By BHP
                             BigInteger amount = output.Value;
                             int i = 0;
                             while (balances[i].Value <= amount)

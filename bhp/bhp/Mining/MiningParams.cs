@@ -51,6 +51,6 @@ namespace Bhp.Mining
             "ARQB5sxyF8fQerps92yAV9weAxBTgWREcL"
         };
 
-        public static readonly string[] PoSAddress = PoSAddressOfMainNet;
+        public static readonly string[] PoSAddress = PoSAddressOfTestNet;
     }
 }

@@ -66,8 +66,8 @@ namespace Bhp.BhpExtensions.Transactions
             var pay_coins = pay_total.Select(p => new
             {
                 AssetId = p.Key,
-                Unspents = from == null ? wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx)) : 
-                                          wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx), from)
+                Unspents = from == null ? wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx, p.Key)) :
+                                          wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx, p.Key), from)
             }).ToDictionary(p => p.AssetId);
 
             if (pay_coins.Any(p => p.Value.Unspents == null)) return null;

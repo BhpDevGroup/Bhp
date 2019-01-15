@@ -65,7 +65,6 @@
             this.官网WToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.开发人员工具TToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.关于BHPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -340,7 +339,6 @@
             this.官网WToolStripMenuItem,
             this.toolStripSeparator3,
             this.开发人员工具TToolStripMenuItem,
-            this.toolStripSeparator4,
             this.关于BHPToolStripMenuItem});
             this.帮助HToolStripMenuItem.Name = "帮助HToolStripMenuItem";
             resources.ApplyResources(this.帮助HToolStripMenuItem, "帮助HToolStripMenuItem");
@@ -366,11 +364,6 @@
             this.开发人员工具TToolStripMenuItem.Name = "开发人员工具TToolStripMenuItem";
             resources.ApplyResources(this.开发人员工具TToolStripMenuItem, "开发人员工具TToolStripMenuItem");
             this.开发人员工具TToolStripMenuItem.Click += new System.EventHandler(this.开发人员工具TToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            resources.ApplyResources(this.toolStripSeparator4, "toolStripSeparator4");
             // 
             // 关于BHPToolStripMenuItem
             // 
@@ -793,7 +786,6 @@
         private System.Windows.Forms.ToolStripMenuItem 官网WToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem 开发人员工具TToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem 关于BHPToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 交易TToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 签名SToolStripMenuItem;

@@ -111,6 +111,10 @@ namespace Bhp.UI
             }
             else
             {
+                if (listView3.Items.Count > 1000)
+                {
+                    listView3.Items.Clear();
+                }
                 listView3.Items.Insert(0, new ListViewItem(new[]
                 {
                             new ListViewItem.ListViewSubItem
@@ -744,7 +748,7 @@ namespace Bhp.UI
 
         private void 官网WToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://exp.bhp.io/");
+            Process.Start("https://exp.bhpa.io/");
         }
 
         private void 开发人员工具TToolStripMenuItem_Click(object sender, EventArgs e)

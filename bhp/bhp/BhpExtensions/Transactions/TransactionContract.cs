@@ -11,7 +11,7 @@ namespace Bhp.BhpExtensions.Transactions
     public class TransactionContract
     {
         public TransactionAttribute MakeLockTransactionScript(uint timestamp)
-        { 
+        {
             using (ScriptBuilder sb = new ScriptBuilder())
             {
                 sb.EmitPush(timestamp);
@@ -79,8 +79,8 @@ namespace Bhp.BhpExtensions.Transactions
             if (change_address == null) change_address = wallet.GetChangeAddress();
             List<TransactionOutput> outputs_new = new List<TransactionOutput>(tx.Outputs);
 
+            /*
             int n = -1;
-
             //添加找零地址  By BHP        
             foreach (UInt256 asset_id in input_sum.Keys)
             {
@@ -111,10 +111,47 @@ namespace Bhp.BhpExtensions.Transactions
                     }
                 }
             }
+            */
+
+            List<int> changeNum = new List<int>();
+            //添加找零地址  By BHP        
+            foreach (UInt256 asset_id in input_sum.Keys)
+            {
+                Fixed8 txFee = BhpTxFee.EstimateTxFee(tx, asset_id);
+                if (input_sum[asset_id].Value > (pay_total[asset_id].Value + txFee))
+                {
+                    outputs_new.Add(new TransactionOutput
+                    {
+                        AssetId = asset_id,
+                        Value = input_sum[asset_id].Value - pay_total[asset_id].Value - txFee,
+                        ScriptHash = change_address
+                    });
+                    changeNum.Add(outputs_new.Count - 1);
+                }
+            }
+
+            //By BHP
+            for (int i = 0; i < tx.Attributes.Length; i++)
+            {
+                if (tx.Attributes[i].Usage == TransactionAttributeUsage.SmartContractScript)
+                {
+                    using (ScriptBuilder sb = new ScriptBuilder())
+                    {
+                        sb.EmitPush(changeNum.Count);
+                        if (changeNum.Count > 0)
+                        {
+                            for (int j = changeNum.Count - 1; j >= 0; j--)
+                                sb.EmitPush(changeNum[j]);
+                        }
+                        sb.EmitPush(tx.Attributes[i].Data);
+                        tx.Attributes[i].Data = sb.ToArray();
+                    }
+                }
+            }
 
             tx.Inputs = pay_coins.Values.SelectMany(p => p.Unspents).Select(p => p.Reference).ToArray();
             tx.Outputs = outputs_new.ToArray();
-                                    
+
             return tx;
         }
 
@@ -124,16 +161,16 @@ namespace Bhp.BhpExtensions.Transactions
             Fixed8 amount = Fixed8.Zero;
             List<string> inAddress = new List<string>();
             foreach (TransactionOutput output in tx.References.Values)
-            { 
+            {
                 inAddress.Add(output.ScriptHash.ToAddress());
             }
 
             bool hasOther = false;
 
-            foreach(TransactionOutput output in tx.Outputs)
+            foreach (TransactionOutput output in tx.Outputs)
             {
                 bool found = false;
-                foreach(string address in inAddress)
+                foreach (string address in inAddress)
                 {
                     if (output.ScriptHash.ToAddress().Equals(address))
                     {
@@ -146,7 +183,7 @@ namespace Bhp.BhpExtensions.Transactions
                         hasOther = true;
                     }
                 }
-                if(found == false)
+                if (found == false)
                 {
                     amount += output.Value;
                 }

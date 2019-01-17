@@ -95,39 +95,42 @@ namespace Bhp.BhpExtensions.Transactions
             private static int ParseIndex(BinaryReader OpReader, OpCode opcode)
             {
                 int n = -1;
-                switch (opcode)
-                {
-                    case OpCode.PUSH0:
-                        break;
-                    case OpCode.PUSHDATA1:
-                        n = BitConverter.ToInt16(OpReader.ReadBytes(OpReader.ReadByte()), 0);
-                        break;
-                    case OpCode.PUSHDATA2:
-                        n = BitConverter.ToInt16(OpReader.ReadBytes(OpReader.ReadUInt16()), 0);
-                        break;
-                    case OpCode.PUSHDATA4:
-                        n = BitConverter.ToInt32(OpReader.ReadBytes((int)OpReader.ReadUInt32()), 0);
-                        break;
-                    case OpCode.PUSHM1:
-                    case OpCode.PUSH1:
-                    case OpCode.PUSH2:
-                    case OpCode.PUSH3:
-                    case OpCode.PUSH4:
-                    case OpCode.PUSH5:
-                    case OpCode.PUSH6:
-                    case OpCode.PUSH7:
-                    case OpCode.PUSH8:
-                    case OpCode.PUSH9:
-                    case OpCode.PUSH10:
-                    case OpCode.PUSH11:
-                    case OpCode.PUSH12:
-                    case OpCode.PUSH13:
-                    case OpCode.PUSH14:
-                    case OpCode.PUSH15:
-                    case OpCode.PUSH16:
-                        n = (int)opcode - (int)OpCode.PUSH1 + 1;
-                        break;
-                }
+                if (opcode >= OpCode.PUSHBYTES1 && opcode <= OpCode.PUSHBYTES75)
+                    n = BitConverter.ToInt16(OpReader.ReadBytes((byte)opcode), 0);
+                else
+                    switch (opcode)
+                    {
+                        case OpCode.PUSH0:
+                            break;
+                        case OpCode.PUSHDATA1:
+                            n = BitConverter.ToInt16(OpReader.ReadBytes(OpReader.ReadByte()), 0);
+                            break;
+                        case OpCode.PUSHDATA2:
+                            n = BitConverter.ToInt16(OpReader.ReadBytes(OpReader.ReadUInt16()), 0);
+                            break;
+                        case OpCode.PUSHDATA4:
+                            n = BitConverter.ToInt32(OpReader.ReadBytes((int)OpReader.ReadUInt32()), 0);
+                            break;
+                        case OpCode.PUSHM1:
+                        case OpCode.PUSH1:
+                        case OpCode.PUSH2:
+                        case OpCode.PUSH3:
+                        case OpCode.PUSH4:
+                        case OpCode.PUSH5:
+                        case OpCode.PUSH6:
+                        case OpCode.PUSH7:
+                        case OpCode.PUSH8:
+                        case OpCode.PUSH9:
+                        case OpCode.PUSH10:
+                        case OpCode.PUSH11:
+                        case OpCode.PUSH12:
+                        case OpCode.PUSH13:
+                        case OpCode.PUSH14:
+                        case OpCode.PUSH15:
+                        case OpCode.PUSH16:
+                            n = (int)opcode - (int)OpCode.PUSH1 + 1;
+                            break;
+                    }
                 return n;
             }
         }
@@ -210,40 +213,43 @@ namespace Bhp.BhpExtensions.Transactions
         private static int ParseIndex(BinaryReader OpReader, OpCode opcode)
         {
             int n = -1;
-            switch (opcode)
-            {
-                case OpCode.PUSH0:
-                    n = 0;
-                    break;
-                case OpCode.PUSHDATA1:
-                    n = BitConverter.ToInt16(OpReader.ReadBytes(OpReader.ReadByte()), 0);
-                    break;
-                case OpCode.PUSHDATA2:
-                    n = BitConverter.ToInt16(OpReader.ReadBytes(OpReader.ReadUInt16()), 0);
-                    break;
-                case OpCode.PUSHDATA4:
-                    n = BitConverter.ToInt32(OpReader.ReadBytes((int)OpReader.ReadUInt32()), 0);
-                    break;
-                case OpCode.PUSHM1:
-                case OpCode.PUSH1:
-                case OpCode.PUSH2:
-                case OpCode.PUSH3:
-                case OpCode.PUSH4:
-                case OpCode.PUSH5:
-                case OpCode.PUSH6:
-                case OpCode.PUSH7:
-                case OpCode.PUSH8:
-                case OpCode.PUSH9:
-                case OpCode.PUSH10:
-                case OpCode.PUSH11:
-                case OpCode.PUSH12:
-                case OpCode.PUSH13:
-                case OpCode.PUSH14:
-                case OpCode.PUSH15:
-                case OpCode.PUSH16:
-                    n = (int)opcode - (int)OpCode.PUSH1 + 1;
-                    break;
-            }
+            if (opcode >= OpCode.PUSHBYTES1 && opcode <= OpCode.PUSHBYTES75)
+                n = BitConverter.ToInt16(OpReader.ReadBytes((byte)opcode), 0);
+            else
+                switch (opcode)
+                {
+                    case OpCode.PUSH0:
+                        n = 0;
+                        break;
+                    case OpCode.PUSHDATA1:
+                        n = BitConverter.ToInt16(OpReader.ReadBytes(OpReader.ReadByte()), 0);
+                        break;
+                    case OpCode.PUSHDATA2:
+                        n = BitConverter.ToInt16(OpReader.ReadBytes(OpReader.ReadUInt16()), 0);
+                        break;
+                    case OpCode.PUSHDATA4:
+                        n = BitConverter.ToInt32(OpReader.ReadBytes((int)OpReader.ReadUInt32()), 0);
+                        break;
+                    case OpCode.PUSHM1:
+                    case OpCode.PUSH1:
+                    case OpCode.PUSH2:
+                    case OpCode.PUSH3:
+                    case OpCode.PUSH4:
+                    case OpCode.PUSH5:
+                    case OpCode.PUSH6:
+                    case OpCode.PUSH7:
+                    case OpCode.PUSH8:
+                    case OpCode.PUSH9:
+                    case OpCode.PUSH10:
+                    case OpCode.PUSH11:
+                    case OpCode.PUSH12:
+                    case OpCode.PUSH13:
+                    case OpCode.PUSH14:
+                    case OpCode.PUSH15:
+                    case OpCode.PUSH16:
+                        n = (int)opcode - (int)OpCode.PUSH1 + 1;
+                        break;
+                }
             return n;
         }
 

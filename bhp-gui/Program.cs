@@ -3,12 +3,8 @@ using Bhp.Properties;
 using Bhp.UI;
 using Bhp.Wallets;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -86,10 +82,10 @@ namespace Bhp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             XDocument xdoc = null;
-            /*
+            
             try
             {
-                xdoc = XDocument.Load("https://bhpa.io/client/update.xml");
+                xdoc = XDocument.Load("https://bhpa.io/client/gui-version.xml");
             }
             catch { }
             if (xdoc != null)
@@ -104,9 +100,10 @@ namespace Bhp
                     }
                     return;
                 }
-            }
-            if (!InstallCertificate()) return;
-            */
+            }             
+            
+            //if (!InstallCertificate()) return;
+           
             using (LevelDBStore store = new LevelDBStore(Settings.Default.Paths.Chain))
             using (System = new BhpSystem(store))
             {

@@ -1,10 +1,10 @@
 @echo off
 set "taskname=bhp-gui.exe"
 echo waiting...
-:wait
-ping 127.0.1 -n 3 >nul
-tasklist | find "%taskname%" /i >nul 2>nul
-if "%errorlevel%" NEQ "1" goto wait
+::wait
+::ping 127.0.1 -n 3 >nul
+::tasklist | find "%taskname%" /i >nul 2>nul
+::if "%errorlevel%" NEQ "1" goto wait
 echo updating...
 copy /Y update\* *
 rmdir /S /Q update

@@ -50,7 +50,7 @@ namespace Bhp.UI
             {
                 AssetName = asset.AssetName,
                 AssetId = asset.AssetId,
-                Value = BigDecimal.Parse(textBox2.Text, asset.Decimals),
+                Value = BigDecimal.Parse(textBox2.Text, 8),
                 ScriptHash = textBox1.Text.ToScriptHash()
             };
         }

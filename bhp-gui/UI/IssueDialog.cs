@@ -32,6 +32,7 @@ namespace Bhp.UI
                     ScriptHash = g.Key
                 }).ToArray()
             }, fee: Fixed8.One);
+            
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)

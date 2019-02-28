@@ -1330,5 +1330,19 @@ namespace Bhp.UI
         {
             Helper.Show<ClaimForm>();
         }
+
+        private void destroyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (CreateDestoryAddress dialog = new CreateDestoryAddress())
+            {
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+                Contract contract = dialog.GetContract();
+                WalletAccount account = Program.CurrentWallet.CreateAccount(contract, dialog.GetKey());
+                if (Program.CurrentWallet is BRC6Wallet wallet)
+                    wallet.Save();
+                listView1.SelectedIndices.Clear();
+                AddAccount(account, true);
+            }
+        }
     }
 }

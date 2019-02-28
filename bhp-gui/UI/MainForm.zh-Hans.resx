@@ -537,4 +537,7 @@
   <data name="tabPage3.Text" xml:space="preserve">
     <value>交易记录</value>
   </data>
+  <data name="destroyToolStripMenuItem.Text" xml:space="preserve">
+    <value>创建销毁地址</value>
+  </data>
 </root>

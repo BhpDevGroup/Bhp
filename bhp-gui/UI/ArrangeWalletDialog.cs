@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Bhp.BhpExtensions.Fees;
 using Bhp.BhpExtensions.Transactions;
 using Bhp.Ledger;
 using Bhp.Network.P2P;
@@ -25,24 +26,25 @@ namespace Bhp.UI
             InitializeComponent();
         }
 
-        private const int MaxInputCount = 1000;
+        private const int MaxInputCount = 50;
 
         private void SendTransaction()
         {
             IEnumerable<WalletAccount> wallets = Program.CurrentWallet.GetAccounts();
-            List<string> txMsg = new List<string>();
-
             foreach (WalletAccount account in wallets)
             {
                 IEnumerable<Coin> allCoins = Program.CurrentWallet.FindUnspentCoins(account.ScriptHash);
                 Coin[] coins = TransactionContract.FindUnspentCoins(allCoins, account.ScriptHash);
-
-                int loopNum = coins.Length / MaxInputCount + (coins.Length % MaxInputCount) == 0 ? 0 + 1;
-
-                //if (1000 * loopNum < coins.Length) loopNum++;
-
-                for (int i = 0; i < loopNum; i++)
+                if (coins.Length <= 1)
                 {
+                    listBox1.Items.Add("nothing to do...");
+                    return;
+                }
+                int loopNum = coins.Length / MaxInputCount + ((coins.Length % MaxInputCount == 0) ? 0 : 1);                                
+                int step = 100 / loopNum;
+                
+                for (int i = 0; i < loopNum; i++)
+                {                    
                     Transaction tx = new ContractTransaction();
                     tx.Attributes = new TransactionAttribute[0];
                     tx.Witnesses = new Witness[0];
@@ -51,21 +53,18 @@ namespace Bhp.UI
                     List<TransactionOutput> outputs = new List<TransactionOutput>();
 
                     Fixed8 sum = Fixed8.Zero;
-                    for (int j = 0; j < 1000; j++)
+                    for (int j = 0; j < MaxInputCount; j++)
                     {
-                        if (i * 1000 + j >= coins.Length) break;
-                        sum += coins[i * 1000 + j].Output.Value;
+                        if (i * MaxInputCount + j >= coins.Length) break;
+                        sum += coins[i * MaxInputCount + j].Output.Value;
                         inputs.Add(new CoinReference
                         {
-                            PrevHash = coins[i * 1000 + j].Reference.PrevHash,
-                            PrevIndex = coins[i * 1000 + j].Reference.PrevIndex
+                            PrevHash = coins[i * MaxInputCount + j].Reference.PrevHash,
+                            PrevIndex = coins[i * MaxInputCount + j].Reference.PrevIndex
                         });
                     }
-
-                    if (sum == Fixed8.Zero) break;
-
+                    
                     tx.Inputs = inputs.ToArray();
-
                     outputs.Add(new TransactionOutput
                     {
                         AssetId = Blockchain.GoverningToken.Hash,
@@ -82,10 +81,18 @@ namespace Bhp.UI
                         });
                     }
                     tx.Outputs = outputs.ToArray();
-
-                    tx.Outputs[0].Value -= Bhp.BhpExtensions.Fees.BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
-
-                    txMsg.Add(SignAndShowMulInformation(tx));
+                    tx.Outputs[0].Value -= BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
+                    listBox1.Items.Add(SignAndShowMulInformation(tx));
+                    listBox1.Refresh();
+                    if (i + 1 == loopNum)
+                    {
+                        progressBar1.Value = 100;
+                    }
+                    else
+                    {
+                        progressBar1.Value = (i + 1) * step;
+                    }
+                    System.Threading.Thread.Sleep(1000);
                 }
             }
         }
@@ -120,7 +127,14 @@ namespace Bhp.UI
         }
         private void button1_Click(object sender, EventArgs e)
         {
+            ClearData();
+            SendTransaction();
+        }
 
+        private void ClearData()
+        {
+            listBox1.Items.Clear();
+            progressBar1.Value = 0;
         }
     }
 }

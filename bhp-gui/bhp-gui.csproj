@@ -94,6 +94,12 @@
     <Compile Include="Properties\Settings.cs">
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="UI\ArrangeWalletDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ArrangeWalletDialog.Designer.cs">
+      <DependentUpon>ArrangeWalletDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\AssetRegisterDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -357,6 +363,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings.zh-Hans.resx">
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ArrangeWalletDialog.resx">
+      <DependentUpon>ArrangeWalletDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\AssetRegisterDialog.es-ES.resx">
       <DependentUpon>AssetRegisterDialog.cs</DependentUpon>

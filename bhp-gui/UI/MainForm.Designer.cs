@@ -96,6 +96,7 @@
             this.lbl_count_node = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lb_tx_time = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -119,7 +120,7 @@
             this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -149,6 +150,7 @@
             this.toolStripSeparator1,
             this.修改密码CToolStripMenuItem,
             this.重建钱包数据库RToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.toolStripSeparator2,
             this.退出XToolStripMenuItem});
             this.钱包WToolStripMenuItem.Name = "钱包WToolStripMenuItem";
@@ -544,6 +546,7 @@
             this.lbl_count_node,
             this.toolStripProgressBar1,
             this.toolStripStatusLabel2,
+            this.lb_tx_time,
             this.toolStripStatusLabel3});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             resources.ApplyResources(this.statusStrip1, "statusStrip1");
@@ -583,6 +586,11 @@
             this.toolStripStatusLabel2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             resources.ApplyResources(this.toolStripStatusLabel2, "toolStripStatusLabel2");
+            // 
+            // lb_tx_time
+            // 
+            this.lb_tx_time.Name = "lb_tx_time";
+            resources.ApplyResources(this.lb_tx_time, "lb_tx_time");
             // 
             // toolStripStatusLabel3
             // 
@@ -746,9 +754,11 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             // 
-            // timer2
+            // toolStripMenuItem2
             // 
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            resources.ApplyResources(this.toolStripMenuItem2, "toolStripMenuItem2");
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // MainForm
             // 
@@ -866,10 +876,11 @@
         private System.Windows.Forms.ToolStripMenuItem signDataToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnHeader12;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
         private System.Windows.Forms.ToolStripMenuItem claToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem destroyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel lb_tx_time;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }
 }
 

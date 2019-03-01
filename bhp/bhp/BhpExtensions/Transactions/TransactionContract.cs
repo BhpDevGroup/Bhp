@@ -198,5 +198,12 @@ namespace Bhp.BhpExtensions.Transactions
                 return tx.Outputs.Sum(p => p.Value);
             }
         }
-    }
+
+        public static Coin[] FindUnspentCoins(IEnumerable<Coin> unspents, UInt160 to_address)
+        {
+            Coin[] unspents_asset = unspents.Where(p => p.Output.AssetId == Blockchain.GoverningToken.Hash).ToArray();
+            unspents_asset = VerifyTransactionContract.checkUtxo(unspents_asset);//By BHP
+            return unspents_asset;
+        }
+    } 
 }

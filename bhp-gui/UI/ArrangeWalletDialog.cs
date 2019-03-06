@@ -26,25 +26,55 @@ namespace Bhp.UI
             InitializeComponent();
         }
 
-        private const int MaxInputCount = 50;
+        private const int MaxInputCount = 100;
+        bool isArrange = false;
+
+        private void button1_Click(object sender, EventArgs e)
+        {            
+            button1.Enabled = false;
+            listBox1.Items.Clear();
+            progressBar1.Value = 0;
+
+            timer1.Start();
+            timer1_Tick(timer1, new EventArgs());
+        }
+        
+        private void button2_Click(object sender, EventArgs e)
+        {                     
+            timer1.Stop();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (isArrange) return;
+            SendTransaction();
+        }
 
         private void SendTransaction()
         {
+            isArrange = true;
+            this.Invoke(new Action(() => {
+                progressBar1.Value = 0;
+            }));            
+
             IEnumerable<WalletAccount> wallets = Program.CurrentWallet.GetAccounts();
             foreach (WalletAccount account in wallets)
             {
                 IEnumerable<Coin> allCoins = Program.CurrentWallet.FindUnspentCoins(account.ScriptHash);
                 Coin[] coins = TransactionContract.FindUnspentCoins(allCoins, account.ScriptHash);
-                if (coins.Length <= 1)
+                if (coins.Length <= 5)
                 {
                     listBox1.Items.Add("nothing to do...");
+                    timer1.Stop();
+                    isArrange = false;
+                    button1.Enabled = true;                    
                     return;
                 }
-                int loopNum = coins.Length / MaxInputCount + ((coins.Length % MaxInputCount == 0) ? 0 : 1);                                
+                int loopNum = coins.Length / MaxInputCount + ((coins.Length % MaxInputCount == 0) ? 0 : 1);
                 int step = 100 / loopNum;
-                
+
                 for (int i = 0; i < loopNum; i++)
-                {                    
+                {
                     Transaction tx = new ContractTransaction();
                     tx.Attributes = new TransactionAttribute[0];
                     tx.Witnesses = new Witness[0];
@@ -63,7 +93,7 @@ namespace Bhp.UI
                             PrevIndex = coins[i * MaxInputCount + j].Reference.PrevIndex
                         });
                     }
-                    
+
                     tx.Inputs = inputs.ToArray();
                     outputs.Add(new TransactionOutput
                     {
@@ -82,19 +112,26 @@ namespace Bhp.UI
                     }
                     tx.Outputs = outputs.ToArray();
                     tx.Outputs[0].Value -= BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
+                   
                     listBox1.Items.Add(SignAndShowMulInformation(tx));
                     listBox1.Refresh();
+
                     if (i + 1 == loopNum)
                     {
-                        progressBar1.Value = 100;
+                        this.Invoke(new Action(() => {
+                            progressBar1.Value = 100;
+                        })); 
                     }
                     else
                     {
-                        progressBar1.Value = (i + 1) * step;
+                        this.Invoke(new Action(() => {
+                            progressBar1.Value = (i + 1) * step;
+                        }));                        
                     }
                     System.Threading.Thread.Sleep(1000);
                 }
             }
+            isArrange = false;
         }
 
         private string SignAndShowMulInformation(Transaction tx)
@@ -124,17 +161,6 @@ namespace Bhp.UI
             {
                 return context.ToString();
             }
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ClearData();
-            SendTransaction();
-        }
-
-        private void ClearData()
-        {
-            listBox1.Items.Clear();
-            progressBar1.Value = 0;
         }
     }
 }

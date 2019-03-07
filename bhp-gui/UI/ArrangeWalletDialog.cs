@@ -37,7 +37,7 @@ namespace Bhp.UI
                 IEnumerable<Coin> allCoins = Program.CurrentWallet.FindUnspentCoins(account.ScriptHash);
                 Coin[] coins = TransactionContract.FindUnspentCoins(allCoins, account.ScriptHash);
 
-                int loopNum = coins.Length / MaxInputCount + (coins.Length % MaxInputCount) == 0 ? 0 + 1;
+                int loopNum = coins.Length / MaxInputCount + (coins.Length % MaxInputCount) == 0 ? 0 : (0 + 1);
 
                 //if (1000 * loopNum < coins.Length) loopNum++;
 

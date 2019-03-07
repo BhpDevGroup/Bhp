@@ -212,6 +212,7 @@ namespace Bhp.UI
             创建新地址NToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             导入私钥IToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             创建智能合约SToolStripMenuItem.Enabled = Program.CurrentWallet != null;
+            零钱规整AToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             listView1.Items.Clear();
             if (Program.CurrentWallet != null)
             {

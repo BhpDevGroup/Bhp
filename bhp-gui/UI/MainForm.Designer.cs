@@ -37,6 +37,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.修改密码CToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.重建钱包数据库RToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.零钱规整AToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.退出XToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.交易TToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,7 +121,6 @@
             this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -150,7 +150,7 @@
             this.toolStripSeparator1,
             this.修改密码CToolStripMenuItem,
             this.重建钱包数据库RToolStripMenuItem,
-            this.toolStripMenuItem2,
+            this.零钱规整AToolStripMenuItem,
             this.toolStripSeparator2,
             this.退出XToolStripMenuItem});
             this.钱包WToolStripMenuItem.Name = "钱包WToolStripMenuItem";
@@ -184,6 +184,12 @@
             this.重建钱包数据库RToolStripMenuItem.Name = "重建钱包数据库RToolStripMenuItem";
             resources.ApplyResources(this.重建钱包数据库RToolStripMenuItem, "重建钱包数据库RToolStripMenuItem");
             this.重建钱包数据库RToolStripMenuItem.Click += new System.EventHandler(this.重建钱包数据库RToolStripMenuItem_Click);
+            // 
+            // 零钱规整AToolStripMenuItem
+            // 
+            this.零钱规整AToolStripMenuItem.Name = "零钱规整AToolStripMenuItem";
+            resources.ApplyResources(this.零钱规整AToolStripMenuItem, "零钱规整AToolStripMenuItem");
+            this.零钱规整AToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripSeparator2
             // 
@@ -754,12 +760,6 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            resources.ApplyResources(this.toolStripMenuItem2, "toolStripMenuItem2");
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
-            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -880,7 +880,7 @@
         private System.Windows.Forms.ToolStripMenuItem claToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem destroyToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel lb_tx_time;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem 零钱规整AToolStripMenuItem;
     }
 }
 

@@ -187,8 +187,8 @@
             // 
             // 零钱规整AToolStripMenuItem
             // 
-            this.零钱规整AToolStripMenuItem.Name = "零钱规整AToolStripMenuItem";
             resources.ApplyResources(this.零钱规整AToolStripMenuItem, "零钱规整AToolStripMenuItem");
+            this.零钱规整AToolStripMenuItem.Name = "零钱规整AToolStripMenuItem";
             this.零钱规整AToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripSeparator2

@@ -152,6 +152,9 @@
   <data name="重建钱包数据库RToolStripMenuItem.Text" xml:space="preserve">
     <value>Rebuild &amp;Index</value>
   </data>
+  <data name="零钱规整AToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="零钱规整AToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>216, 22</value>
   </data>
@@ -174,31 +177,31 @@
     <value>&amp;Wallet</value>
   </data>
   <data name="转账TToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="转账TToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Transfer...</value>
   </data>
   <data name="交易TToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="交易TToolStripMenuItem1.Text" xml:space="preserve">
     <value>Transactions(&amp;X)...</value>
   </data>
   <data name="toolStripSeparator5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>171, 6</value>
   </data>
   <data name="签名SToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="签名SToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Signature...</value>
   </data>
   <data name="toolStripSeparator13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>171, 6</value>
   </data>
   <data name="claToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>174, 22</value>
   </data>
   <data name="claToolStripMenuItem.Text" xml:space="preserve">
     <value>Claim BHPGas</value>

@@ -71,7 +71,7 @@ namespace Bhp.UI
                     return;
                 }
                 int loopNum = coins.Length / MaxInputCount + ((coins.Length % MaxInputCount == 0) ? 0 : 1);
-                int step = 100 / loopNum;
+                double step = 100 / loopNum;
 
                 for (int i = 0; i < loopNum; i++)
                 {
@@ -125,7 +125,7 @@ namespace Bhp.UI
                     else
                     {
                         this.Invoke(new Action(() => {
-                            progressBar1.Value = (i + 1) * step;
+                            progressBar1.Value = (int)((i + 1) * step);
                         }));                        
                     }
                     System.Threading.Thread.Sleep(1000);

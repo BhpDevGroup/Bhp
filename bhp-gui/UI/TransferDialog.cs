@@ -136,10 +136,11 @@ namespace Bhp.UI
                 tx = transactionContract.MakeTransaction(Program.CurrentWallet, ctx, change_address: ChangeAddress, fee: Fee);
             return tx;
         }
-
+        
         private void txOutListBox1_ItemsChanged(object sender, EventArgs e)
         {
-            button3.Enabled = txOutListBox1.ItemCount > 0;
+            //button3.Enabled = txOutListBox1.ItemCount > 0;
+            button3.Enabled = txOutListBox1.ItemCount > 0 && Program.CurrentWallet.WalletHeight - 1 == Ledger.Blockchain.Singleton.HeaderHeight && Ledger.Blockchain.Singleton.Height == Ledger.Blockchain.Singleton.HeaderHeight;            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -172,6 +173,11 @@ namespace Bhp.UI
                     LockAttribute = transactionContract.MakeLockTransactionScript(lockTime.ToTimestamp());
                 }
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            button3.Enabled = txOutListBox1.ItemCount > 0 && Program.CurrentWallet.WalletHeight - 1 == Ledger.Blockchain.Singleton.HeaderHeight && Ledger.Blockchain.Singleton.Height == Ledger.Blockchain.Singleton.HeaderHeight;
         }
     }
 }

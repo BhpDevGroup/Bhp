@@ -71,7 +71,7 @@ namespace Bhp.UI
                     return;
                 }
                 int loopNum = coins.Length / MaxInputCount + ((coins.Length % MaxInputCount == 0) ? 0 : 1);
-                double step = 100 / loopNum;
+                double step = (double)100 / loopNum;
 
                 for (int i = 0; i < loopNum; i++)
                 {

@@ -1387,5 +1387,13 @@ namespace Bhp.UI
                 dialog.ShowDialog();
             }
         }
+
+        private void toolStripMenuItem2_Click_1(object sender, EventArgs e)
+        {
+            using (FrmMakeTx dialog = new FrmMakeTx())
+            {
+                dialog.ShowDialog();
+            }
+        }
     }
 }

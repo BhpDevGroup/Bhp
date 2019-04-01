@@ -42,7 +42,7 @@ namespace Bhp.UI
 
         private DateTime persistence_time = DateTime.MinValue;
         private IActorRef actor;
-        private WalletIndexer indexer;
+        //private WalletIndexer indexer;
 
         public MainForm(XDocument xdoc = null)
         {
@@ -188,7 +188,7 @@ namespace Bhp.UI
                     //timer2.Enabled = true;
                 }
                 using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
-                    foreach (var i in Program.CurrentWallet.GetTransactions().Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null).Select(p => new
+                    foreach (var i in Program.CurrentWallet.GetTransactions()?.Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null).Select(p => new
                     {
                         p.Transaction,
                         p.BlockIndex,
@@ -249,11 +249,19 @@ namespace Bhp.UI
             }
         }
 
+        //private WalletIndexer GetIndexer()
+        //{
+        //    if (indexer is null)
+        //        indexer = new WalletIndexer(Settings.Default.Paths.Index);
+        //    return indexer;
+        //}
+
+        //by bhp
         private WalletIndexer GetIndexer()
         {
-            if (indexer is null)
-                indexer = new WalletIndexer(Settings.Default.Paths.Index);
-            return indexer;
+            if (Program.indexer is null)
+                Program.indexer = new WalletIndexer(Settings.Default.Paths.Index);
+            return Program.indexer;
         }
 
         private void RefreshConfirmations()

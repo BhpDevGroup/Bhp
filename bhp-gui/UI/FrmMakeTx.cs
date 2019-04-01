@@ -39,12 +39,11 @@ namespace Bhp.UI
         int maxTxPreBlock;
         string[] addressArr;
 
-        private WalletIndexer indexer = null;
         private WalletIndexer GetIndexer()
         {
-            if (indexer is null)
-                indexer = new WalletIndexer(Properties.Settings.Default.Paths.Index);
-            return indexer;
+            if (Program.indexer is null)
+                Program.indexer = new WalletIndexer(Properties.Settings.Default.Paths.Index);
+            return Program.indexer;
         }        
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -133,6 +132,7 @@ namespace Bhp.UI
 
         private void btn_open_Click(object sender, EventArgs e)
         {
+            listBox1.Items.Clear();
             OpenWallet();
         }
 
@@ -160,8 +160,8 @@ namespace Bhp.UI
             }
             wallet = nep6wallet;
 
-            ChangeWallet(wallet);
-            Bhp.Properties.Settings.Default.LastWalletPath = path;
+            ChangeWallet(wallet);       
+            Bhp.Properties.Settings.Default.LastWalletPath = spath;
             Bhp.Properties.Settings.Default.Save();
 
             addressArr = File.ReadAllLines(spath + ".snop");

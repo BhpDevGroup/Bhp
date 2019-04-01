@@ -15,6 +15,7 @@ namespace Bhp
         public static BhpSystem System;
         public static Wallet CurrentWallet;
         public static MainForm MainForm;
+        public static WalletIndexer indexer;//by bhp
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {

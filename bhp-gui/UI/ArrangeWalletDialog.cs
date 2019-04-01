@@ -49,13 +49,15 @@ namespace Bhp.UI
         private Coin[] FindCoins()
         {
             IEnumerable<WalletAccount> wallets = Program.CurrentWallet.GetAccounts();
+            List<Coin> allCoin = new List<Coin>();
             foreach (WalletAccount account in wallets)
             {
                 IEnumerable<Coin> allCoins = Program.CurrentWallet.FindUnspentCoins(account.ScriptHash);
                 Coin[] coins = TransactionContract.FindUnspentCoins(allCoins, account.ScriptHash);
-                if (coins.Length <= 5) continue;
+                allCoin.AddRange(coins);
+                if (allCoin.Count <= 5) continue;
                 currentAddress = account.ScriptHash;
-                return coins;
+                return allCoin.ToArray();
             }
             StopArrange();
             return new Coin[0];

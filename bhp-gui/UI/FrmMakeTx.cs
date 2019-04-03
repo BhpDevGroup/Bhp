@@ -190,7 +190,7 @@ namespace Bhp.UI
             do
             {
                 Random random = new Random();
-                index = random.Next(0, addressArr.Length - 1);                
+                index = random.Next(0, addressArr.Length);                
 
             } while (index >= addressArr.Length);
             System.Threading.Thread.Sleep(15);

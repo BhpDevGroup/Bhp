@@ -184,7 +184,7 @@ namespace Bhp.UI
                 txQueue.Clear();
                 if (backgroundWorker1.IsBusy == false)
                 {
-                    //backgroundWorker1.RunWorkerAsync();
+                    backgroundWorker1.RunWorkerAsync();
                     //timer2.Enabled = true;
                 }
                 using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
@@ -245,7 +245,7 @@ namespace Bhp.UI
             //BeginInvoke(new Action<Transaction, uint?, uint>(AddTransaction), e.Transaction, e.Height, e.Time);
             if (e.Height != null)
             {
-                //AddTxToQueue(e.Transaction, (uint)e.Height, e.Time);
+                AddTxToQueue(e.Transaction, (uint)e.Height, e.Time);
             }
         }
 
@@ -1076,7 +1076,8 @@ namespace Bhp.UI
             dateTime = dtStart.AddSeconds(Time);
 
             TimeSpan time = DateTime.Now - dateTime;
-            return (time.TotalDays <= 3);
+            //return (time.TotalDays <= 3);
+            return (time.TotalDays <= Settings.Default.Configs.LastestTxDay);
         } 
 
         //-------------------------------------------------
@@ -1347,12 +1348,12 @@ namespace Bhp.UI
             DateTime dateTime;
             IsShowTx(wtx.time, out dateTime);
             lb_tx_time.Text = dateTime.ToString();
-            Application.DoEvents();
+            //Application.DoEvents();
 
-            if (Program.CurrentWallet.WalletHeight + 10 < Blockchain.Singleton.Height)
-            {
-                return;
-            }
+            //if (Program.CurrentWallet.WalletHeight + 10 < Blockchain.Singleton.Height)
+            //{
+            //    return;
+            //}
 
             showingWalletInfo = true;
             

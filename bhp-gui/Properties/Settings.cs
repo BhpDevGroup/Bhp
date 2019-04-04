@@ -32,9 +32,11 @@ namespace Bhp.Properties
     internal class AppConfigs
     {
         public string Development { get; }
+        public int LastestTxDay { get; }
         public AppConfigs(IConfigurationSection section)
         {
             Development = section.GetSection("Development").Value;
+            LastestTxDay = int.Parse(section.GetSection("LastestTxDay").Value);
         }
     }
 

@@ -1,7 +1,8 @@
 ﻿{
   "ApplicationConfiguration": {
-	"AppConfigs": {
-      "Development": 0
+    "AppConfigs": {
+      "Development": 0,
+      "LastestTxDay": 90
     },
     "Paths": {
       "Chain": "Chain_{0}",

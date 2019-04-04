@@ -476,6 +476,15 @@ namespace Bhp.Properties {
         }
         
         /// <summary>
+        ///   查找类似 The transaction is too big, please reduce the amount of transfer! 的本地化字符串。
+        /// </summary>
+        internal static string TxTooLarge {
+            get {
+                return ResourceManager.GetString("TxTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 unconfirmed 的本地化字符串。
         /// </summary>
         internal static string Unconfirmed {

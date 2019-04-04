@@ -151,6 +151,12 @@ namespace Bhp.UI
             if (context.Completed)
             {
                 context.Verifiable.Witnesses = context.GetWitnesses();
+
+                if (tx.Size > Transaction.MaxTransactionSize)
+                {
+                    return Strings.TxTooLarge;
+                }
+
                 Program.CurrentWallet.ApplyTransaction(tx);
                 Program.System.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
                 return tx.Hash.ToString();

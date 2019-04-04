@@ -256,6 +256,9 @@ Note: updated files cannot be openned by clients in older versions!</value>
   <data name="TradeSuccessMessage" xml:space="preserve">
     <value>Transaction sent, this is the TXID:</value>
   </data>
+  <data name="TxTooLarge" xml:space="preserve">
+    <value>The transaction is too big, please reduce the amount of transfer!</value>
+  </data>
   <data name="Unconfirmed" xml:space="preserve">
     <value>unconfirmed</value>
   </data>

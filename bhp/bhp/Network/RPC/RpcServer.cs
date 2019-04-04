@@ -118,7 +118,7 @@ namespace Bhp.Network.RPC
                         tx = null;
                 }
 
-                if (tx.Size > Transaction.MaxTransactionSize)
+                if (tx?.Size > Transaction.MaxTransactionSize)
                     throw new RpcException(-301, "The transaction is too big, please reduce the amount of transfer!");
 
                 json["tx"] = tx?.ToArray().ToHexString();

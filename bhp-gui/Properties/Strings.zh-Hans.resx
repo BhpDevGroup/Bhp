@@ -248,7 +248,7 @@
     <value>交易已发送，这是交易编号(TXID)：</value>
   </data>
   <data name="TxTooLarge" xml:space="preserve">
-    <value>交易过大，请减少转账金额!</value>
+    <value>免费交易大小不能超过102400字节</value>
   </data>
   <data name="Unconfirmed" xml:space="preserve">
     <value>未确认</value>

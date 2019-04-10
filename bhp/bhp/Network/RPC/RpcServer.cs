@@ -119,7 +119,7 @@ namespace Bhp.Network.RPC
                 }
 
                 if (tx?.Size > Transaction.MaxTransactionSize)
-                    throw new RpcException(-301, "The transaction is too big, please reduce the amount of transfer!");
+                    throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
 
                 json["tx"] = tx?.ToArray().ToHexString();
             }
@@ -475,7 +475,10 @@ namespace Bhp.Network.RPC
                             tx.Witnesses = context.GetWitnesses();
 
                             if (tx.Size > Transaction.MaxTransactionSize)
-                                throw new RpcException(-301, "The transaction is too big, please reduce the amount of transfer!");
+                                throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
+
+                            if (!Plugin.CheckPolicy(tx))
+                                return RelayResultReason.PolicyFail;
 
                             Wallet.ApplyTransaction(tx);
                             system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
@@ -522,7 +525,7 @@ namespace Bhp.Network.RPC
                             tx.Witnesses = context.GetWitnesses();
 
                             if (tx.Size > Transaction.MaxTransactionSize)
-                                throw new RpcException(-301, "The transaction is too big, please reduce the amount of transfer!");
+                                throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
 
                             Wallet.ApplyTransaction(tx);
                             system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
@@ -573,7 +576,7 @@ namespace Bhp.Network.RPC
                             tx.Witnesses = context.GetWitnesses();
 
                             if (tx.Size > Transaction.MaxTransactionSize)
-                                throw new RpcException(-301, "The transaction is too big, please reduce the amount of transfer!");                            
+                                throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");                            
 
                             Wallet.ApplyTransaction(tx);
                             system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });

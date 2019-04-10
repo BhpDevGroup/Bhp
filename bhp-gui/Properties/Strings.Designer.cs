@@ -476,7 +476,7 @@ namespace Bhp.Properties {
         }
         
         /// <summary>
-        ///   查找类似 The transaction is too big, please reduce the amount of transfer! 的本地化字符串。
+        ///   查找类似 The size of the free transaction must be less than 102400 bytes 的本地化字符串。
         /// </summary>
         internal static string TxTooLarge {
             get {

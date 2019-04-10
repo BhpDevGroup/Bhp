@@ -257,7 +257,7 @@ Note: updated files cannot be openned by clients in older versions!</value>
     <value>Transaction sent, this is the TXID:</value>
   </data>
   <data name="TxTooLarge" xml:space="preserve">
-    <value>The transaction is too big, please reduce the amount of transfer!</value>
+    <value>The size of the free transaction must be less than 102400 bytes</value>
   </data>
   <data name="Unconfirmed" xml:space="preserve">
     <value>unconfirmed</value>

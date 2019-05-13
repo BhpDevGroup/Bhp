@@ -610,34 +610,46 @@ namespace Bhp.Network.RPC
                     if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied");
                     else
-                    {                        
-                        JObject json = new JObject();
-                        int startBlockHeight = _params[0].AsString() != "" ? int.Parse(_params[0].AsString()) : 0;
-                        int targetConfirmations = _params[1].AsString() != "" ? int.Parse(_params[1].AsString()) : 6;
-                        using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
+                    {
+                        try
                         {
-                            var trans = Wallet.GetTransactions().Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null
-                           && p.BlockIndex >= startBlockHeight).Select(p => new
-                           {
-                               p.Transaction,
-                               p.BlockIndex,
-                               Time = snapshot.GetHeader(p.BlockIndex).Timestamp,
-                               BlockHash = snapshot.GetHeader(p.BlockIndex).Hash
-                           }).OrderBy(p => p.Time);
+                            var Transactions = Wallet.GetTransactions();
+                            JObject json = new JObject();
+                            int startBlockHeight = _params[0].AsString() != "" ? int.Parse(_params[0].AsString()) : 0;
+                            int targetConfirmations = _params[1].AsString() != "" ? int.Parse(_params[1].AsString()) : 6;
+                            using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
+                            {
+                                var trans = Transactions.Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null
+                               && p.BlockIndex >= startBlockHeight).Select(p => new
+                               {
+                                   p.Transaction,
+                                   p.BlockIndex,
+                                   Time = snapshot.GetHeader(p.BlockIndex).Timestamp,
+                                   BlockHash = snapshot.GetHeader(p.BlockIndex).Hash
+                               }).OrderBy(p => p.Time);
 
-                            json["txs"] = new JArray(
-                                trans.Select(p =>
-                                {
-                                    JObject peerjson = new JObject();
-                                    peerjson["txid"] = p.Transaction.Hash.ToString();
-                                    peerjson["blockheight"] = p.BlockIndex;
-                                    peerjson["blockhash"] = p.BlockHash.ToString();
-                                    peerjson["utctime"] = p.Time;
-                                    return peerjson;
-                                }));
-                            json["lastblockheight"] = (Wallet.WalletHeight - targetConfirmations > 0) ? (Wallet.WalletHeight - targetConfirmations) : 0;
+                                json["txs"] = new JArray(
+                                    trans.Select(p =>
+                                    {
+                                        JObject peerjson = new JObject();
+                                        peerjson["txid"] = p.Transaction.Hash.ToString();
+                                        peerjson["blockheight"] = p.BlockIndex;
+                                        peerjson["blockhash"] = p.BlockHash.ToString();
+                                        peerjson["utctime"] = p.Time;
+                                        return peerjson;
+                                    }));
+                                json["lastblockheight"] = (Wallet.WalletHeight - targetConfirmations > 0) ? (Wallet.WalletHeight - targetConfirmations) : 0;
+
+
+                                return json;
+                            }
                         }
-                        return json;
+                        catch (Exception ex)
+                        {
+                            JObject json = new JObject();
+                            json["txs"] = new JArray();
+                            return json;
+                        }
                     }
                 default:
                     return rpcExtension.Process(method, _params);

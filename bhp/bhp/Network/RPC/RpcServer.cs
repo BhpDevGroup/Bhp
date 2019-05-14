@@ -27,6 +27,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Bhp.BhpExtensions.RPC;
+using Bhp.BhpExtensions.Transactions;
+using Bhp.BhpExtensions.Fees;
 
 namespace Bhp.Network.RPC
 {
@@ -651,6 +653,36 @@ namespace Bhp.Network.RPC
                             return json;
                         }
                     }
+                case "sendtocold":
+                    {
+                        if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
+                            throw new RpcException(-400, "Access denied");
+                        else
+                        {
+                            UInt160 scriptHash = _params[0].AsString().ToScriptHash();
+                            IEnumerable<Coin> allCoins = Wallet.FindUnspentCoins();
+                            Coin[] coins = TransactionContract.FindUnspentCoins(allCoins);
+                            JObject json = new JObject();
+                            Transaction tx = MakeToColdTransaction(coins, scriptHash);
+                            if (tx == null)
+                                throw new RpcException(-300, "Insufficient funds");
+                            ContractParametersContext context = new ContractParametersContext(tx);
+                            Wallet.Sign(context);
+                            if (context.Completed)
+                            {
+                                tx.Witnesses = context.GetWitnesses();
+                                if (tx.Size > Transaction.MaxTransactionSize)
+                                    throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
+                                Wallet.ApplyTransaction(tx);
+                                system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
+                                return tx.ToJson();
+                            }
+                            else
+                            {
+                                return context.ToJson();
+                            }
+                        }
+                    }
                 default:
                     return rpcExtension.Process(method, _params);
             }
@@ -795,6 +827,56 @@ namespace Bhp.Network.RPC
             .Build();
 
             host.Start();
+        }
+
+        private Transaction MakeToColdTransaction(Coin[] coins, UInt160 outAddress)
+        {
+            int MaxInputCount = 50;
+            Transaction tx = new ContractTransaction();
+            tx.Attributes = new TransactionAttribute[0];
+            tx.Witnesses = new Witness[0];
+
+            List<CoinReference> inputs = new List<CoinReference>();
+            List<TransactionOutput> outputs = new List<TransactionOutput>();
+
+            Fixed8 sum = Fixed8.Zero;
+            if (coins.Length < 50)
+            {
+                MaxInputCount = coins.Length;
+            }
+            for (int j = 0; j < MaxInputCount; j++)
+            {
+                sum += coins[j].Output.Value;
+                inputs.Add(new CoinReference
+                {
+                    PrevHash = coins[j].Reference.PrevHash,
+                    PrevIndex = coins[j].Reference.PrevIndex
+                });
+            }
+            tx.Inputs = inputs.ToArray();
+            outputs.Add(new TransactionOutput
+            {
+                AssetId = Blockchain.GoverningToken.Hash,
+                ScriptHash = outAddress,
+                Value = sum
+
+            });
+            if (tx.SystemFee > Fixed8.Zero)
+            {
+                outputs.Add(new TransactionOutput
+                {
+                    AssetId = Blockchain.UtilityToken.Hash,
+                    Value = tx.SystemFee
+                });
+            }
+            tx.Outputs = outputs.ToArray();
+            Fixed8 transfee = BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
+            if (tx.Outputs[0].Value <= transfee)
+            {
+                return null;
+            }
+            tx.Outputs[0].Value -= transfee;
+            return tx;
         }
     }
 }

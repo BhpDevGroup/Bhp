@@ -199,9 +199,9 @@ namespace Bhp.BhpExtensions.Transactions
             }
         }
 
-        public static Coin[] FindUnspentCoins(IEnumerable<Coin> unspents, UInt160 to_address)
+        public static Coin[] FindUnspentCoins(IEnumerable<Coin> unspents, UInt160 to_address = null)
         {
-            Coin[] unspents_asset = unspents.Where(p => p.Output.AssetId == Blockchain.GoverningToken.Hash).ToArray();
+            Coin[] unspents_asset = unspents.Where(p => p.Output.AssetId == Blockchain.GoverningToken.Hash).OrderByDescending(k => k.Output.Value).ToArray();
             unspents_asset = VerifyTransactionContract.checkUtxo(unspents_asset);//By BHP
             return unspents_asset;
         }

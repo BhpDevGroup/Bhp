@@ -639,15 +639,15 @@ namespace Bhp.Network.RPC
                                         return peerjson;
                                     }));
                                 json["lastblockheight"] = (Wallet.WalletHeight - targetConfirmations > 0) ? (Wallet.WalletHeight - targetConfirmations) : 0;
-
-
                                 return json;
                             }
                         }
                         catch (Exception ex)
                         {
+                            int startBlockHeight = _params[0].AsString() != "" ? int.Parse(_params[0].AsString()) : 0;
                             JObject json = new JObject();
                             json["txs"] = new JArray();
+                            json["lastblockheight"] = startBlockHeight;
                             return json;
                         }
                     }

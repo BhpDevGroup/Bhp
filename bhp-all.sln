@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockUTXOContract", "smartco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DestroyAccount", "smartcontractapp\DestroyAccount\DestroyAccount.csproj", "{81BA6D68-C1CB-4669-84C8-7892BE640C4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageContract", "smartcontractapp\StorageContract\StorageContract.csproj", "{43E38734-2069-4A7D-AB06-08A48BC517D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{81BA6D68-C1CB-4669-84C8-7892BE640C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81BA6D68-C1CB-4669-84C8-7892BE640C4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81BA6D68-C1CB-4669-84C8-7892BE640C4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E38734-2069-4A7D-AB06-08A48BC517D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E38734-2069-4A7D-AB06-08A48BC517D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E38734-2069-4A7D-AB06-08A48BC517D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E38734-2069-4A7D-AB06-08A48BC517D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -185,6 +191,7 @@ Global
 		{3158E63D-CB69-4237-B63C-C57F0FBF32AE} = {C540F9EE-9702-40AC-8374-3F22EC644255}
 		{787B6F68-53EA-432A-8775-C60458BFA69C} = {C540F9EE-9702-40AC-8374-3F22EC644255}
 		{81BA6D68-C1CB-4669-84C8-7892BE640C4B} = {C540F9EE-9702-40AC-8374-3F22EC644255}
+		{43E38734-2069-4A7D-AB06-08A48BC517D8} = {C540F9EE-9702-40AC-8374-3F22EC644255}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F7AEE2ED-6735-41F5-B496-4B77336AA777}

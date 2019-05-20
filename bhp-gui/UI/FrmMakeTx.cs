@@ -205,7 +205,7 @@ namespace Bhp.UI
         {
             decimal value;
             Random random = new Random();
-            value = (decimal)(random.Next(minValue, maxValue) + random.NextDouble());
+            value = (decimal)(random.Next(minValue * 100, maxValue * 100) * 0.01);
             return Fixed8.FromDecimal(value);
         }
 

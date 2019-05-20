@@ -58,7 +58,7 @@ namespace Bhp.UI
                     toolStripStatusLabel3.Visible = true;
                 }
             }
-        }  
+        }
 
         private void AddAccount(WalletAccount account, bool selected = false)
         {
@@ -178,7 +178,7 @@ namespace Bhp.UI
             }
             Program.CurrentWallet = wallet;
             listView3.Items.Clear();
-            
+
             if (Program.CurrentWallet != null)
             {
                 txQueue.Clear();
@@ -186,6 +186,10 @@ namespace Bhp.UI
                 {
                     backgroundWorker1.RunWorkerAsync();
                     //timer2.Enabled = true;
+                }
+                if(backgroundWorker2.IsBusy == false)
+                {
+                    backgroundWorker2.RunWorkerAsync();
                 }
                 using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
                     foreach (var i in Program.CurrentWallet.GetTransactions()?.Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null).Select(p => new
@@ -236,7 +240,7 @@ namespace Bhp.UI
                 wtx.height = height;
                 wtx.time = Time;
                 txQueue.Push(wtx);
-            } 
+            }
         }
 
         private void CurrentWallet_WalletTransaction(object sender, WalletTransactionEventArgs e)
@@ -289,15 +293,16 @@ namespace Bhp.UI
 
         bool WindowsClosed = false;
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        { 
+        {
             if (MessageBox.Show("Are you sure exit?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 WindowsClosed = true;
-                backgroundWorker1.CancelAsync(); 
+                backgroundWorker1.CancelAsync();
+                backgroundWorker2.CancelAsync();
 
                 if (actor != null)
                     Program.System.ActorSystem.Stop(actor);
-                ChangeWallet(null);                
+                ChangeWallet(null);
             }
             else
             {
@@ -1072,13 +1077,13 @@ namespace Bhp.UI
 
         private bool IsShowTx(uint Time, out DateTime dateTime)
         {
-            DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));          
+            DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
             dateTime = dtStart.AddSeconds(Time);
 
             TimeSpan time = DateTime.Now - dateTime;
             //return (time.TotalDays <= 3);
             return (time.TotalDays <= Settings.Default.Configs.LastestTxDay);
-        } 
+        }
 
         //-------------------------------------------------
         IEnumerable<Coin> coins;
@@ -1311,7 +1316,7 @@ namespace Bhp.UI
                 }
             }
         }
-    
+
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             while (IsDisposed == false && WindowsClosed == false)
@@ -1320,49 +1325,17 @@ namespace Bhp.UI
                 {
                     coins = Program.CurrentWallet?.GetCoins().Where(p => !p.State.HasFlag(CoinState.Spent)) ?? Enumerable.Empty<Coin>();
                     bonus_available = snapshot.CalculateBonus(Program.CurrentWallet.GetUnclaimedCoins().Select(p => p.Reference));
-                    bonus_unavailable = snapshot.CalculateBonus(coins.Where(p => p.State.HasFlag(CoinState.Confirmed) && p.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)).Select(p => p.Reference), snapshot.Height + 1);
-
-                    WalletTx wtx = new WalletTx()
-                    {
-                        height = 0
-                    }; 
-
-                    if (txQueue.Pop(out wtx))
-                    {
-                        backgroundWorker1.ReportProgress(1, wtx); 
-                    }  
-                    Thread.Sleep(1000); 
+                    bonus_unavailable = snapshot.CalculateBonus(coins.Where(p => p.State.HasFlag(CoinState.Confirmed) && p.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)).Select(p => p.Reference), snapshot.Height + 1);                   
+                    Thread.Sleep(1000);
                 }
             }
-        } 
+        }
 
         bool showingWalletInfo = false;
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (showingWalletInfo)
-            {
-                return;
-            }
-
-            WalletTx wtx = (WalletTx)e.UserState;
-            DateTime dateTime;
-            IsShowTx(wtx.time, out dateTime);
-            lb_tx_time.Text = dateTime.ToString();
-            //Application.DoEvents();
-
-            //if (Program.CurrentWallet.WalletHeight + 10 < Blockchain.Singleton.Height)
-            //{
-            //    return;
-            //}
-
-            showingWalletInfo = true;
             
-            AddTransaction(wtx.tx, wtx.height, wtx.time);            
-            ShowWalletInfo();
-            RefreshConfirmations(); 
-
-            showingWalletInfo = false;
-        } 
+        }
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
@@ -1403,6 +1376,50 @@ namespace Bhp.UI
             {
                 dialog.ShowDialog();
             }
+        }
+
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (IsDisposed == false && WindowsClosed == false)
+            {
+                WalletTx wtx = new WalletTx()
+                {
+                    height = 0
+                };
+
+                if (txQueue.Pop(out wtx))
+                {
+                    backgroundWorker2.ReportProgress(1, wtx);
+                }
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (showingWalletInfo)
+            {
+                return;
+            }
+
+            WalletTx wtx = (WalletTx)e.UserState;
+            DateTime dateTime;
+            IsShowTx(wtx.time, out dateTime);
+            lb_tx_time.Text = dateTime.ToString();
+            //Application.DoEvents();
+
+            //if (Program.CurrentWallet.WalletHeight + 10 < Blockchain.Singleton.Height)
+            //{
+            //    return;
+            //}
+
+            showingWalletInfo = true;
+
+            AddTransaction(wtx.tx, wtx.height, wtx.time);
+            ShowWalletInfo();
+            RefreshConfirmations();
+
+            showingWalletInfo = false;
         }
     }
 }

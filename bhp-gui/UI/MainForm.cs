@@ -199,7 +199,9 @@ namespace Bhp.UI
                         Time = snapshot.GetHeader(p.BlockIndex).Timestamp
                     }).OrderBy(p => p.Time))
                     {
-                        AddTransaction(i.Transaction, i.BlockIndex, i.Time);
+                        DateTime dateTime = DateTime.Now;
+                        if (IsShowTx(i.Time, out dateTime))
+                            AddTransaction(i.Transaction, i.BlockIndex, i.Time);
                     }
                 Program.CurrentWallet.WalletTransaction += CurrentWallet_WalletTransaction;
             }

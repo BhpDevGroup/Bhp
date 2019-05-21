@@ -76,10 +76,19 @@ namespace Bhp.UI
         {
             CoinReference[] claims = Program.CurrentWallet.GetUnclaimedCoins().Select(p => p.Reference).ToArray();
             if (claims.Length == 0) return;
+            CoinReference[] getClaims;
+            if (claims.Length > 50)
+            {
+                getClaims = claims.Take(50).ToArray();
+            }
+            else
+            {
+                getClaims = claims;
+            }
             using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
                 Helper.SignAndShowInformation(new ClaimTransaction
                 {
-                    Claims = claims,
+                    Claims = getClaims,
                     Attributes = new TransactionAttribute[0],
                     Inputs = new CoinReference[0],
                     Outputs = new[]
@@ -87,7 +96,7 @@ namespace Bhp.UI
                         new TransactionOutput
                         {
                             AssetId = Blockchain.UtilityToken.Hash,
-                            Value = snapshot.CalculateBonus(claims),
+                            Value = snapshot.CalculateBonus(getClaims),
                             ScriptHash = Program.CurrentWallet.GetChangeAddress()
                         }
                     }

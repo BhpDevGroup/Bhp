@@ -117,10 +117,10 @@ namespace Bhp.BhpExtensions.Transactions
         {
             if (tx.Type == TransactionType.ContractTransaction)
             {
-                Fixed8 otherInput = Fixed8.Zero;
-                otherInput = tx.References.Values.Where(p => p.AssetId != Blockchain.UtilityToken.Hash).Sum(p => p.Value);
-                //输入存在不是gas的资产
-                if (otherInput == Fixed8.Zero)
+                Fixed8 BHPsum = Fixed8.Zero; 
+                BHPsum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(k=>k.Value);//所有BHP输入的和
+                
+                if (BHPsum == Fixed8.Zero)//交易中不存在BHP转账
                 {
                     if (results_destroy.Length == 0) return "success";
                     if (results_destroy.Length == 1 && results_destroy[0].AssetId != Blockchain.UtilityToken.Hash) return "Transaction is error";
@@ -131,7 +131,7 @@ namespace Bhp.BhpExtensions.Transactions
 
                     return "success";
                 }
-                else
+                else //存在BHP转账
                 {
                     if (results_destroy.Length == 0)
                     {

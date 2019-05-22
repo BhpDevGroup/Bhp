@@ -10,6 +10,7 @@ using Bhp.Wallets;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Bhp.UI
@@ -19,12 +20,29 @@ namespace Bhp.UI
         public ArrangeWalletDialog()
         {
             InitializeComponent();
+            foreach (UInt256 asset_id in Program.CurrentWallet.FindUnspentCoins().Select(p => p.Output.AssetId).Distinct())
+            {
+                combo_asset.Items.Add(new AssetDescriptor(asset_id));
+            }
+            foreach (string s in Properties.Settings.Default.BRC20Watched)
+            {
+                UInt160 asset_id = UInt160.Parse(s);
+                try
+                {
+                    combo_asset.Items.Add(new AssetDescriptor(asset_id));
+                }
+                catch (ArgumentException)
+                {
+                    continue;
+                }
+            }
         }
 
         private const int MaxInputCount = 100;
 
         private void btn_arrange_Click(object sender, EventArgs e)
-        {            
+        {
+            combo_asset.Enabled = false;
             btn_arrange.Enabled = false;
             listBox1.Items.Clear();
             progressBar1.Value = 0;
@@ -53,7 +71,7 @@ namespace Bhp.UI
             foreach (WalletAccount account in wallets)
             {
                 IEnumerable<Coin> allCoins = Program.CurrentWallet.FindUnspentCoins(account.ScriptHash);
-                Coin[] coins = TransactionContract.FindUnspentCoins(allCoins, account.ScriptHash);
+                Coin[] coins = TransactionContract.FindUnspentCoins(allCoins, (UInt256)asset.AssetId);
                 allCoin.AddRange(coins);
                 if (allCoin.Count <= 5) continue;
                 currentAddress = account.ScriptHash;
@@ -67,6 +85,7 @@ namespace Bhp.UI
         {
             timer1.Stop();
             backgroundWorker1.CancelAsync();
+            combo_asset.Enabled = true;
             btn_arrange.Enabled = true;
         }
 
@@ -102,7 +121,7 @@ namespace Bhp.UI
                 tx.Inputs = inputs.ToArray();
                 outputs.Add(new TransactionOutput
                 {
-                    AssetId = Blockchain.GoverningToken.Hash,
+                    AssetId = (UInt256)asset.AssetId,
                     ScriptHash = currentAddress,
                     Value = sum
 
@@ -116,7 +135,10 @@ namespace Bhp.UI
                     });
                 }
                 tx.Outputs = outputs.ToArray();
-                tx.Outputs[0].Value -= BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
+                if ((UInt256)asset.AssetId == Blockchain.GoverningToken.Hash)
+                {
+                    tx.Outputs[0].Value -= BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
+                }
 
                 string msg = SignAndShowMulInformation(tx);
 
@@ -178,6 +200,21 @@ namespace Bhp.UI
             if (e.ProgressPercentage <= progressBar1.Maximum)
             {
                 progressBar1.Value = e.ProgressPercentage;
+            }
+        }
+
+        AssetDescriptor asset = null;
+        private void combo_asset_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (combo_asset.SelectedIndex < 0)
+            {
+                asset = null;
+                btn_arrange.Enabled = false;                
+            }
+            else
+            {
+                asset = (AssetDescriptor)combo_asset.SelectedItem;
+                btn_arrange.Enabled = true;
             }
         }
     }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArrangeWalletDialog));
             this.label1 = new System.Windows.Forms.Label();
             this.btn_arrange = new System.Windows.Forms.Button();
             this.btn_close = new System.Windows.Forms.Button();
@@ -37,35 +38,27 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.combo_asset = new System.Windows.Forms.ComboBox();
+            this.lbl_coinType = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 31);
+            resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Progress";
             // 
             // btn_arrange
             // 
-            this.btn_arrange.Location = new System.Drawing.Point(366, 312);
+            resources.ApplyResources(this.btn_arrange, "btn_arrange");
             this.btn_arrange.Name = "btn_arrange";
-            this.btn_arrange.Size = new System.Drawing.Size(75, 23);
-            this.btn_arrange.TabIndex = 1;
-            this.btn_arrange.Text = "Arrange";
             this.btn_arrange.UseVisualStyleBackColor = true;
             this.btn_arrange.Click += new System.EventHandler(this.btn_arrange_Click);
             // 
             // btn_close
             // 
             this.btn_close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_close.Location = new System.Drawing.Point(447, 312);
+            resources.ApplyResources(this.btn_close, "btn_close");
             this.btn_close.Name = "btn_close";
-            this.btn_close.Size = new System.Drawing.Size(75, 23);
-            this.btn_close.TabIndex = 1;
-            this.btn_close.Text = "Close";
             this.btn_close.UseVisualStyleBackColor = true;
             this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
             // 
@@ -78,39 +71,44 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(71, 29);
+            resources.ApplyResources(this.progressBar1, "progressBar1");
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(451, 23);
-            this.progressBar1.TabIndex = 2;
             // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(71, 65);
+            resources.ApplyResources(this.listBox1, "listBox1");
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(451, 232);
-            this.listBox1.TabIndex = 4;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 65);
+            resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 12);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Message";
             // 
             // timer1
             // 
             this.timer1.Interval = 60000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // combo_asset
+            // 
+            this.combo_asset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_asset.FormattingEnabled = true;
+            resources.ApplyResources(this.combo_asset, "combo_asset");
+            this.combo_asset.Name = "combo_asset";
+            this.combo_asset.SelectedIndexChanged += new System.EventHandler(this.combo_asset_SelectedIndexChanged);
+            // 
+            // lbl_coinType
+            // 
+            resources.ApplyResources(this.lbl_coinType, "lbl_coinType");
+            this.lbl_coinType.Name = "lbl_coinType";
+            // 
             // ArrangeWalletDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(534, 356);
+            this.Controls.Add(this.combo_asset);
+            this.Controls.Add(this.lbl_coinType);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.progressBar1);
@@ -121,8 +119,6 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ArrangeWalletDialog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ArrangeWalletDialog";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -138,5 +134,7 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ComboBox combo_asset;
+        private System.Windows.Forms.Label lbl_coinType;
     }
 }

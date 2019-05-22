@@ -373,6 +373,9 @@
     <EmbeddedResource Include="UI\ArrangeWalletDialog.resx">
       <DependentUpon>ArrangeWalletDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\ArrangeWalletDialog.zh-CN.resx">
+      <DependentUpon>ArrangeWalletDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\AssetRegisterDialog.es-ES.resx">
       <DependentUpon>AssetRegisterDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -564,6 +567,9 @@
     <EmbeddedResource Include="UI\MainForm.es-ES.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MainForm.zh-CN.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MainForm.zh-Hans.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

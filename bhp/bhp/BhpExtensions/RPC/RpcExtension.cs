@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Bhp.BhpExtensions.Fees;
 using Bhp.BhpExtensions.Transactions;
 using Bhp.BhpExtensions.Wallets;
 using Bhp.IO.Json;
@@ -6,6 +7,7 @@ using Bhp.Ledger;
 using Bhp.Network.P2P;
 using Bhp.Network.P2P.Payloads;
 using Bhp.Network.RPC;
+using Bhp.Persistence;
 using Bhp.SmartContract;
 using Bhp.Wallets;
 using Bhp.Wallets.BRC6;
@@ -39,7 +41,7 @@ namespace Bhp.BhpExtensions.RPC
             Unlocking = false;
         }
 
-        public RpcExtension(BhpSystem system,Wallet wallet, RpcServer rpcServer)
+        public RpcExtension(BhpSystem system, Wallet wallet, RpcServer rpcServer)
         {
             this.system = system;
             this.wallet = wallet;
@@ -75,13 +77,13 @@ namespace Bhp.BhpExtensions.RPC
         public JObject Process(string method, JArray _params)
         {
             JObject json = new JObject();
-             
+
             switch (method)
             {
                 case "unlock":
                     //if (wallet == null) return "wallet is null.";
                     if (ExtensionSettings.Default.WalletConfig.Path.Trim().Length < 1) throw new RpcException(-500, "Wallet file is exists.");
-                                        
+
                     if (_params.Count < 2) throw new RpcException(-501, "parameter is error.");
                     string password = _params[0].AsString();
                     int duration = (int)_params[1].AsNumber();
@@ -114,7 +116,7 @@ namespace Bhp.BhpExtensions.RPC
                         if (wallet == null || walletTimeLock.IsLocked())
                             throw new RpcException(-400, "Access denied");
                         else
-                        {  
+                        {
                             //address,assetid
                             UInt160 scriptHash = _params[0].AsString().ToScriptHash();
                             IEnumerable<Coin> coins = wallet.FindUnspentCoins();
@@ -154,9 +156,9 @@ namespace Bhp.BhpExtensions.RPC
                     }
 
                 case "verifytx":
-                    { 
+                    {
                         Transaction tx = Transaction.DeserializeFrom(_params[0].AsString().HexToBytes());
-                        string res = VerifyTransaction.Verify(Blockchain.Singleton.GetSnapshot(), new List<Transaction> { tx },tx);
+                        string res = VerifyTransaction.Verify(Blockchain.Singleton.GetSnapshot(), new List<Transaction> { tx }, tx);
 
                         json["result"] = res;
                         if ("success".Equals(res))
@@ -171,7 +173,7 @@ namespace Bhp.BhpExtensions.RPC
                         if (wallet == null || walletTimeLock.IsLocked())
                             throw new RpcException(-400, "Access denied");
                         else
-                        { 
+                        {
                             RpcCoins coins = new RpcCoins(wallet, system);
                             ClaimTransaction[] txs = coins.ClaimAll();
                             if (txs == null)
@@ -200,12 +202,12 @@ namespace Bhp.BhpExtensions.RPC
                             return json;
                         }
                     }
-                case "getutxoofaddress":                
+                case "getutxoofaddress":
                     {
                         string from = _params[0].AsString();
-                        string jsonRes = RequestRpc("getUtxo",$"address={from}");
+                        string jsonRes = RequestRpc("getUtxo", $"address={from}");
 
-                        Newtonsoft.Json.Linq.JArray jsons = (Newtonsoft.Json.Linq.JArray)JsonConvert.DeserializeObject(jsonRes);                        
+                        Newtonsoft.Json.Linq.JArray jsons = (Newtonsoft.Json.Linq.JArray)JsonConvert.DeserializeObject(jsonRes);
                         json["utxo"] = new JArray(jsons.Select(p =>
                         {
                             JObject peerJson = new JObject();
@@ -223,7 +225,7 @@ namespace Bhp.BhpExtensions.RPC
                 case "gettransaction":
                     {
                         string from = _params[0].AsString();
-                        string position = _params[1].AsString() != "" ? _params[1].AsString() :"1";
+                        string position = _params[1].AsString() != "" ? _params[1].AsString() : "1";
                         string offset = _params[2].AsString() != "" ? _params[2].AsString() : "20";
                         string jsonRes = RequestRpc("findTxVout", $"address={from}&position={position}&offset={offset}");
 
@@ -302,7 +304,7 @@ namespace Bhp.BhpExtensions.RPC
                             peerJson["blockHeight"] = p["blockHeight"].ToString();
                             peerJson["time"] = p["time"].ToString();
                             peerJson["type"] = p["type"].ToString();
-                            Newtonsoft.Json.Linq.JToken [] jt = p["inAddressList"].ToArray();
+                            Newtonsoft.Json.Linq.JToken[] jt = p["inAddressList"].ToArray();
                             JArray j_inaddress = new JArray();
                             foreach (Newtonsoft.Json.Linq.JToken i in jt)
                             {
@@ -324,7 +326,7 @@ namespace Bhp.BhpExtensions.RPC
                         }));
                         return json;
                     }
-				case "sendissuetransaction":
+                case "sendissuetransaction":
                     if (wallet == null || walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied");
                     else
@@ -335,19 +337,19 @@ namespace Bhp.BhpExtensions.RPC
                             throw new RpcException(-32602, "Invalid params");
                         TransactionOutput[] outputs = new TransactionOutput[to.Count];
                         for (int i = 0; i < to.Count; i++)
-                        {                            
+                        {
                             AssetDescriptor descriptor = new AssetDescriptor(asset_id);
                             outputs[i] = new TransactionOutput
                             {
                                 AssetId = asset_id,
                                 Value = Fixed8.Parse(to[i]["value"].AsString()),
                                 ScriptHash = to[i]["address"].AsString().ToScriptHash()
-                            };                           
+                            };
                         }
                         IssueTransaction tx = wallet.MakeTransaction(new IssueTransaction
                         {
                             Version = 1,
-                            Outputs = outputs                            
+                            Outputs = outputs
                         }, fee: Fixed8.One);
                         if (tx == null)
                             throw new RpcException(-300, "Insufficient funds");
@@ -411,12 +413,84 @@ namespace Bhp.BhpExtensions.RPC
                             return context.ToJson();
                         }
                     }
+                case "listsinceblock":
+                    if (wallet == null || walletTimeLock.IsLocked())
+                        throw new RpcException(-400, "Access denied");
+                    else
+                    {
+                        try
+                        {
+                            var Transactions = wallet.GetTransactions();
+                            int startBlockHeight = _params[0].AsString() != "" ? int.Parse(_params[0].AsString()) : 0;
+                            int targetConfirmations = _params[1].AsString() != "" ? int.Parse(_params[1].AsString()) : 6;
+                            using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
+                            {
+                                var trans = Transactions.Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null
+                               && p.BlockIndex >= startBlockHeight).Select(p => new
+                               {
+                                   p.Transaction,
+                                   p.BlockIndex,
+                                   Time = snapshot.GetHeader(p.BlockIndex).Timestamp,
+                                   BlockHash = snapshot.GetHeader(p.BlockIndex).Hash
+                               }).OrderBy(p => p.Time);
+
+                                json["txs"] = new JArray(
+                                    trans.Select(p =>
+                                    {
+                                        JObject peerjson = new JObject();
+                                        peerjson["txid"] = p.Transaction.Hash.ToString();
+                                        peerjson["blockheight"] = p.BlockIndex;
+                                        peerjson["blockhash"] = p.BlockHash.ToString();
+                                        peerjson["utctime"] = p.Time;
+                                        return peerjson;
+                                    }));
+                                json["lastblockheight"] = (wallet.WalletHeight - targetConfirmations > 0) ? (wallet.WalletHeight - targetConfirmations) : 0;
+                                return json;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            int startBlockHeight = _params[0].AsString() != "" ? int.Parse(_params[0].AsString()) : 0;
+                            json["txs"] = new JArray();
+                            json["lastblockheight"] = startBlockHeight;
+                            return json;
+                        }
+                    }
+                case "sendtocold":
+                    {
+                        if (wallet == null || walletTimeLock.IsLocked())
+                            throw new RpcException(-400, "Access denied");
+                        else
+                        {
+                            UInt160 scriptHash = _params[0].AsString().ToScriptHash();
+                            IEnumerable<Coin> allCoins = wallet.FindUnspentCoins();
+                            Coin[] coins = TransactionContract.FindUnspentCoins(allCoins);
+                            Transaction tx = MakeToColdTransaction(coins, scriptHash);
+                            if (tx == null)
+                                throw new RpcException(-300, "Insufficient funds");
+                            ContractParametersContext context = new ContractParametersContext(tx);
+                            wallet.Sign(context);
+                            if (context.Completed)
+                            {
+                                tx.Witnesses = context.GetWitnesses();
+                                if (tx.Size > Transaction.MaxTransactionSize)
+                                    throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
+                                wallet.ApplyTransaction(tx);
+                                system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
+                                return tx.ToJson();
+                            }
+                            else
+                            {
+                                return context.ToJson();
+                            }
+                        }
+                    }
                 default:
                     throw new RpcException(-32601, "Method not found");
-            } 
+            }
         }
 
-        private string RequestRpc(string method,string kvs)
+        private string RequestRpc(string method, string kvs)
         {
             string jsonRes = "";
             using (HttpClient client = new HttpClient())
@@ -434,6 +508,55 @@ namespace Bhp.BhpExtensions.RPC
             }
             return jsonRes;
         }
-         
+
+        private Transaction MakeToColdTransaction(Coin[] coins, UInt160 outAddress)
+        {
+            int MaxInputCount = 50;
+            Transaction tx = new ContractTransaction();
+            tx.Attributes = new TransactionAttribute[0];
+            tx.Witnesses = new Witness[0];
+
+            List<CoinReference> inputs = new List<CoinReference>();
+            List<TransactionOutput> outputs = new List<TransactionOutput>();
+
+            Fixed8 sum = Fixed8.Zero;
+            if (coins.Length < 50)
+            {
+                MaxInputCount = coins.Length;
+            }
+            for (int j = 0; j < MaxInputCount; j++)
+            {
+                sum += coins[j].Output.Value;
+                inputs.Add(new CoinReference
+                {
+                    PrevHash = coins[j].Reference.PrevHash,
+                    PrevIndex = coins[j].Reference.PrevIndex
+                });
+            }
+            tx.Inputs = inputs.ToArray();
+            outputs.Add(new TransactionOutput
+            {
+                AssetId = Blockchain.GoverningToken.Hash,
+                ScriptHash = outAddress,
+                Value = sum
+
+            });
+            if (tx.SystemFee > Fixed8.Zero)
+            {
+                outputs.Add(new TransactionOutput
+                {
+                    AssetId = Blockchain.UtilityToken.Hash,
+                    Value = tx.SystemFee
+                });
+            }
+            tx.Outputs = outputs.ToArray();
+            Fixed8 transfee = BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
+            if (tx.Outputs[0].Value <= transfee)
+            {
+                return null;
+            }
+            tx.Outputs[0].Value -= transfee;
+            return tx;
+        }
     }
 }

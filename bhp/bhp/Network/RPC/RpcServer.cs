@@ -27,8 +27,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Bhp.BhpExtensions.RPC;
-using Bhp.BhpExtensions.Transactions;
-using Bhp.BhpExtensions.Fees;
 
 namespace Bhp.Network.RPC
 {
@@ -47,7 +45,7 @@ namespace Bhp.Network.RPC
             this.Wallet = wallet;
             this.maxGasInvoke = maxGasInvoke;
 
-            rpcExtension = new RpcExtension(system, wallet,this);
+            rpcExtension = new RpcExtension(system, wallet, this);
         }
 
         public void SetWallet(Wallet wallet)
@@ -478,7 +476,7 @@ namespace Bhp.Network.RPC
 
                             if (tx.Size > Transaction.MaxTransactionSize)
                                 throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
-                           
+
                             Wallet.ApplyTransaction(tx);
                             system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
                             return tx.ToJson();
@@ -575,7 +573,7 @@ namespace Bhp.Network.RPC
                             tx.Witnesses = context.GetWitnesses();
 
                             if (tx.Size > Transaction.MaxTransactionSize)
-                                throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");                            
+                                throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
 
                             Wallet.ApplyTransaction(tx);
                             system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
@@ -607,81 +605,6 @@ namespace Bhp.Network.RPC
                         json["address"] = _params[0];
                         json["isvalid"] = scriptHash != null;
                         return json;
-                    }
-                case "listsinceblock":
-                    if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
-                        throw new RpcException(-400, "Access denied");
-                    else
-                    {
-                        try
-                        {
-                            var Transactions = Wallet.GetTransactions();
-                            JObject json = new JObject();
-                            int startBlockHeight = _params[0].AsString() != "" ? int.Parse(_params[0].AsString()) : 0;
-                            int targetConfirmations = _params[1].AsString() != "" ? int.Parse(_params[1].AsString()) : 6;
-                            using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
-                            {
-                                var trans = Transactions.Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null
-                               && p.BlockIndex >= startBlockHeight).Select(p => new
-                               {
-                                   p.Transaction,
-                                   p.BlockIndex,
-                                   Time = snapshot.GetHeader(p.BlockIndex).Timestamp,
-                                   BlockHash = snapshot.GetHeader(p.BlockIndex).Hash
-                               }).OrderBy(p => p.Time);
-
-                                json["txs"] = new JArray(
-                                    trans.Select(p =>
-                                    {
-                                        JObject peerjson = new JObject();
-                                        peerjson["txid"] = p.Transaction.Hash.ToString();
-                                        peerjson["blockheight"] = p.BlockIndex;
-                                        peerjson["blockhash"] = p.BlockHash.ToString();
-                                        peerjson["utctime"] = p.Time;
-                                        return peerjson;
-                                    }));
-                                json["lastblockheight"] = (Wallet.WalletHeight - targetConfirmations > 0) ? (Wallet.WalletHeight - targetConfirmations) : 0;
-                                return json;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            int startBlockHeight = _params[0].AsString() != "" ? int.Parse(_params[0].AsString()) : 0;
-                            JObject json = new JObject();
-                            json["txs"] = new JArray();
-                            json["lastblockheight"] = startBlockHeight;
-                            return json;
-                        }
-                    }
-                case "sendtocold":
-                    {
-                        if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
-                            throw new RpcException(-400, "Access denied");
-                        else
-                        {
-                            UInt160 scriptHash = _params[0].AsString().ToScriptHash();
-                            IEnumerable<Coin> allCoins = Wallet.FindUnspentCoins();
-                            Coin[] coins = TransactionContract.FindUnspentCoins(allCoins);
-                            JObject json = new JObject();
-                            Transaction tx = MakeToColdTransaction(coins, scriptHash);
-                            if (tx == null)
-                                throw new RpcException(-300, "Insufficient funds");
-                            ContractParametersContext context = new ContractParametersContext(tx);
-                            Wallet.Sign(context);
-                            if (context.Completed)
-                            {
-                                tx.Witnesses = context.GetWitnesses();
-                                if (tx.Size > Transaction.MaxTransactionSize)
-                                    throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
-                                Wallet.ApplyTransaction(tx);
-                                system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
-                                return tx.ToJson();
-                            }
-                            else
-                            {
-                                return context.ToJson();
-                            }
-                        }
                     }
                 default:
                     return rpcExtension.Process(method, _params);
@@ -827,56 +750,6 @@ namespace Bhp.Network.RPC
             .Build();
 
             host.Start();
-        }
-
-        private Transaction MakeToColdTransaction(Coin[] coins, UInt160 outAddress)
-        {
-            int MaxInputCount = 50;
-            Transaction tx = new ContractTransaction();
-            tx.Attributes = new TransactionAttribute[0];
-            tx.Witnesses = new Witness[0];
-
-            List<CoinReference> inputs = new List<CoinReference>();
-            List<TransactionOutput> outputs = new List<TransactionOutput>();
-
-            Fixed8 sum = Fixed8.Zero;
-            if (coins.Length < 50)
-            {
-                MaxInputCount = coins.Length;
-            }
-            for (int j = 0; j < MaxInputCount; j++)
-            {
-                sum += coins[j].Output.Value;
-                inputs.Add(new CoinReference
-                {
-                    PrevHash = coins[j].Reference.PrevHash,
-                    PrevIndex = coins[j].Reference.PrevIndex
-                });
-            }
-            tx.Inputs = inputs.ToArray();
-            outputs.Add(new TransactionOutput
-            {
-                AssetId = Blockchain.GoverningToken.Hash,
-                ScriptHash = outAddress,
-                Value = sum
-
-            });
-            if (tx.SystemFee > Fixed8.Zero)
-            {
-                outputs.Add(new TransactionOutput
-                {
-                    AssetId = Blockchain.UtilityToken.Hash,
-                    Value = tx.SystemFee
-                });
-            }
-            tx.Outputs = outputs.ToArray();
-            Fixed8 transfee = BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
-            if (tx.Outputs[0].Value <= transfee)
-            {
-                return null;
-            }
-            tx.Outputs[0].Value -= transfee;
-            return tx;
         }
     }
 }

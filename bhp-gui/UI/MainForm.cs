@@ -1328,7 +1328,7 @@ namespace Bhp.UI
                     coins = Program.CurrentWallet?.GetCoins().Where(p => !p.State.HasFlag(CoinState.Spent)) ?? Enumerable.Empty<Coin>();
                     bonus_available = snapshot.CalculateBonus(Program.CurrentWallet.GetUnclaimedCoins().Select(p => p.Reference));
                     bonus_unavailable = snapshot.CalculateBonus(coins.Where(p => p.State.HasFlag(CoinState.Confirmed) && p.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)).Select(p => p.Reference), snapshot.Height + 1);                   
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                 }
             }
         }
@@ -1393,7 +1393,7 @@ namespace Bhp.UI
                 {
                     backgroundWorker2.ReportProgress(1, wtx);
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
         }
 

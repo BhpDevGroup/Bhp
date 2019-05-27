@@ -2,6 +2,7 @@
 using Bhp.BhpExtensions.Fees;
 using Bhp.BhpExtensions.Transactions;
 using Bhp.BhpExtensions.Wallets;
+using Bhp.IO;
 using Bhp.IO.Json;
 using Bhp.Ledger;
 using Bhp.Network.P2P;
@@ -486,13 +487,13 @@ namespace Bhp.BhpExtensions.RPC
                             }
                         }
                     }
-                case "sendtoaddressremarks":
+                case "sendtoaddressorder":
                     if (wallet == null || walletTimeLock.IsLocked())
                         throw new RpcException(-400, "Access denied");
                     else
                     {
                         string remarks = _params[0].AsString();
-                        List<TransactionAttribute> attributes = new List<TransactionAttribute>();                        
+                        List<TransactionAttribute> attributes = new List<TransactionAttribute>();
                         using (ScriptBuilder sb = new ScriptBuilder())
                         {
                             sb.EmitPush(remarks);
@@ -541,9 +542,92 @@ namespace Bhp.BhpExtensions.RPC
                             return context.ToJson();
                         }
                     }
+                case "getrawtransactionorder":
+                    {
+                        UInt256 hash = UInt256.Parse(_params[0].AsString());
+                        bool verbose = _params.Count >= 2 && _params[1].AsBooleanOrDefault(false);
+                        Transaction tx = Blockchain.Singleton.GetTransaction(hash);
+                        if (tx == null)
+                            throw new RpcException(-100, "Unknown transaction");
+                        if (verbose)
+                        {
+                            json = tx.ToJson();
+                            if (tx.Attributes.Length > 0)
+                            {
+                                JArray attrs = (JArray)json["attributes"];
+                                for (int i = 0; i < tx.Attributes.Length; i++)
+                                {
+                                    if (tx.Attributes[i].Usage == TransactionAttributeUsage.Description)
+                                    {                                       
+                                        attrs[i]["data"] = ReadOderData(tx.Attributes[i].Data);
+                                    }
+                                }
+                                json["attributes"] = attrs;
+                            }
+                            uint? height = Blockchain.Singleton.Store.GetTransactions().TryGet(hash)?.BlockIndex;
+                            if (height != null)
+                            {
+                                Header header = Blockchain.Singleton.Store.GetHeader((uint)height);
+                                json["blockhash"] = header.Hash.ToString();
+                                json["confirmations"] = Blockchain.Singleton.Height - header.Index + 1;
+                                json["blocktime"] = header.Timestamp;
+                            }
+                            return json;
+                        }
+                        return tx.ToArray().ToHexString();
+                    }
                 default:
                     throw new RpcException(-32601, "Method not found");
             }
+        }
+
+        private string ReadOderData(byte[] attrData)
+        {
+            byte[] data;
+            BinaryReader OpReader = new BinaryReader(new MemoryStream(attrData, false));
+            OpCode opcode = (OpCode)OpReader.ReadByte();
+            if (opcode >= OpCode.PUSHBYTES1 && opcode <= OpCode.PUSHBYTES75)
+                data = OpReader.ReadBytes((byte)opcode);
+            else
+                switch (opcode)
+                {
+                    // Push value
+                    case OpCode.PUSH0:
+                        data = new byte[0];
+                        break;
+                    case OpCode.PUSHDATA1:
+                        data = OpReader.ReadBytes(OpReader.ReadByte());
+                        break;
+                    case OpCode.PUSHDATA2:
+                        data = OpReader.ReadBytes(OpReader.ReadUInt16());
+                        break;
+                    case OpCode.PUSHDATA4:
+                        data = OpReader.ReadBytes(OpReader.ReadInt32());
+                        break;
+                    case OpCode.PUSHM1:
+                    case OpCode.PUSH1:
+                    case OpCode.PUSH2:
+                    case OpCode.PUSH3:
+                    case OpCode.PUSH4:
+                    case OpCode.PUSH5:
+                    case OpCode.PUSH6:
+                    case OpCode.PUSH7:
+                    case OpCode.PUSH8:
+                    case OpCode.PUSH9:
+                    case OpCode.PUSH10:
+                    case OpCode.PUSH11:
+                    case OpCode.PUSH12:
+                    case OpCode.PUSH13:
+                    case OpCode.PUSH14:
+                    case OpCode.PUSH15:
+                    case OpCode.PUSH16:
+                        data = ((int)opcode - (int)OpCode.PUSH1 + 1).ToString().HexToBytes();
+                        break;
+                    default:
+                        data = new byte[0];
+                        break;
+                }
+            return System.Text.Encoding.Default.GetString(data);
         }
 
         private string RequestRpc(string method, string kvs)

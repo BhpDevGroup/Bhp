@@ -508,9 +508,7 @@ namespace Bhp.Shell
                 "\tinstall <pluginName>\n" +
                 "\tuninstall <pluginName>\n" +
                 "Advanced Commands:\n" +
-                "\tstart consensus\n" +
-                "1.OTC接口；2.自动转账到冷钱包\n" );
-
+                "\tstart consensus\n");
             return true;
         }
 

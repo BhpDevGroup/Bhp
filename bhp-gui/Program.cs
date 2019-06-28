@@ -83,7 +83,7 @@ namespace Bhp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             XDocument xdoc = null;
-            /*
+            
             try
             {
                 xdoc = XDocument.Load("https://bhpa.io/client/gui-version.xml");
@@ -101,10 +101,10 @@ namespace Bhp
                     }
                     return;
                 }
-            }             
-            */
+            }
+
             //if (!InstallCertificate()) return;
-           
+
             using (LevelDBStore store = new LevelDBStore(Settings.Default.Paths.Chain))
             using (System = new BhpSystem(store))
             {

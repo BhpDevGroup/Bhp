@@ -422,6 +422,7 @@ namespace Bhp.BhpExtensions.RPC
                     {
                         try
                         {
+                            uint walletHeight = wallet.WalletHeight;
                             var Transactions = wallet.GetTransactions();
                             int startBlockHeight = _params[0].AsString() != "" ? int.Parse(_params[0].AsString()) : 0;
                             int targetConfirmations = _params[1].AsString() != "" ? int.Parse(_params[1].AsString()) : 6;
@@ -446,7 +447,7 @@ namespace Bhp.BhpExtensions.RPC
                                         peerjson["utctime"] = p.Time;
                                         return peerjson;
                                     }));
-                                json["lastblockheight"] = (wallet.WalletHeight - targetConfirmations > 0) ? (wallet.WalletHeight - targetConfirmations) : 0;
+                                json["lastblockheight"] = (walletHeight - targetConfirmations > 0) ? (walletHeight - targetConfirmations) : 0;
                                 return json;
                             }
                         }

@@ -338,6 +338,8 @@ namespace Bhp.Shell
             {
                 case "key":
                     return OnExportKeyCommand(args);
+                case "wallet":
+                    return OnExportWalletCommand(args);
                 case "block":
                 case "blocks":
                     return OnExportBlocksCommand(args);
@@ -474,6 +476,43 @@ namespace Bhp.Shell
             return true;
         }
 
+        private bool OnExportWalletCommand(string[] args)
+        {
+            if (NoWallet()) return true;
+            if (args.Length != 3)
+            {
+                Console.WriteLine("error");
+                return true;
+            }
+            string path = args[2];
+            string password = ReadPassword("password");
+            if (password.Length == 0)
+            {
+                Console.WriteLine("cancelled");
+                return true;
+            }
+            if (!Program.Wallet.VerifyPassword(password))
+            {
+                Console.WriteLine("Incorrect password");
+                return true;
+            }
+            List<string> wallet = new List<string>();
+            foreach (WalletAccount account in Program.Wallet.GetAccounts().Where(p => p.HasKey))
+            {
+                //WIF 私钥 公钥 地址               
+                string acc = $"{account.GetKey().Export()} {account.GetKey().PrivateKey.ToHexString()} {account.GetKey().PublicKey.EncodePoint(true).ToHexString()} {account.Address}";
+                wallet.Add(acc);
+            }
+            if (wallet.Count < 1)
+            {
+                Console.WriteLine("Nothing to export");
+                return true;
+            }
+            File.WriteAllLines(path, wallet);
+            Console.WriteLine($"Export wallet to {path} success");
+            return true;
+        }
+
         private bool OnHelpCommand(string[] args)
         {
             Console.Write(
@@ -496,6 +535,7 @@ namespace Bhp.Shell
                 "\tcreate address [n=1]\n" +
                 "\timport key <wif|path>\n" +
                 "\texport key [address] [path]\n" +
+                "\texport wallet <path>\n" +
                 "\timport multisigaddress m pubkeys...\n" +
                 "\tsend <id|alias> <address> <value>|all [fee=0]\n" +
                 "\tsign <jsonObjectToSign>\n" +
@@ -798,10 +838,10 @@ namespace Bhp.Shell
             UIntBase assetId;
             switch (args[1].ToLower())
             {
-                case "bhp": 
+                case "bhp":
                     assetId = Blockchain.GoverningToken.Hash;
                     break;
-                case "gas": 
+                case "gas":
                     assetId = Blockchain.UtilityToken.Hash;
                     break;
                 default:
@@ -861,7 +901,7 @@ namespace Bhp.Shell
 
                 if (tx.Size > Transaction.MaxTransactionSize)
                 {
-                    Console.WriteLine("The size of the free transaction must be less than 102400 bytes");                    
+                    Console.WriteLine("The size of the free transaction must be less than 102400 bytes");
                     return true;
                 }
 
@@ -951,10 +991,10 @@ namespace Bhp.Shell
                 UInt256 assetId;
                 switch (args[2].ToLower())
                 {
-                    case "bhp": 
+                    case "bhp":
                         assetId = Blockchain.GoverningToken.Hash;
                         break;
-                    case "gas": 
+                    case "gas":
                         assetId = Blockchain.UtilityToken.Hash;
                         break;
                     default:

@@ -485,6 +485,11 @@ namespace Bhp.Shell
                 return true;
             }
             string path = args[2];
+            if (File.Exists(path))
+            {
+                Console.WriteLine("file is exist");
+                return true;
+            }
             string password = ReadPassword("password");
             if (password.Length == 0)
             {
@@ -496,19 +501,31 @@ namespace Bhp.Shell
                 Console.WriteLine("Incorrect password");
                 return true;
             }
-            List<string> wallet = new List<string>();
-            foreach (WalletAccount account in Program.Wallet.GetAccounts().Where(p => p.HasKey))
+
+            try
             {
-                //WIF 私钥 公钥 地址               
-                string acc = $"{account.GetKey().Export()} {account.GetKey().PrivateKey.ToHexString()} {account.GetKey().PublicKey.EncodePoint(true).ToHexString()} {account.Address}";
-                wallet.Add(acc);
+                using (FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write))
+                {
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        foreach (WalletAccount account in Program.Wallet.GetAccounts().Where(p => p.HasKey))
+                        {
+                            //WIF 私钥 公钥 地址                                       
+                            sw.WriteLine($"{account.GetKey().Export()} {account.GetKey().PrivateKey.ToHexString()} {account.GetKey().PublicKey.EncodePoint(true).ToHexString()} {account.Address}");
+                            sw.Flush();
+                        }
+                        sw.Flush();
+                        sw.Close();
+                    }
+                    fs.Close();
+                }
             }
-            if (wallet.Count < 1)
-            {
-                Console.WriteLine("Nothing to export");
+            catch (Exception ex)
+            {                
+                Console.WriteLine($"Export wallet failed");
                 return true;
             }
-            File.WriteAllLines(path, wallet);
+        
             Console.WriteLine($"Export wallet to {path} success");
             return true;
         }

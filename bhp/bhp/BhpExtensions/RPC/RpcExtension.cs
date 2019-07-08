@@ -577,6 +577,23 @@ namespace Bhp.BhpExtensions.RPC
                         }
                         return tx.ToArray().ToHexString();
                     }
+                case "exportaddresswif":
+                    if (wallet == null || walletTimeLock.IsLocked())
+                        throw new RpcException(-400, "Access denied");
+                    else
+                    {
+                        UInt160 scriptHash = _params[0].AsString().ToScriptHash();
+                        WalletAccount account = wallet.GetAccount(scriptHash);
+                        if (account == null)
+                        {
+                            throw new RpcException(-2146232969, $"The given key '{scriptHash}' was not present in the dictionary.");
+                        }
+                        json["wif"] = account.GetKey().Export();
+                        json["prikey"] = account.GetKey().PrivateKey.ToHexString();
+                        json["pubkey"] = account.GetKey().PublicKey.EncodePoint(true).ToHexString();
+                        json["address"] = account.Address;
+                        return json;
+                    }
                 default:
                     throw new RpcException(-32601, "Method not found");
             }

@@ -509,11 +509,16 @@ namespace Bhp.Shell
                 {
                     using (StreamWriter sw = new StreamWriter(fs))
                     {
+                        int x = 0;
+                        int count = Program.Wallet.GetAccounts().Where(p => p.HasKey).Count();
                         foreach (WalletAccount account in Program.Wallet.GetAccounts().Where(p => p.HasKey))
                         {
-                            //WIF 私钥 公钥 地址                                       
+                            x++;
+                            //WIF 私钥 公钥 地址   
                             sw.WriteLine($"{account.GetKey().Export()} {account.GetKey().PrivateKey.ToHexString()} {account.GetKey().PublicKey.EncodePoint(true).ToHexString()} {account.Address}");
                             sw.Flush();
+                            Console.SetCursorPosition(0, Console.CursorTop);
+                            Console.Write($"[{x}/{count}]");
                         }
                         sw.Flush();
                         sw.Close();
@@ -523,10 +528,11 @@ namespace Bhp.Shell
             }
             catch (Exception ex)
             {
+                Console.WriteLine();
                 Console.WriteLine($"Export wallet failed");
                 return true;
             }
-
+            Console.WriteLine();
             Console.WriteLine($"Export wallet to {path} success");
             return true;
         }

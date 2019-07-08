@@ -466,9 +466,14 @@ namespace Bhp.BhpExtensions.RPC
                         else
                         {
                             UInt160 scriptHash = _params[0].AsString().ToScriptHash();
+                            UInt256 assetId = Blockchain.GoverningToken.Hash;
+                            if (_params.Count > 1)
+                            {
+                                assetId = UInt256.Parse(_params[1].AsString());
+                            }
                             IEnumerable<Coin> allCoins = wallet.FindUnspentCoins();
-                            Coin[] coins = TransactionContract.FindUnspentCoins(allCoins);
-                            Transaction tx = MakeToColdTransaction(coins, scriptHash);
+                            Coin[] coins = TransactionContract.FindUnspentCoins(allCoins, assetId);
+                            Transaction tx = MakeToColdTransaction(coins, scriptHash, assetId);
                             if (tx == null)
                                 throw new RpcException(-300, "Insufficient funds");
                             ContractParametersContext context = new ContractParametersContext(tx);
@@ -667,7 +672,7 @@ namespace Bhp.BhpExtensions.RPC
             return jsonRes;
         }
 
-        private Transaction MakeToColdTransaction(Coin[] coins, UInt160 outAddress)
+        private Transaction MakeToColdTransaction(Coin[] coins, UInt160 outAddress, UInt256 assetId)
         {
             int MaxInputCount = 50;
             Transaction tx = new ContractTransaction();
@@ -694,7 +699,7 @@ namespace Bhp.BhpExtensions.RPC
             tx.Inputs = inputs.ToArray();
             outputs.Add(new TransactionOutput
             {
-                AssetId = Blockchain.GoverningToken.Hash,
+                AssetId = assetId,
                 ScriptHash = outAddress,
                 Value = sum
 
@@ -708,7 +713,7 @@ namespace Bhp.BhpExtensions.RPC
                 });
             }
             tx.Outputs = outputs.ToArray();
-            Fixed8 transfee = BhpTxFee.EstimateTxFee(tx, Blockchain.GoverningToken.Hash);
+            Fixed8 transfee = BhpTxFee.EstimateTxFee(tx, assetId);
             if (tx.Outputs[0].Value <= transfee)
             {
                 return null;

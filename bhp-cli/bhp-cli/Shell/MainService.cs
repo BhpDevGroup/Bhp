@@ -35,6 +35,7 @@ namespace Bhp.Shell
         private LevelDBStore store;
         private BhpSystem system;
         private WalletIndexer indexer;
+        private System.Timers.Timer exportWalletTimer;
 
         protected override string Prompt => "bhp";
         public override string ServiceName => $"BHP-CLI V{Assembly.GetEntryAssembly().GetName().Version.ToString()}";
@@ -521,11 +522,11 @@ namespace Bhp.Shell
                 }
             }
             catch (Exception ex)
-            {                
+            {
                 Console.WriteLine($"Export wallet failed");
                 return true;
             }
-        
+
             Console.WriteLine($"Export wallet to {path} success");
             return true;
         }
@@ -1076,6 +1077,42 @@ namespace Bhp.Shell
                     sslCert: Settings.Default.RPC.SslCert,
                     password: Settings.Default.RPC.SslCertPassword);
             }
+
+            if (Settings.Default.ExportWallet.IsActive)
+            {
+                exportWalletTimer = new System.Timers.Timer();
+                exportWalletTimer.Interval = Settings.Default.ExportWallet.Interval * 60 * 60 * 1000;
+                exportWalletTimer.Elapsed += ExportWalletTimer_Elapsed;
+                exportWalletTimer.Start();
+            }
+        }
+
+        private void ExportWalletTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (Program.Wallet == null || Program.Wallet.GetAccounts().Count() <= 0) return;
+            string walletName = Path.GetFileNameWithoutExtension(Program.Wallet.WalletPath);
+            try
+            {
+                string path = Path.Combine(Settings.Default.ExportWallet.Path, $"{walletName}{DateTime.Now.ToString("yyyyMMddHHmmss")}.txt");
+                using (FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write))
+                {
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        foreach (WalletAccount account in Program.Wallet.GetAccounts().Where(p => p.HasKey))
+                        {
+                            //WIF 私钥 公钥 地址                                       
+                            sw.WriteLine($"{account.GetKey().Export()} {account.GetKey().PrivateKey.ToHexString()} {account.GetKey().PublicKey.EncodePoint(true).ToHexString()} {account.Address}");
+                            sw.Flush();
+                        }
+                        sw.Flush();
+                        sw.Close();
+                    }
+                    fs.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private bool OnStartCommand(string[] args)
@@ -1099,6 +1136,11 @@ namespace Bhp.Shell
 
         protected internal override void OnStop()
         {
+            if (exportWalletTimer != null)
+            {
+                exportWalletTimer.Stop();
+                exportWalletTimer.Dispose();
+            }
             system.Dispose();
             store.Dispose();
         }

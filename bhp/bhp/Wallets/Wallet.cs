@@ -27,6 +27,7 @@ namespace Bhp.Wallets
         public abstract string Name { get; }
         public abstract Version Version { get; }
         public abstract uint WalletHeight { get; }
+        public abstract string WalletPath { get; }
 
         public abstract void ApplyTransaction(Transaction tx);
         public abstract bool Contains(UInt160 scriptHash);

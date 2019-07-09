@@ -515,7 +515,8 @@ namespace Bhp.Shell
                         {
                             x++;
                             //WIF 私钥 公钥 地址   
-                            sw.WriteLine($"{account.GetKey().Export()} {account.GetKey().PrivateKey.ToHexString()} {account.GetKey().PublicKey.EncodePoint(true).ToHexString()} {account.Address}");
+                            KeyPair key = account.GetKey();
+                            sw.WriteLine($"{key.Export()} {key.PrivateKey.ToHexString()} {key.PublicKey.EncodePoint(true).ToHexString()} {account.Address}");
                             sw.Flush();
                             Console.SetCursorPosition(0, Console.CursorTop);
                             Console.Write($"[{x}/{count}]");
@@ -1106,8 +1107,9 @@ namespace Bhp.Shell
                     {
                         foreach (WalletAccount account in Program.Wallet.GetAccounts().Where(p => p.HasKey))
                         {
-                            //WIF 私钥 公钥 地址                                       
-                            sw.WriteLine($"{account.GetKey().Export()} {account.GetKey().PrivateKey.ToHexString()} {account.GetKey().PublicKey.EncodePoint(true).ToHexString()} {account.Address}");
+                            //WIF 私钥 公钥 地址  
+                            KeyPair key = account.GetKey();
+                            sw.WriteLine($"{key.Export()} {key.PrivateKey.ToHexString()} {key.PublicKey.EncodePoint(true).ToHexString()} {account.Address}");
                             sw.Flush();
                         }
                         sw.Flush();

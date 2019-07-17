@@ -437,6 +437,7 @@ namespace Bhp.BhpExtensions.RPC
                                    BlockHash = snapshot.GetHeader(p.BlockIndex).Hash
                                }).OrderBy(p => p.Time);
 
+                                uint CurrentHeight = Blockchain.Singleton.Height;
                                 json["txs"] = new JArray(
                                     trans.Select(p =>
                                     {
@@ -445,6 +446,28 @@ namespace Bhp.BhpExtensions.RPC
                                         peerjson["blockheight"] = p.BlockIndex;
                                         peerjson["blockhash"] = p.BlockHash.ToString();
                                         peerjson["utctime"] = p.Time;
+                                        peerjson["confirmations"] = ((CurrentHeight - p.BlockIndex) > 0) ? (CurrentHeight - p.BlockIndex) : 0;
+
+                                        List<string> addresses = new List<string>();
+                                        foreach (var s in p.Transaction.References)
+                                        {
+                                            addresses.Add(s.Value.ScriptHash.ToAddress());
+                                        }
+                                        List<string> addres = addresses.Distinct().ToList();
+                                        peerjson["inaddress"] = new JArray(addres.Select(g =>
+                                        {
+                                            JObject obj = g.ToString();
+                                            return obj;
+                                        }));
+                                        peerjson["output"] = new JArray(p.Transaction.Outputs.Select((g,i) =>
+                                        {
+                                            JObject jobject = new JObject();
+                                            jobject["asset"] = g.AssetId.ToString();
+                                            jobject["outaddress"] = g.ScriptHash.ToAddress();
+                                            jobject["value"] = g.Value.ToString();
+                                            jobject["n"] = (ushort)i;
+                                            return jobject;
+                                        }));
                                         return peerjson;
                                     }));
                                 json["lastblockheight"] = (walletHeight - targetConfirmations > 0) ? (walletHeight - targetConfirmations) : 0;

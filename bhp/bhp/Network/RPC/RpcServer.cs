@@ -502,13 +502,13 @@ namespace Bhp.Network.RPC
                 UInt160 change_address = _params.Count >= 6 ? _params[5].AsString().ToScriptHash() : null;
                 Transaction tx = Wallet.MakeTransaction(null, new[]
                 {
-                            new TransferOutput
-                            {
-                                AssetId = assetId,
-                                Value = value,
-                                ScriptHash = to
-                            }
-                        }, from: from, change_address: change_address, fee: fee);
+                    new TransferOutput
+                    {
+                        AssetId = assetId,
+                        Value = value,
+                        ScriptHash = to
+                    }
+                }, from: from, change_address: change_address, fee: fee);
                 if (tx == null)
                     throw new RpcException(-300, "Insufficient funds");
                 ContractParametersContext context = new ContractParametersContext(tx);
@@ -551,13 +551,13 @@ namespace Bhp.Network.RPC
                 UInt160 change_address = _params.Count >= 7 ? _params[6].AsString().ToScriptHash() : null;
                 Transaction tx = Wallet.MakeTransaction(null, new[]
                 {
-                            new TransferOutput
-                            {
-                                AssetId = assetId,
-                                Value = value,
-                                ScriptHash = to
-                            }
-                        }, from: from, fee_address: fee_address, change_address: change_address, fee: fee);
+                    new TransferOutput
+                    {
+                        AssetId = assetId,
+                        Value = value,
+                        ScriptHash = to
+                    }
+                }, from: from, fee_address: fee_address, change_address: change_address, fee: fee);
                 if (tx == null)
                     throw new RpcException(-300, "Insufficient funds");
                 ContractParametersContext context = new ContractParametersContext(tx);
@@ -701,13 +701,13 @@ namespace Bhp.Network.RPC
                 UInt160 change_address = _params.Count >= 5 ? _params[4].AsString().ToScriptHash() : null;
                 Transaction tx = Wallet.MakeTransaction(null, new[]
                 {
-                            new TransferOutput
-                            {
-                                AssetId = assetId,
-                                Value = value,
-                                ScriptHash = scriptHash
-                            }
-                        }, change_address: change_address, fee: fee);
+                    new TransferOutput
+                    {
+                        AssetId = assetId,
+                        Value = value,
+                        ScriptHash = scriptHash
+                    }
+                }, change_address: change_address, fee: fee);
                 if (tx == null)
                     throw new RpcException(-300, "Insufficient funds");
                 ContractParametersContext context = new ContractParametersContext(tx);
@@ -749,13 +749,13 @@ namespace Bhp.Network.RPC
                 UInt160 change_address = _params.Count >= 6 ? _params[5].AsString().ToScriptHash() : null;
                 Transaction tx = Wallet.MakeTransaction(null, new[]
                 {
-                            new TransferOutput
-                            {
-                                AssetId = assetId,
-                                Value = value,
-                                ScriptHash = scriptHash
-                            }
-                        }, fee_address: fee_address, change_address: change_address, fee: fee);
+                    new TransferOutput
+                    {
+                        AssetId = assetId,
+                        Value = value,
+                        ScriptHash = scriptHash
+                    }
+                }, fee_address: fee_address, change_address: change_address, fee: fee);
                 if (tx == null)
                     throw new RpcException(-300, "Insufficient funds");
                 ContractParametersContext context = new ContractParametersContext(tx);

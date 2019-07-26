@@ -131,7 +131,7 @@ namespace Bhp.BhpExtensions.Transactions
         /// <param name="from"></param>
         /// <param name="fee_address"></param>
         /// <returns></returns>
-        private static T EstimateFee<T>(Wallet wallet, T tx, UInt160 from, UInt160 fee_address) where T : Transaction
+        public static T EstimateFee<T>(Wallet wallet, T tx, UInt160 from, UInt160 fee_address) where T : Transaction
         {
             if (!tx.Outputs.Any(p => p.AssetId == Blockchain.GoverningToken.Hash))//without bhp
             {

@@ -934,6 +934,19 @@ namespace Bhp.Shell
                         }
                     }
                 };                
+                switch (args[1].ToLower())
+                {
+                    case "bhp":
+                        tx.Outputs[0].Value -= BhpExtensions.Fees.BhpTxFee.EstimateTxFee(tx);
+                        if (tx.Outputs[0].Value <= Fixed8.Zero)
+                        {
+                            Console.WriteLine("TxFee is not enough.");
+                            return true;
+                        }
+                        break;
+                    default:                      
+                        break;
+                }
             }
             else
             {
@@ -1041,7 +1054,7 @@ namespace Bhp.Shell
                         tx.Outputs[0].Value -= BhpExtensions.Fees.BhpTxFee.EstimateTxFee(tx);
                         if (tx.Outputs[0].Value <= Fixed8.Zero)
                         {
-                            Console.WriteLine("Transaction SystemFee is invalid.");
+                            Console.WriteLine("TxFee is not enough.");
                             return true;
                         }
                         break;

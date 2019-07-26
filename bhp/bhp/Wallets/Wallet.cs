@@ -285,7 +285,7 @@ namespace Bhp.Wallets
             return tx;
         }
 
-        public Transaction MakeTransaction(List<TransactionAttribute> attributes, IEnumerable<TransferOutput> outputs, UInt160 from = null, UInt160 change_address = null, Fixed8 fee = default(Fixed8))
+        public Transaction MakeTransaction(List<TransactionAttribute> attributes, IEnumerable<TransferOutput> outputs, UInt160 from = null, UInt160 fee_address = null, UInt160 change_address = null, Fixed8 fee = default(Fixed8))
         {
             var cOutputs = outputs.Where(p => !p.IsGlobalAsset).GroupBy(p => new
             {
@@ -384,9 +384,8 @@ namespace Bhp.Wallets
                     Inputs = itx.Inputs,
                     Outputs = itx.Outputs
                 };
-            }
-            //tx = MakeTransaction(tx, from, change_address, fee);
-            tx = transactionContract.MakeTransaction(this, tx, from, change_address, fee);//By BHP
+            }            
+            tx = transactionContract.MakeTransaction(this, tx, from, fee_address, change_address, fee);//By BHP
             return tx;
         }
 

@@ -137,7 +137,7 @@ namespace Bhp.BhpExtensions.Transactions
             {
                 if (tx.Outputs.Any(p => p.AssetId != Blockchain.GoverningToken.Hash && p.AssetId != Blockchain.UtilityToken.Hash))//except bhp and gas
                 {
-                    Fixed8 bhp_fee = BhpTxFee.EstimateTxFee(tx;
+                    Fixed8 bhp_fee = BhpTxFee.EstimateTxFee(tx);
                     if (fee_address == null && from != null)
                     {
                         fee_address = from;

@@ -49,7 +49,7 @@ namespace Bhp.BhpExtensions.Fees
             {
                 Fixed8 txFee = MinTxFee;
                 int tx_size = tx.OutputSize;
-                txFee = Fixed8.FromDecimal(tx_size / SizeRadix + (tx_size % SizeRadix == 0 ? 0 : 1)) * MinTxFee; ;
+                txFee = Fixed8.FromDecimal(tx_size / SizeRadix + (tx_size % SizeRadix == 0 ? 0 : 1)) * MinTxFee;
                 txFee = txFee <= MaxTxFee ? txFee : MaxTxFee;
                 return txFee;
             }

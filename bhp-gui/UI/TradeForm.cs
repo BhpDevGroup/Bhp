@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Bhp.BhpExtensions.Transactions;
 using Bhp.IO.Json;
 using Bhp.Ledger;
 using Bhp.Network.P2P;
@@ -66,6 +67,24 @@ namespace Bhp.UI
             button1.Enabled = txOutListBox1.ItemCount > 0;
         }
 
+        TransactionContract transactionContract = new TransactionContract();
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ContractTransaction tx = transactionContract.MakeTransaction(Program.CurrentWallet, new ContractTransaction
+            {
+                Outputs = txOutListBox1.Items.Select(p => p.ToTxOutput()).ToArray()
+            });  
+            if(tx == null)
+            {
+                MessageBox.Show(Strings.InsufficientFunds);
+                return;
+            }
+            textBox3.Text = RequestToJson(tx).ToString();
+            InformationBox.Show(textBox3.Text, Strings.TradeRequestCreatedMessage, Strings.TradeRequestCreatedCaption);
+            tabControl1.SelectedTab = tabPage2;
+        }
+
+        /*
         private void button1_Click(object sender, EventArgs e)
         {
             ContractTransaction tx = Program.CurrentWallet.MakeTransaction(new ContractTransaction
@@ -76,6 +95,7 @@ namespace Bhp.UI
             InformationBox.Show(textBox3.Text, Strings.TradeRequestCreatedMessage, Strings.TradeRequestCreatedCaption);
             tabControl1.SelectedTab = tabPage2;
         }
+        */
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {

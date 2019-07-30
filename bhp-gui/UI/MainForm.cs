@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Bhp.BhpExtensions;
 using Bhp.BhpExtensions.Transactions;
 using Bhp.Cryptography;
 using Bhp.IO;
@@ -291,6 +292,7 @@ namespace Bhp.UI
             actor = Program.System.ActorSystem.ActorOf(EventWrapper<Blockchain.PersistCompleted>.Props(Blockchain_PersistCompleted));
             Program.System.Blockchain.Tell(new Blockchain.Register(), actor);
             Program.System.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
+            ExtensionSettings.Default.WalletConfig.IsBhpFee = Settings.Default.UnlockWallet.IsBhpFee;//BHP
         }
 
         bool WindowsClosed = false;
@@ -1017,6 +1019,7 @@ namespace Bhp.UI
             Process.Start(path);
         }
 
+        /*
         private void 删除DToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (listView2.SelectedIndices.Count == 0) return;
@@ -1031,6 +1034,33 @@ namespace Bhp.UI
                 , Strings.DeleteConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
                 return;
             ContractTransaction tx = Program.CurrentWallet.MakeTransaction(new ContractTransaction
+            {
+                Outputs = delete.Select(p => new TransactionOutput
+                {
+                    AssetId = p.Asset.AssetId,
+                    Value = p.Value,
+                    ScriptHash = RecycleScriptHash
+                }).ToArray()
+            }, fee: Fixed8.Zero);
+            Helper.SignAndShowInformation(tx);
+        }
+        */
+
+        TransactionContract transactionContract = new TransactionContract();
+        private void 删除DToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (listView2.SelectedIndices.Count == 0) return;
+            var delete = listView2.SelectedItems.OfType<ListViewItem>().Select(p => p.Tag as AssetState).Where(p => p != null).Select(p => new
+            {
+                Asset = p,
+                Value = Program.CurrentWallet.GetAvailable(p.AssetId)
+            }).ToArray();
+            if (delete.Length == 0) return;
+            if (MessageBox.Show($"{Strings.DeleteAssetConfirmationMessage}\n"
+                + string.Join("\n", delete.Select(p => $"{p.Asset.GetName()}:{p.Value}"))
+                , Strings.DeleteConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                return;
+            ContractTransaction tx = transactionContract.MakeTransaction(Program.CurrentWallet, new ContractTransaction
             {
                 Outputs = delete.Select(p => new TransactionOutput
                 {

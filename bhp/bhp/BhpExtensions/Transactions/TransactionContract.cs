@@ -118,8 +118,7 @@ namespace Bhp.BhpExtensions.Transactions
             tx.Inputs = pay_coins.Values.SelectMany(p => p.Unspents).Select(p => p.Reference).ToArray();
             tx.Outputs = outputs_new.ToArray();
             
-            //return EstimateFee(wallet, tx, from, fee_address);//BHP
-            return tx;
+            return EstimateFee(wallet, tx, from, fee_address);//BHP            
         }
 
         /// <summary>
@@ -133,6 +132,7 @@ namespace Bhp.BhpExtensions.Transactions
         /// <returns></returns>
         public static T EstimateFee<T>(Wallet wallet, T tx, UInt160 from, UInt160 fee_address) where T : Transaction
         {
+            if (!ExtensionSettings.Default.WalletConfig.IsBhpFee) return tx;
             if (!tx.Outputs.Any(p => p.AssetId == Blockchain.GoverningToken.Hash))//without bhp
             {
                 if (tx.Outputs.Any(p => p.AssetId != Blockchain.GoverningToken.Hash && p.AssetId != Blockchain.UtilityToken.Hash))//except bhp and gas

@@ -11,6 +11,7 @@ namespace Bhp.Properties
         public P2PSettings P2P { get; }
         public BrowserSettings Urls { get; }
         public ContractSettings Contracts { get; }
+        public UnlockWalletSettings UnlockWallet { get; }
 
         public Settings()
         {
@@ -26,6 +27,7 @@ namespace Bhp.Properties
             this.P2P = new P2PSettings(section.GetSection("P2P"));
             this.Urls = new BrowserSettings(section.GetSection("Urls"));
             this.Contracts = new ContractSettings(section.GetSection("Contracts"));
+            this.UnlockWallet = new UnlockWalletSettings(section.GetSection("UnlockWallet"));
         }
     }
 
@@ -89,4 +91,18 @@ namespace Bhp.Properties
             this.NEP5 = section.GetSection("NEP5").GetChildren().Select(p => UInt160.Parse(p.Value)).ToArray();
         }
     }
+
+    internal class UnlockWalletSettings
+    {
+        public bool IsBhpFee { get; }
+
+        public UnlockWalletSettings(IConfigurationSection section)
+        {
+            if (section.Exists())
+            {                
+                this.IsBhpFee = bool.Parse(section.GetSection("IsBhpFee").Value);
+            }
+        }
+    }
+
 }

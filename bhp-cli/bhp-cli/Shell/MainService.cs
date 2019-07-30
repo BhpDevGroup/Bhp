@@ -88,7 +88,6 @@ namespace Bhp.Shell
                     return OnRebuildCommand(args);
                 case "send":
                     return OnSendCommand(args);
-                //return OnSendCommandFee(args);
                 case "show":
                     return OnShowCommand(args);
                 case "start":
@@ -882,6 +881,7 @@ namespace Bhp.Shell
             return true;
         }
 
+        /*
         private bool OnSendCommand(string[] args)
         {
             if (args.Length < 4 || args.Length > 5)
@@ -995,8 +995,10 @@ namespace Bhp.Shell
             }
             return true;
         }
+        */
 
-        private bool OnSendCommandFee(string[] args)
+        //BHP
+        private bool OnSendCommand(string[] args)
         {
             if (args.Length < 4 || args.Length > 5)
             {
@@ -1247,6 +1249,7 @@ namespace Bhp.Shell
             ExtensionSettings.Default.WalletConfig.Path = Settings.Default.UnlockWallet.Path;
             ExtensionSettings.Default.WalletConfig.AutoLock = Settings.Default.UnlockWallet.AutoLock;
             ExtensionSettings.Default.WalletConfig.Indexer = GetIndexer();
+            ExtensionSettings.Default.WalletConfig.IsBhpFee = Settings.Default.UnlockWallet.IsBhpFee;
 
             if (useRPC)
             {

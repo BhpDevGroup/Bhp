@@ -443,10 +443,8 @@ namespace Bhp.Network.RPC
                         }).ToArray();  
                 case "sendfrom":
                     return SendFrom(_params);
-                    //return SendFromFee(_params);
                 case "sendmany":
                     return SendMany(_params);
-                    //return SendManyFee(_params);
                 case "sendrawtransaction":
                     {
                         Transaction tx = Transaction.DeserializeFrom(_params[0].AsString().HexToBytes());
@@ -455,7 +453,6 @@ namespace Bhp.Network.RPC
                     }
                 case "sendtoaddress":
                     return SendToAddress(_params);
-                    //return SendToAddressFee(_params);
                 case "submitblock":
                     {
                         Block block = _params[0].AsString().HexToBytes().AsSerializable<Block>();
@@ -483,6 +480,7 @@ namespace Bhp.Network.RPC
             }
         }
 
+        /*
         private JObject SendFrom(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
@@ -530,8 +528,10 @@ namespace Bhp.Network.RPC
                 }
             }
         }
+        */
 
-        private JObject SendFromFee(JArray _params)
+        //BHP
+        private JObject SendFrom(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
                 throw new RpcException(-400, "Access denied");
@@ -580,6 +580,7 @@ namespace Bhp.Network.RPC
             }
         }   
 
+        /*
         private JObject SendMany(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
@@ -630,8 +631,10 @@ namespace Bhp.Network.RPC
                 }
             }
         }
+        */
 
-        private JObject SendManyFee(JArray _params)
+        //BHP
+        private JObject SendMany(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
                 throw new RpcException(-400, "Access denied");
@@ -683,6 +686,7 @@ namespace Bhp.Network.RPC
             }
         }
 
+        /*
         private JObject SendToAddress(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
@@ -729,8 +733,10 @@ namespace Bhp.Network.RPC
                 }
             }
         }
+        */
 
-        private JObject SendToAddressFee(JArray _params)
+        //BHP
+        private JObject SendToAddress(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
                 throw new RpcException(-400, "Access denied");

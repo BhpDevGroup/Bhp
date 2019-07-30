@@ -81,6 +81,7 @@ namespace Bhp
         public bool StartConsensus { get; }
         public bool IsActive { get; }
         public bool AutoLock { get; }
+        public bool IsBhpFee { get; }
 
         public UnlockWalletSettings(IConfigurationSection section)
         {
@@ -91,6 +92,7 @@ namespace Bhp
                 this.StartConsensus = bool.Parse(section.GetSection("StartConsensus").Value);
                 this.IsActive = bool.Parse(section.GetSection("IsActive").Value);
                 this.AutoLock = bool.Parse(section.GetSection("AutoLock").Value);
+                this.IsBhpFee = bool.Parse(section.GetSection("IsBhpFee").Value);
             }
         }
     }

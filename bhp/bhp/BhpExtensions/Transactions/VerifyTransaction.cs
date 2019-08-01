@@ -117,11 +117,17 @@ namespace Bhp.BhpExtensions.Transactions
         {
             if (tx.Type == TransactionType.ContractTransaction)
             {
-                Fixed8 BHPsum = Fixed8.Zero; 
-                BHPsum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(k=>k.Value);//所有BHP输入的和
-                
+                Fixed8 BHPsum = Fixed8.Zero;
+                BHPsum = tx.References.Values.Where(p => p.AssetId == Blockchain.GoverningToken.Hash).Sum(k => k.Value);//所有BHP输入的和
+
                 if (BHPsum == Fixed8.Zero)//交易中不存在BHP转账
                 {
+                    if (ExtensionSettings.Default.WalletConfig.IsBhpFee)
+                    {
+                        if (tx.Outputs.Any(p => p.AssetId != Blockchain.GoverningToken.Hash && p.AssetId != Blockchain.UtilityToken.Hash))//except bhp and gas
+                            return "TxFee is not enough!";
+                    }
+
                     if (results_destroy.Length == 0) return "success";
                     if (results_destroy.Length == 1 && results_destroy[0].AssetId != Blockchain.UtilityToken.Hash) return "Transaction is error";
                     if (results_destroy.Length > 1) return "Transaction is error";
@@ -181,7 +187,7 @@ namespace Bhp.BhpExtensions.Transactions
                     return "success";
                 }
 
-                if(payFee < BhpTxFee.MinTxFee)
+                if (payFee < BhpTxFee.MinTxFee)
                 {
                     return "TxFee is not enough!";
                 }

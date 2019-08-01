@@ -27,6 +27,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Bhp.BhpExtensions.RPC;
+using Bhp.BhpExtensions;
 
 namespace Bhp.Network.RPC
 {
@@ -440,11 +441,24 @@ namespace Bhp.Network.RPC
                             account["label"] = p.Label;
                             account["watchonly"] = p.WatchOnly;
                             return account;
-                        }).ToArray();  
+                        }).ToArray();
                 case "sendfrom":
-                    return SendFrom(_params);
+                    if (ExtensionSettings.Default.WalletConfig.IsBhpFee) {
+                        return SendFromEx(_params);
+                    }
+                    else
+                    {
+                        return SendFrom(_params);
+                    }
                 case "sendmany":
-                    return SendMany(_params);
+                    if (ExtensionSettings.Default.WalletConfig.IsBhpFee)
+                    {
+                        return SendManyEx(_params);
+                    }
+                    else
+                    {
+                        return SendMany(_params);
+                    }
                 case "sendrawtransaction":
                     {
                         Transaction tx = Transaction.DeserializeFrom(_params[0].AsString().HexToBytes());
@@ -452,7 +466,14 @@ namespace Bhp.Network.RPC
                         return GetRelayResult(reason);
                     }
                 case "sendtoaddress":
-                    return SendToAddress(_params);
+                    if (ExtensionSettings.Default.WalletConfig.IsBhpFee)
+                    {
+                        return SendToAddressEx(_params);
+                    }
+                    else
+                    {
+                        return SendToAddress(_params);
+                    }
                 case "submitblock":
                     {
                         Block block = _params[0].AsString().HexToBytes().AsSerializable<Block>();
@@ -480,7 +501,6 @@ namespace Bhp.Network.RPC
             }
         }
 
-        /*
         private JObject SendFrom(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
@@ -528,10 +548,9 @@ namespace Bhp.Network.RPC
                 }
             }
         }
-        */
 
         //BHP
-        private JObject SendFrom(JArray _params)
+        private JObject SendFromEx(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
                 throw new RpcException(-400, "Access denied");
@@ -579,8 +598,7 @@ namespace Bhp.Network.RPC
                 }
             }
         }   
-
-        /*
+        
         private JObject SendMany(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
@@ -631,10 +649,9 @@ namespace Bhp.Network.RPC
                 }
             }
         }
-        */
 
         //BHP
-        private JObject SendMany(JArray _params)
+        private JObject SendManyEx(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
                 throw new RpcException(-400, "Access denied");
@@ -685,8 +702,7 @@ namespace Bhp.Network.RPC
                 }
             }
         }
-
-        /*
+       
         private JObject SendToAddress(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
@@ -733,10 +749,9 @@ namespace Bhp.Network.RPC
                 }
             }
         }
-        */
 
         //BHP
-        private JObject SendToAddress(JArray _params)
+        private JObject SendToAddressEx(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
                 throw new RpcException(-400, "Access denied");

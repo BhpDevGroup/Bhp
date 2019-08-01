@@ -73,7 +73,6 @@ namespace Bhp.Shell
                     return OnExportCommand(args);
                 case "help":
                     return OnHelpCommand(args);
-                //return OnHelpCommandFee(args);
                 case "plugins":
                     return OnPluginsCommand(args);
                 case "import":
@@ -87,7 +86,14 @@ namespace Bhp.Shell
                 case "rebuild":
                     return OnRebuildCommand(args);
                 case "send":
-                    return OnSendCommand(args);
+                    if (ExtensionSettings.Default.WalletConfig.IsBhpFee)
+                    {
+                        return OnSendCommandEx(args);
+                    }
+                    else
+                    {
+                        return OnSendCommand(args);
+                    }
                 case "show":
                     return OnShowCommand(args);
                 case "start":
@@ -576,46 +582,7 @@ namespace Bhp.Shell
                 "Advanced Commands:\n" +
                 "\tstart consensus\n");
             return true;
-        }
-
-        private bool OnHelpCommandFee(string[] args)
-        {
-            Console.Write(
-                "Normal Commands:\n" +
-                "\tversion\n" +
-                "\thelp [plugin-name]\n" +
-                "\tclear\n" +
-                "\texit\n" +
-                "Wallet Commands:\n" +
-                "\tcreate wallet <path>\n" +
-                "\topen wallet <path>\n" +
-                "\tupgrade wallet <path>\n" +
-                "\trebuild index\n" +
-                "\tlist address\n" +
-                "\tlist asset\n" +
-                "\tlist key\n" +
-                "\tshow utxo [id|alias]\n" +
-                "\tshow gas\n" +
-                "\tclaim gas [all] [changeAddress]\n" +
-                "\tcreate address [n=1]\n" +
-                "\timport key <wif|path>\n" +
-                "\texport key [address] [path]\n" +
-                "\texport wallet <path>\n" +
-                "\timport multisigaddress m pubkeys...\n" +
-                "\tsend <id|alias> <address> <value>|all [fee_address] [fee=0]\n" +
-                "\tsign <jsonObjectToSign>\n" +
-                "Node Commands:\n" +
-                "\tshow state\n" +
-                "\tshow pool [verbose]\n" +
-                "\trelay <jsonObjectToSign>\n" +
-                "Plugin Commands:\n" +
-                "\tplugins\n" +
-                "\tinstall <pluginName>\n" +
-                "\tuninstall <pluginName>\n" +
-                "Advanced Commands:\n" +
-                "\tstart consensus\n");
-            return true;
-        }
+        }        
 
         private bool OnPluginsCommand(string[] args)
         {
@@ -881,123 +848,6 @@ namespace Bhp.Shell
             return true;
         }
 
-        /*
-        private bool OnSendCommand(string[] args)
-        {
-            if (args.Length < 4 || args.Length > 5)
-            {
-                Console.WriteLine("error");
-                return true;
-            }
-            if (NoWallet()) return true;
-            string password = ReadPassword("password");
-            if (password.Length == 0)
-            {
-                Console.WriteLine("cancelled");
-                return true;
-            }
-            if (!Program.Wallet.VerifyPassword(password))
-            {
-                Console.WriteLine("Incorrect password");
-                return true;
-            }
-            UIntBase assetId;
-            switch (args[1].ToLower())
-            {
-                case "bhp":
-                    assetId = Blockchain.GoverningToken.Hash;
-                    break;
-                case "gas":
-                    assetId = Blockchain.UtilityToken.Hash;
-                    break;
-                default:
-                    assetId = UIntBase.Parse(args[1]);
-                    break;
-            }
-            UInt160 scriptHash = args[2].ToScriptHash();
-            bool isSendAll = string.Equals(args[3], "all", StringComparison.OrdinalIgnoreCase);
-            Transaction tx;
-            if (isSendAll)
-            {
-                Coin[] coins = Program.Wallet.FindUnspentCoins().Where(p => p.Output.AssetId.Equals(assetId)).ToArray();
-                tx = new ContractTransaction
-                {
-                    Attributes = new TransactionAttribute[0],
-                    Inputs = coins.Select(p => p.Reference).ToArray(),
-                    Outputs = new[]
-                    {
-                        new TransactionOutput
-                        {
-                            AssetId = (UInt256)assetId,
-                            Value = coins.Sum(p => p.Output.Value),
-                            ScriptHash = scriptHash
-                        }
-                    }
-                };                
-                switch (args[1].ToLower())
-                {
-                    case "bhp":
-                        tx.Outputs[0].Value -= BhpExtensions.Fees.BhpTxFee.EstimateTxFee(tx);
-                        if (tx.Outputs[0].Value <= Fixed8.Zero)
-                        {
-                            Console.WriteLine("TxFee is not enough.");
-                            return true;
-                        }
-                        break;
-                    default:                      
-                        break;
-                }
-            }
-            else
-            {
-                AssetDescriptor descriptor = new AssetDescriptor(assetId);
-                if (!BigDecimal.TryParse(args[3], descriptor.Decimals, out BigDecimal amount))
-                {
-                    Console.WriteLine("Incorrect Amount Format");
-                    return true;
-                }                
-                Fixed8 fee = args.Length >= 5 ? Fixed8.Parse(args[4]) : Fixed8.Zero;
-                tx = Program.Wallet.MakeTransaction(null, new[]
-                {
-                    new TransferOutput
-                    {
-                        AssetId = assetId,
-                        Value = amount,
-                        ScriptHash = scriptHash
-                    }
-                }, fee: fee);
-                if (tx == null)
-                {
-                    Console.WriteLine("Insufficient funds");
-                    return true;
-                }
-            }
-            ContractParametersContext context = new ContractParametersContext(tx);
-            Program.Wallet.Sign(context);
-            if (context.Completed)
-            {
-                tx.Witnesses = context.GetWitnesses();
-
-                if (tx.Size > Transaction.MaxTransactionSize)
-                {
-                    Console.WriteLine("The size of the free transaction must be less than 102400 bytes");
-                    return true;
-                }
-
-                Program.Wallet.ApplyTransaction(tx);
-                system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
-                Console.WriteLine($"TXID: {tx.Hash}");
-            }
-            else
-            {
-                Console.WriteLine("SignatureContext:");
-                Console.WriteLine(context.ToString());
-            }
-            return true;
-        }
-        */
-
-        //BHP
         private bool OnSendCommand(string[] args)
         {
             if (args.Length < 4 || args.Length > 5)
@@ -1050,21 +900,14 @@ namespace Bhp.Shell
                         }
                     }
                 };
-                switch (args[1].ToLower())
+                if (assetId.Equals(Blockchain.GoverningToken.Hash))
                 {
-                    case "bhp":
-                        tx.Outputs[0].Value -= BhpExtensions.Fees.BhpTxFee.EstimateTxFee(tx);
-                        if (tx.Outputs[0].Value <= Fixed8.Zero)
-                        {
-                            Console.WriteLine("TxFee is not enough.");
-                            return true;
-                        }
-                        break;
-                    case "gas":
-                        break;
-                    default:
-                        tx = Bhp.BhpExtensions.Transactions.TransactionContract.EstimateFee(Program.Wallet, tx, null, null);
-                        break;
+                    tx.Outputs[0].Value -= BhpExtensions.Fees.BhpTxFee.EstimateTxFee(tx);
+                    if (tx.Outputs[0].Value <= Fixed8.Zero)
+                    {
+                        Console.WriteLine("Insufficient funds.");
+                        return true;
+                    }
                 }
             }
             else
@@ -1075,8 +918,7 @@ namespace Bhp.Shell
                     Console.WriteLine("Incorrect Amount Format");
                     return true;
                 }
-                UInt160 fee_address = args.Length >= 5 ? args[4].ToScriptHash() : null;
-                Fixed8 fee = args.Length >= 6 ? Fixed8.Parse(args[5]) : Fixed8.Zero;
+                Fixed8 fee = args.Length >= 5 ? Fixed8.Parse(args[4]) : Fixed8.Zero;
                 tx = Program.Wallet.MakeTransaction(null, new[]
                 {
                     new TransferOutput
@@ -1085,7 +927,127 @@ namespace Bhp.Shell
                         Value = amount,
                         ScriptHash = scriptHash
                     }
-                }, fee_address: fee_address, fee: fee);
+                }, fee: fee);
+                if (tx == null)
+                {
+                    Console.WriteLine("Insufficient funds");
+                    return true;
+                }
+            }
+            ContractParametersContext context = new ContractParametersContext(tx);
+            Program.Wallet.Sign(context);
+            if (context.Completed)
+            {
+                tx.Witnesses = context.GetWitnesses();
+
+                if (tx.Size > Transaction.MaxTransactionSize)
+                {
+                    Console.WriteLine("The size of the free transaction must be less than 102400 bytes");
+                    return true;
+                }
+
+                Program.Wallet.ApplyTransaction(tx);
+                system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
+                Console.WriteLine($"TXID: {tx.Hash}");
+            }
+            else
+            {
+                Console.WriteLine("SignatureContext:");
+                Console.WriteLine(context.ToString());
+            }
+            return true;
+        }
+
+        //BHP
+        private bool OnSendCommandEx(string[] args)
+        {
+            if (args.Length < 4 || args.Length > 5)
+            {
+                Console.WriteLine("error");
+                return true;
+            }
+            if (NoWallet()) return true;
+            string password = ReadPassword("password");
+            if (password.Length == 0)
+            {
+                Console.WriteLine("cancelled");
+                return true;
+            }
+            if (!Program.Wallet.VerifyPassword(password))
+            {
+                Console.WriteLine("Incorrect password");
+                return true;
+            }
+            UIntBase assetId;
+            switch (args[1].ToLower())
+            {
+                case "bhp":
+                    assetId = Blockchain.GoverningToken.Hash;
+                    break;
+                case "gas":
+                    assetId = Blockchain.UtilityToken.Hash;
+                    break;
+                default:
+                    assetId = UIntBase.Parse(args[1]);
+                    break;
+            }
+            UInt160 scriptHash = args[2].ToScriptHash();
+            bool isSendAll = string.Equals(args[3], "all", StringComparison.OrdinalIgnoreCase);
+            Transaction tx;
+            if (isSendAll)
+            {
+                Coin[] coins = Program.Wallet.FindUnspentCoins().Where(p => p.Output.AssetId.Equals(assetId)).ToArray();
+                tx = new ContractTransaction
+                {
+                    Attributes = new TransactionAttribute[0],
+                    Inputs = coins.Select(p => p.Reference).ToArray(),
+                    Outputs = new[]
+                    {
+                        new TransactionOutput
+                        {
+                            AssetId = (UInt256)assetId,
+                            Value = coins.Sum(p => p.Output.Value),
+                            ScriptHash = scriptHash
+                        }
+                    }
+                };
+                if (assetId.Equals(Blockchain.GoverningToken.Hash))
+                {
+                    tx.Outputs[0].Value -= BhpExtensions.Fees.BhpTxFee.EstimateTxFee(tx);
+                    if (tx.Outputs[0].Value <= Fixed8.Zero)
+                    {
+                        Console.WriteLine("Insufficient funds.");
+                        return true;
+                    }
+                }
+                else if (!assetId.Equals(Blockchain.UtilityToken.Hash))
+                {
+                    tx = Bhp.BhpExtensions.Transactions.TransactionContract.EstimateFee(Program.Wallet, tx, null, null);
+                    if (tx == null)
+                    {
+                        Console.WriteLine("Insufficient funds");
+                        return true;
+                    }
+                }               
+            }
+            else
+            {
+                AssetDescriptor descriptor = new AssetDescriptor(assetId);
+                if (!BigDecimal.TryParse(args[3], descriptor.Decimals, out BigDecimal amount))
+                {
+                    Console.WriteLine("Incorrect Amount Format");
+                    return true;
+                }
+                Fixed8 fee = args.Length >= 5 ? Fixed8.Parse(args[4]) : Fixed8.Zero;
+                tx = Program.Wallet.MakeTransaction(null, new[]
+                {
+                    new TransferOutput
+                    {
+                        AssetId = assetId,
+                        Value = amount,
+                        ScriptHash = scriptHash
+                    }
+                }, fee: fee);
                 if (tx == null)
                 {
                     Console.WriteLine("Insufficient funds");

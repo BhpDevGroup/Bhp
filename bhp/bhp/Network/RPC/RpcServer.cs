@@ -443,22 +443,9 @@ namespace Bhp.Network.RPC
                             return account;
                         }).ToArray();
                 case "sendfrom":
-                    if (ExtensionSettings.Default.WalletConfig.IsBhpFee) {
-                        return SendFromEx(_params);
-                    }
-                    else
-                    {
-                        return SendFrom(_params);
-                    }
+                    return SendFrom(_params);
                 case "sendmany":
-                    if (ExtensionSettings.Default.WalletConfig.IsBhpFee)
-                    {
-                        return SendManyEx(_params);
-                    }
-                    else
-                    {
-                        return SendMany(_params);
-                    }
+                    return SendMany(_params);
                 case "sendrawtransaction":
                     {
                         Transaction tx = Transaction.DeserializeFrom(_params[0].AsString().HexToBytes());
@@ -466,14 +453,7 @@ namespace Bhp.Network.RPC
                         return GetRelayResult(reason);
                     }
                 case "sendtoaddress":
-                    if (ExtensionSettings.Default.WalletConfig.IsBhpFee)
-                    {
-                        return SendToAddressEx(_params);
-                    }
-                    else
-                    {
-                        return SendToAddress(_params);
-                    }
+                    return SendToAddress(_params);
                 case "submitblock":
                     {
                         Block block = _params[0].AsString().HexToBytes().AsSerializable<Block>();
@@ -519,6 +499,7 @@ namespace Bhp.Network.RPC
                     throw new RpcException(-32602, "Invalid params");
                 UInt160 change_address = _params.Count >= 6 ? _params[5].AsString().ToScriptHash() : null;
                 string remark = _params.Count >= 7 ? _params[6].AsString() : string.Empty;
+                UInt160 fee_address = _params.Count >= 8 ? _params[7].AsString().ToScriptHash() : from;
                 List<TransactionAttribute> attributes = null;
                 if (!string.IsNullOrEmpty(remark))
                 {
@@ -541,7 +522,7 @@ namespace Bhp.Network.RPC
                         Value = value,
                         ScriptHash = to
                     }
-                }, from: from, change_address: change_address, fee: fee);
+                }, fee_address: fee_address, from: from, change_address: change_address, fee: fee);
                 if (tx == null)
                     throw new RpcException(-300, "Insufficient funds");
                 ContractParametersContext context = new ContractParametersContext(tx);
@@ -564,71 +545,6 @@ namespace Bhp.Network.RPC
             }
         }
 
-        //BHP
-        private JObject SendFromEx(JArray _params)
-        {
-            if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
-                throw new RpcException(-400, "Access denied");
-            else
-            {
-                UIntBase assetId = UIntBase.Parse(_params[0].AsString());
-                AssetDescriptor descriptor = new AssetDescriptor(assetId);
-                UInt160 from = _params[1].AsString().ToScriptHash();
-                UInt160 to = _params[2].AsString().ToScriptHash();
-                BigDecimal value = BigDecimal.Parse(_params[3].AsString(), descriptor.Decimals);
-                if (value.Sign <= 0)
-                    throw new RpcException(-32602, "Invalid params");
-                UInt160 fee_address = _params.Count >= 5 ? _params[4].AsString().ToScriptHash() : from;
-                Fixed8 fee = _params.Count >= 6 ? Fixed8.Parse(_params[5].AsString()) : Fixed8.Zero;
-                if (fee < Fixed8.Zero)
-                    throw new RpcException(-32602, "Invalid params");
-                UInt160 change_address = _params.Count >= 7 ? _params[6].AsString().ToScriptHash() : null;
-                string remark = _params.Count >= 8 ? _params[7].AsString() : string.Empty;
-                List<TransactionAttribute> attributes = null;
-                if (!string.IsNullOrEmpty(remark))
-                {
-                    attributes = new List<TransactionAttribute>();
-                    using (ScriptBuilder sb = new ScriptBuilder())
-                    {
-                        sb.EmitPush(remark);
-                        attributes.Add(new TransactionAttribute
-                        {
-                            Usage = TransactionAttributeUsage.Description,
-                            Data = sb.ToArray()
-                        });
-                    }
-                }
-                Transaction tx = Wallet.MakeTransaction(attributes, new[]
-                {
-                    new TransferOutput
-                    {
-                        AssetId = assetId,
-                        Value = value,
-                        ScriptHash = to
-                    }
-                }, from: from, fee_address: fee_address, change_address: change_address, fee: fee);
-                if (tx == null)
-                    throw new RpcException(-300, "Insufficient funds");
-                ContractParametersContext context = new ContractParametersContext(tx);
-                Wallet.Sign(context);
-                if (context.Completed)
-                {
-                    tx.Witnesses = context.GetWitnesses();
-
-                    if (tx.Size > Transaction.MaxTransactionSize)
-                        throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
-
-                    Wallet.ApplyTransaction(tx);
-                    system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
-                    return tx.ToJson();
-                }
-                else
-                {
-                    return context.ToJson();
-                }
-            }
-        }   
-        
         private JObject SendMany(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
@@ -656,59 +572,7 @@ namespace Bhp.Network.RPC
                 if (fee < Fixed8.Zero)
                     throw new RpcException(-32602, "Invalid params");
                 UInt160 change_address = _params.Count >= 3 ? _params[2].AsString().ToScriptHash() : null;
-                Transaction tx = Wallet.MakeTransaction(null, outputs, change_address: change_address, fee: fee);
-                if (tx == null)
-                    throw new RpcException(-300, "Insufficient funds");
-                ContractParametersContext context = new ContractParametersContext(tx);
-                Wallet.Sign(context);
-                if (context.Completed)
-                {
-                    tx.Witnesses = context.GetWitnesses();
-
-                    if (tx.Size > Transaction.MaxTransactionSize)
-                        throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
-
-                    Wallet.ApplyTransaction(tx);
-                    system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
-                    //Console.WriteLine(tx.ToArray().ToHexString());
-                    return tx.ToJson();
-                }
-                else
-                {
-                    return context.ToJson();
-                }
-            }
-        }
-
-        //BHP
-        private JObject SendManyEx(JArray _params)
-        {
-            if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
-                throw new RpcException(-400, "Access denied");
-            else
-            {
-                JArray to = (JArray)_params[0];
-                if (to.Count == 0)
-                    throw new RpcException(-32602, "Invalid params");
-                TransferOutput[] outputs = new TransferOutput[to.Count];
-                for (int i = 0; i < to.Count; i++)
-                {
-                    UIntBase asset_id = UIntBase.Parse(to[i]["asset"].AsString());
-                    AssetDescriptor descriptor = new AssetDescriptor(asset_id);
-                    outputs[i] = new TransferOutput
-                    {
-                        AssetId = asset_id,
-                        Value = BigDecimal.Parse(to[i]["value"].AsString(), descriptor.Decimals),
-                        ScriptHash = to[i]["address"].AsString().ToScriptHash()
-                    };
-                    if (outputs[i].Value.Sign <= 0)
-                        throw new RpcException(-32602, "Invalid params");
-                }
-                UInt160 fee_address = _params.Count >= 2 ? _params[1].AsString().ToScriptHash() : null;
-                Fixed8 fee = _params.Count >= 3 ? Fixed8.Parse(_params[2].AsString()) : Fixed8.Zero;
-                if (fee < Fixed8.Zero)
-                    throw new RpcException(-32602, "Invalid params");
-                UInt160 change_address = _params.Count >= 4 ? _params[3].AsString().ToScriptHash() : null;
+                UInt160 fee_address = _params.Count >= 4 ? _params[3].AsString().ToScriptHash() : null;
                 Transaction tx = Wallet.MakeTransaction(null, outputs, fee_address: fee_address, change_address: change_address, fee: fee);
                 if (tx == null)
                     throw new RpcException(-300, "Insufficient funds");
@@ -732,7 +596,7 @@ namespace Bhp.Network.RPC
                 }
             }
         }
-       
+
         private JObject SendToAddress(JArray _params)
         {
             if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
@@ -749,55 +613,7 @@ namespace Bhp.Network.RPC
                 if (fee < Fixed8.Zero)
                     throw new RpcException(-32602, "Invalid params");
                 UInt160 change_address = _params.Count >= 5 ? _params[4].AsString().ToScriptHash() : null;
-                Transaction tx = Wallet.MakeTransaction(null, new[]
-                {
-                    new TransferOutput
-                    {
-                        AssetId = assetId,
-                        Value = value,
-                        ScriptHash = scriptHash
-                    }
-                }, change_address: change_address, fee: fee);
-                if (tx == null)
-                    throw new RpcException(-300, "Insufficient funds");
-                ContractParametersContext context = new ContractParametersContext(tx);
-                Wallet.Sign(context);
-                if (context.Completed)
-                {
-                    tx.Witnesses = context.GetWitnesses();
-
-                    if (tx.Size > Transaction.MaxTransactionSize)
-                        throw new RpcException(-301, "The size of the free transaction must be less than 102400 bytes");
-
-                    Wallet.ApplyTransaction(tx);
-                    system.LocalNode.Tell(new LocalNode.Relay { Inventory = tx });
-                    return tx.ToJson();
-                }
-                else
-                {
-                    return context.ToJson();
-                }
-            }
-        }
-
-        //BHP
-        private JObject SendToAddressEx(JArray _params)
-        {
-            if (Wallet == null || rpcExtension.walletTimeLock.IsLocked())
-                throw new RpcException(-400, "Access denied");
-            else
-            {
-                UIntBase assetId = UIntBase.Parse(_params[0].AsString());
-                AssetDescriptor descriptor = new AssetDescriptor(assetId);
-                UInt160 scriptHash = _params[1].AsString().ToScriptHash();
-                BigDecimal value = BigDecimal.Parse(_params[2].AsString(), descriptor.Decimals);
-                if (value.Sign <= 0)
-                    throw new RpcException(-32602, "Invalid params");
-                UInt160 fee_address = _params.Count >= 4 ? _params[3].AsString().ToScriptHash() : null;
-                Fixed8 fee = _params.Count >= 5 ? Fixed8.Parse(_params[4].AsString()) : Fixed8.Zero;
-                if (fee < Fixed8.Zero)
-                    throw new RpcException(-32602, "Invalid params");
-                UInt160 change_address = _params.Count >= 6 ? _params[5].AsString().ToScriptHash() : null;
+                UInt160 fee_address = _params.Count >= 6 ? _params[5].AsString().ToScriptHash() : null;
                 Transaction tx = Wallet.MakeTransaction(null, new[]
                 {
                     new TransferOutput

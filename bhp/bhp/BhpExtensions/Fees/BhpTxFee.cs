@@ -59,10 +59,12 @@ namespace Bhp.BhpExtensions.Fees
             }
         }
 
-        public static Fixed8 EstimateTxFee(Transaction tx, UInt256 asset_id)
+        public static Fixed8 EstimateTxFee(Transaction tx, UInt256 asset_id, bool hasBhpFeeAddress = false)
         {
             if (asset_id == Blockchain.GoverningToken.Hash)
             {
+                if (hasBhpFeeAddress) return Fixed8.Zero;
+
                 return EstimateTxFee(tx);
             }
             else

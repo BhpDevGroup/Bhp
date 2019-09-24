@@ -499,7 +499,8 @@ namespace Bhp.Network.RPC
                     throw new RpcException(-32602, "Invalid params");
                 UInt160 change_address = _params.Count >= 6 ? _params[5].AsString().ToScriptHash() : null;
                 string remark = _params.Count >= 7 ? _params[6].AsString() : string.Empty;
-                UInt160 fee_address = _params.Count >= 8 ? _params[7].AsString().ToScriptHash() : from;
+                UInt160 fee_address = _params.Count >= 8 ? _params[7].AsString().ToScriptHash() : null;
+                if (fee_address != null && fee_address.Equals(from) && assetId.Equals(Blockchain.GoverningToken.Hash)) fee_address = null;
                 List<TransactionAttribute> attributes = null;
                 if (!string.IsNullOrEmpty(remark))
                 {
@@ -555,9 +556,11 @@ namespace Bhp.Network.RPC
                 if (to.Count == 0)
                     throw new RpcException(-32602, "Invalid params");
                 TransferOutput[] outputs = new TransferOutput[to.Count];
+                bool hasBhp = false;
                 for (int i = 0; i < to.Count; i++)
                 {
                     UIntBase asset_id = UIntBase.Parse(to[i]["asset"].AsString());
+                    if (!hasBhp && asset_id.Equals(Blockchain.GoverningToken.Hash)) hasBhp = true;
                     AssetDescriptor descriptor = new AssetDescriptor(asset_id);
                     outputs[i] = new TransferOutput
                     {
@@ -573,6 +576,7 @@ namespace Bhp.Network.RPC
                     throw new RpcException(-32602, "Invalid params");
                 UInt160 change_address = _params.Count >= 3 ? _params[2].AsString().ToScriptHash() : null;
                 UInt160 fee_address = _params.Count >= 4 ? _params[3].AsString().ToScriptHash() : null;
+                if (hasBhp) fee_address = null;
                 Transaction tx = Wallet.MakeTransaction(null, outputs, fee_address: fee_address, change_address: change_address, fee: fee);
                 if (tx == null)
                     throw new RpcException(-300, "Insufficient funds");
@@ -614,6 +618,7 @@ namespace Bhp.Network.RPC
                     throw new RpcException(-32602, "Invalid params");
                 UInt160 change_address = _params.Count >= 5 ? _params[4].AsString().ToScriptHash() : null;
                 UInt160 fee_address = _params.Count >= 6 ? _params[5].AsString().ToScriptHash() : null;
+                if (assetId.Equals(Blockchain.GoverningToken.Hash)) fee_address = null;
                 Transaction tx = Wallet.MakeTransaction(null, new[]
                 {
                     new TransferOutput

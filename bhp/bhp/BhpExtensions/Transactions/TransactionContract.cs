@@ -63,11 +63,16 @@ namespace Bhp.BhpExtensions.Transactions
 
             //By BHP
             //When transferring money, finding UTXO requires additional transaction fees
+            bool hasBhpFeeAddress = false;
+            if(pay_total.Any(p=> p.Key.Equals(Blockchain.GoverningToken.Hash) && fee_address != null))
+            {
+                hasBhpFeeAddress = true;
+            }
             var pay_coins = pay_total.Select(p => new
             {
                 AssetId = p.Key,
-                Unspents = from == null ? wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx, p.Key)) :
-                                          wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx, p.Key), from)
+                Unspents = from == null ? wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx, p.Key, hasBhpFeeAddress)) :
+                                          wallet.FindUnspentCoins(p.Key, p.Value.Value + BhpTxFee.EstimateTxFee(tx, p.Key, hasBhpFeeAddress), from)
             }).ToDictionary(p => p.AssetId);
 
             if (pay_coins.Any(p => p.Value.Unspents == null)) return null;
@@ -118,7 +123,7 @@ namespace Bhp.BhpExtensions.Transactions
             tx.Inputs = pay_coins.Values.SelectMany(p => p.Unspents).Select(p => p.Reference).ToArray();
             tx.Outputs = outputs_new.ToArray();
             
-            return EstimateFee(wallet, tx, from, fee_address);//BHP            
+            return EstimateFee(wallet, tx, from, fee_address, hasBhpFeeAddress);//BHP            
         }
 
         /// <summary>
@@ -130,23 +135,44 @@ namespace Bhp.BhpExtensions.Transactions
         /// <param name="from"></param>
         /// <param name="fee_address"></param>
         /// <returns></returns>
-        public static T EstimateFee<T>(Wallet wallet, T tx, UInt160 from, UInt160 fee_address) where T : Transaction
+        public static T EstimateFee<T>(Wallet wallet, T tx, UInt160 from, UInt160 fee_address, bool hasBhpFeeAddress = false) where T : Transaction
         {
+            Fixed8 bhp_fee, coin_value;
+            Coin[] feeCoins;
+            if (hasBhpFeeAddress)
+            {
+                bhp_fee = BhpTxFee.EstimateTxFee(tx);
+                feeCoins = wallet.FindUnspentCoins(Blockchain.GoverningToken.Hash, bhp_fee, fee_address);
+                if (feeCoins == null) return null;
+                tx.Inputs = tx.Inputs.Concat(feeCoins.Select(p => { return p.Reference; })).ToArray();
+                coin_value = feeCoins.Sum(p => p.Output.Value);
+                if (coin_value > bhp_fee)
+                {
+                    tx.Outputs = tx.Outputs.Concat(new[] { new TransactionOutput()
+                        {
+                            AssetId = Blockchain.GoverningToken.Hash,
+                            ScriptHash = fee_address,
+                            Value = coin_value - bhp_fee
+                        }}).ToArray();
+                }
+                return tx;
+            }
+
             if (!ExtensionSettings.Default.WalletConfig.IsBhpFee) return tx;
             if (!tx.Outputs.Any(p => p.AssetId == Blockchain.GoverningToken.Hash))//without bhp
             {
                 if (tx.Outputs.Any(p => p.AssetId != Blockchain.GoverningToken.Hash && p.AssetId != Blockchain.UtilityToken.Hash))//except bhp and gas
                 {
-                    Fixed8 bhp_fee = BhpTxFee.EstimateTxFee(tx);
+                    bhp_fee = BhpTxFee.EstimateTxFee(tx);
                     if (fee_address == null && from != null)
                     {
                         fee_address = from;
                     }
-                    Coin[] feeCoins = fee_address == null ? wallet.FindUnspentCoins(Blockchain.GoverningToken.Hash, bhp_fee) :
+                    feeCoins = fee_address == null ? wallet.FindUnspentCoins(Blockchain.GoverningToken.Hash, bhp_fee) :
                                                             wallet.FindUnspentCoins(Blockchain.GoverningToken.Hash, bhp_fee, fee_address);
                     if (feeCoins == null) return null;
                     tx.Inputs = tx.Inputs.Concat(feeCoins.Select(p => { return p.Reference; })).ToArray();
-                    Fixed8 coin_value = feeCoins.Sum(p => p.Output.Value);
+                    coin_value = feeCoins.Sum(p => p.Output.Value);
                     if (coin_value > bhp_fee)
                     {
                         tx.Outputs = tx.Outputs.Concat(new[] { new TransactionOutput()

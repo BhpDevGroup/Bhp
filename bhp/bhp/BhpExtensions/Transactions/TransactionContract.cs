@@ -88,7 +88,7 @@ namespace Bhp.BhpExtensions.Transactions
             //添加找零地址  By BHP        
             foreach (UInt256 asset_id in input_sum.Keys)
             {
-                Fixed8 txFee = BhpTxFee.EstimateTxFee(tx, asset_id);
+                Fixed8 txFee = BhpTxFee.EstimateTxFee(tx, asset_id, hasBhpFeeAddress);
                 if (input_sum[asset_id].Value > (pay_total[asset_id].Value + txFee))
                 {
                     outputs_new.Add(new TransactionOutput

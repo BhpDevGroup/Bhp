@@ -65,7 +65,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageContract", "smartcon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppCallContract", "smartcontractapp\AppCallContract\AppCallContract.csproj", "{955593D3-A3E3-4081-866E-E1020B48886D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BRC20Contract", "smartcontractapp\BRC5Contract\BRC20Contract.csproj", "{6C609B15-BF0F-456A-B846-C11285A68017}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BRC20Contract", "smartcontractapp\BRC20Contract\BRC20Contract.csproj", "{6C609B15-BF0F-456A-B846-C11285A68017}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

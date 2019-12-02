@@ -496,6 +496,18 @@ namespace Bhp.BhpExtensions.RPC
                         json["address"] = account.Address;
                         return json;
                     }
+                case "getcontractopcode":
+                    {
+                        byte[] script = _params[0].AsString().HexToBytes();
+                        var ops = Avm2Asm.Trans(script); ;
+                        json["opcode"] = new JArray(ops.Select(p =>
+                        {
+                            JObject opJson = new JObject();
+                            opJson = p.ToString();
+                            return opJson;
+                        }));
+                        return json;
+                    }
                 default:
                     throw new RpcException(-32601, "Method not found");
             }

@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using Bhp.BhpExtensions;
+using Bhp.BhpExtensions.RPC;
 using Bhp.BhpExtensions.Transactions;
 using Bhp.Cryptography;
 using Bhp.IO;
@@ -188,7 +189,7 @@ namespace Bhp.UI
                     backgroundWorker1.RunWorkerAsync();
                     //timer2.Enabled = true;
                 }
-                if(backgroundWorker2.IsBusy == false)
+                if (backgroundWorker2.IsBusy == false)
                 {
                     backgroundWorker2.RunWorkerAsync();
                 }
@@ -559,6 +560,11 @@ namespace Bhp.UI
             using (CreateWalletDialog dialog = new CreateWalletDialog())
             {
                 if (dialog.ShowDialog() != DialogResult.OK) return;
+                if (!RpcExtension.VerifyPW(dialog.Password))
+                {
+                    MessageBox.Show($"password max length {RpcExtension.MaxPWLength}");
+                    return;
+                }
                 BRC6Wallet wallet = new BRC6Wallet(GetIndexer(), dialog.WalletPath);
                 wallet.Unlock(dialog.Password);
                 wallet.CreateAccount();
@@ -574,6 +580,11 @@ namespace Bhp.UI
             using (OpenWalletDialog dialog = new OpenWalletDialog())
             {
                 if (dialog.ShowDialog() != DialogResult.OK) return;
+                if (!RpcExtension.VerifyPW(dialog.Password))
+                {
+                    MessageBox.Show($"password max length {RpcExtension.MaxPWLength}");
+                    return;
+                }
                 string path = dialog.WalletPath;
                 Wallet wallet;
                 if (Path.GetExtension(path) == ".db3")
@@ -635,6 +646,11 @@ namespace Bhp.UI
             using (ChangePasswordDialog dialog = new ChangePasswordDialog())
             {
                 if (dialog.ShowDialog() != DialogResult.OK) return;
+                if (!RpcExtension.VerifyPW(dialog.OldPassword) || !RpcExtension.VerifyPW(dialog.NewPassword))
+                {
+                    MessageBox.Show($"password max length {RpcExtension.MaxPWLength}");
+                    return;
+                }                
                 if (((UserWallet)Program.CurrentWallet).ChangePassword(dialog.OldPassword, dialog.NewPassword))
                     MessageBox.Show(Strings.ChangePasswordSuccessful);
                 else
@@ -1357,7 +1373,7 @@ namespace Bhp.UI
                 {
                     coins = Program.CurrentWallet?.GetCoins().Where(p => !p.State.HasFlag(CoinState.Spent)) ?? Enumerable.Empty<Coin>();
                     bonus_available = snapshot.CalculateBonus(Program.CurrentWallet.GetUnclaimedCoins().Select(p => p.Reference));
-                    bonus_unavailable = snapshot.CalculateBonus(coins.Where(p => p.State.HasFlag(CoinState.Confirmed) && p.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)).Select(p => p.Reference), snapshot.Height + 1);                   
+                    bonus_unavailable = snapshot.CalculateBonus(coins.Where(p => p.State.HasFlag(CoinState.Confirmed) && p.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)).Select(p => p.Reference), snapshot.Height + 1);
                     Thread.Sleep(2000);
                 }
             }
@@ -1366,7 +1382,7 @@ namespace Bhp.UI
         bool showingWalletInfo = false;
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            
+
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

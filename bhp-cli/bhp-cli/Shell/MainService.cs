@@ -285,7 +285,7 @@ namespace Bhp.Shell
             if (Program.Wallet is BRC6Wallet wallet)
                 wallet.Save();
             Console.WriteLine();
-            string path = "address.txt";
+            string path = $"address{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.txt";
             Console.WriteLine($"export addresses to {path}");
             File.WriteAllLines(path, addresses);
             return true;
@@ -466,6 +466,13 @@ namespace Bhp.Shell
                 scriptHash = args[2].ToScriptHash();
                 path = args[3];
             }
+
+            if (path != null && File.Exists(path))
+            {
+                Console.WriteLine("file is exist");
+                return true;
+            }
+
             string password = ReadPassword("password");
             if (password.Length == 0)
             {
@@ -503,12 +510,14 @@ namespace Bhp.Shell
                 Console.WriteLine("error");
                 return true;
             }
+
             string path = args[2];
             if (File.Exists(path))
             {
                 Console.WriteLine("file is exist");
                 return true;
             }
+
             string password = ReadPassword("password");
             if (password.Length == 0)
             {

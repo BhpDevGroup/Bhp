@@ -193,18 +193,21 @@ namespace Bhp.UI
                 {
                     backgroundWorker2.RunWorkerAsync();
                 }
-                using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
-                    foreach (var i in Program.CurrentWallet.GetTransactions()?.Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null).Select(p => new
-                    {
-                        p.Transaction,
-                        p.BlockIndex,
-                        Time = snapshot.GetHeader(p.BlockIndex).Timestamp
-                    }).OrderBy(p => p.Time))
-                    {
-                        DateTime dateTime = DateTime.Now;
-                        if (IsShowTx(i.Time, out dateTime))
-                            AddTransaction(i.Transaction, i.BlockIndex, i.Time);
-                    }
+                if (showTransactionHistoryToolStripMenuItem.Checked)
+                {
+                    using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
+                        foreach (var i in Program.CurrentWallet.GetTransactions()?.Select(p => snapshot.Transactions.TryGet(p)).Where(p => p.Transaction != null).Select(p => new
+                        {
+                            p.Transaction,
+                            p.BlockIndex,
+                            Time = snapshot.GetHeader(p.BlockIndex).Timestamp
+                        }).OrderBy(p => p.Time))
+                        {
+                            DateTime dateTime = DateTime.Now;
+                            if (IsShowTx(i.Time, out dateTime))
+                                AddTransaction(i.Transaction, i.BlockIndex, i.Time);
+                        }
+                }
                 Program.CurrentWallet.WalletTransaction += CurrentWallet_WalletTransaction;
             }
             修改密码CToolStripMenuItem.Enabled = Program.CurrentWallet is UserWallet;
@@ -236,6 +239,8 @@ namespace Bhp.UI
         WalletTxQueue txQueue = new WalletTxQueue();
         private void AddTxToQueue(Transaction tx, uint height, uint Time)
         {
+            if (!showTransactionHistoryToolStripMenuItem.Checked) return;
+
             DateTime dateTime = DateTime.Now;
             if (IsShowTx(Time, out dateTime))
             {
@@ -650,7 +655,7 @@ namespace Bhp.UI
                 {
                     MessageBox.Show($"password max length {RpcExtension.MaxPWLength}");
                     return;
-                }                
+                }
                 if (((UserWallet)Program.CurrentWallet).ChangePassword(dialog.OldPassword, dialog.NewPassword))
                     MessageBox.Show(Strings.ChangePasswordSuccessful);
                 else
@@ -1445,6 +1450,8 @@ namespace Bhp.UI
 
         private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            if (!showTransactionHistoryToolStripMenuItem.Checked) return;
+
             if (showingWalletInfo)
             {
                 return;
@@ -1468,6 +1475,11 @@ namespace Bhp.UI
             RefreshConfirmations();
 
             showingWalletInfo = false;
+        }
+
+        private void showTransactionHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showTransactionHistoryToolStripMenuItem.Checked = !showTransactionHistoryToolStripMenuItem.Checked;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Bhp
             $"remote-node-mailbox {{ mailbox-type: \"{typeof(RemoteNodeMailbox).AssemblyQualifiedName}\" }}" +
             $"protocol-handler-mailbox {{ mailbox-type: \"{typeof(ProtocolHandlerMailbox).AssemblyQualifiedName}\" }}" +
             $"consensus-service-mailbox {{ mailbox-type: \"{typeof(ConsensusServiceMailbox).AssemblyQualifiedName}\" }}");
-        
+
         public IActorRef Blockchain { get; }
         public IActorRef LocalNode { get; }
         internal IActorRef TaskManager { get; }

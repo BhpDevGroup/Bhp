@@ -1,9 +1,11 @@
 ﻿using Akka.Actor;
 using Akka.Configuration;
 using Bhp.IO.Actors;
+using Bhp.IO.Caching;
 using Bhp.Ledger;
 using Bhp.Network.P2P.Payloads;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -13,6 +15,7 @@ namespace Bhp.Network.P2P
     internal class TaskManager : UntypedActor
     {
         public class Register { public VersionPayload Version; }
+        public class Update { public uint LastBlockIndex; }
         public class NewTasks { public InvPayload Payload; }
         public class TaskCompleted { public UInt256 Hash; }
         public class HeaderTaskCompleted { }
@@ -24,7 +27,15 @@ namespace Bhp.Network.P2P
 
         private readonly BhpSystem system;
         private const int MaxConncurrentTasks = 3;
-        private readonly HashSet<UInt256> knownHashes = new HashSet<UInt256>();
+        private const int PingCoolingOffPeriod = 60; // in secconds.
+
+        /// <summary>
+        /// Max GetBlocks and Headers are limmited to 500 each
+        /// Blockchain.Singleton.MemPool.Capacity * 2 was the same value used in ProtocolHandler
+        /// </summary>
+        private static readonly int MaxCachedHashes = Blockchain.Singleton.MemPool.Capacity * 2;
+        private readonly FIFOSet<UInt256> knownHashes = new FIFOSet<UInt256>(MaxCachedHashes);
+
         private readonly Dictionary<UInt256, int> globalTasks = new Dictionary<UInt256, int>();
         private readonly Dictionary<IActorRef, TaskSession> sessions = new Dictionary<IActorRef, TaskSession>();
         private readonly ICancelable timer = Context.System.Scheduler.ScheduleTellRepeatedlyCancelable(TimerInterval, TimerInterval, Context.Self, new Timer(), ActorRefs.NoSender);
@@ -56,11 +67,11 @@ namespace Bhp.Network.P2P
                 return;
             }
             HashSet<UInt256> hashes = new HashSet<UInt256>(payload.Hashes);
-            hashes.ExceptWith(knownHashes);
+            hashes.Remove(knownHashes);
             if (payload.Type == InventoryType.Block)
                 session.AvailableTasks.UnionWith(hashes.Where(p => globalTasks.ContainsKey(p)));
 
-            hashes.ExceptWith(globalTasks.Keys);
+            hashes.Remove(globalTasks);
             if (hashes.Count == 0)
             {
                 RequestTasks(session);
@@ -83,6 +94,9 @@ namespace Bhp.Network.P2P
             {
                 case Register register:
                     OnRegister(register.Version);
+                    break;
+                case Update update:
+                    OnUpdate(update.LastBlockIndex);
                     break;
                 case NewTasks tasks:
                     OnNewTasks(tasks.Payload);
@@ -111,6 +125,13 @@ namespace Bhp.Network.P2P
             TaskSession session = new TaskSession(Sender, version);
             sessions.Add(Sender, session);
             RequestTasks(session);
+        }
+
+        private void OnUpdate(uint lastBlockIndex)
+        {
+            if (!sessions.TryGetValue(Sender, out TaskSession session))
+                return;
+            session.LastBlockIndex = lastBlockIndex;
         }
 
         private void OnRestartTasks(InvPayload payload)
@@ -201,7 +222,7 @@ namespace Bhp.Network.P2P
             if (session.HasTask) return;
             if (session.AvailableTasks.Count > 0)
             {
-                session.AvailableTasks.ExceptWith(knownHashes);
+                session.AvailableTasks.Remove(knownHashes);
                 session.AvailableTasks.RemoveWhere(p => Blockchain.Singleton.ContainsBlock(p));
                 HashSet<UInt256> hashes = new HashSet<UInt256>(session.AvailableTasks);
                 if (hashes.Count > 0)
@@ -211,7 +232,7 @@ namespace Bhp.Network.P2P
                         if (!IncrementGlobalTask(hash))
                             hashes.Remove(hash);
                     }
-                    session.AvailableTasks.ExceptWith(hashes);
+                    session.AvailableTasks.Remove(hashes);
                     foreach (UInt256 hash in hashes)
                         session.Tasks[hash] = DateTime.UtcNow;
                     foreach (InvPayload group in InvPayload.CreateGroup(InventoryType.Block, hashes.ToArray()))
@@ -219,13 +240,13 @@ namespace Bhp.Network.P2P
                     return;
                 }
             }
-            if ((!HasHeaderTask || globalTasks[HeaderTaskHash] < MaxConncurrentTasks) && Blockchain.Singleton.HeaderHeight < session.Version.StartHeight)
+            if ((!HasHeaderTask || globalTasks[HeaderTaskHash] < MaxConncurrentTasks) && Blockchain.Singleton.HeaderHeight < session.LastBlockIndex)
             {
                 session.Tasks[HeaderTaskHash] = DateTime.UtcNow;
                 IncrementGlobalTask(HeaderTaskHash);
                 session.RemoteNode.Tell(Message.Create("getheaders", GetBlocksPayload.Create(Blockchain.Singleton.CurrentHeaderHash)));
             }
-            else if (Blockchain.Singleton.Height < session.Version.StartHeight)
+            else if (Blockchain.Singleton.Height < session.LastBlockIndex)
             {
                 UInt256 hash = Blockchain.Singleton.CurrentBlockHash;
                 for (uint i = Blockchain.Singleton.Height + 1; i <= Blockchain.Singleton.HeaderHeight; i++)
@@ -239,6 +260,11 @@ namespace Bhp.Network.P2P
                 }
                 session.RemoteNode.Tell(Message.Create("getblocks", GetBlocksPayload.Create(hash)));
             }
+            else if (Blockchain.Singleton.HeaderHeight >= session.LastBlockIndex
+                    && TimeProvider.Current.UtcNow.ToTimestamp() - PingCoolingOffPeriod >= Blockchain.Singleton.GetBlock(Blockchain.Singleton.CurrentHeaderHash)?.Timestamp)
+            {
+                session.RemoteNode.Tell(Message.Create("ping", PingPayload.Create(Blockchain.Singleton.Height)));
+            }
         }
     }
 
@@ -249,11 +275,12 @@ namespace Bhp.Network.P2P
         {
         }
 
-        protected override bool IsHighPriority(object message)
+        internal protected override bool IsHighPriority(object message)
         {
             switch (message)
             {
                 case TaskManager.Register _:
+                case TaskManager.Update _:
                 case TaskManager.RestartTasks _:
                     return true;
                 case TaskManager.NewTasks tasks:
@@ -263,6 +290,14 @@ namespace Bhp.Network.P2P
                 default:
                     return false;
             }
+        }
+
+        internal protected override bool ShallDrop(object message, IEnumerable queue)
+        {
+            if (!(message is TaskManager.NewTasks tasks)) return false;
+            // Remove duplicate tasks
+            if (queue.OfType<TaskManager.NewTasks>().Any(x => x.Payload.Type == tasks.Payload.Type && x.Payload.Hashes.SequenceEqual(tasks.Payload.Hashes))) return true;
+            return false;
         }
     }
 }

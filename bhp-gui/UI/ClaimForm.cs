@@ -52,7 +52,6 @@ namespace Bhp.UI
                 CalculateBonusUnavailable(snapshot.Height + 1);
             }
             actor = Program.System.ActorSystem.ActorOf(EventWrapper<Blockchain.PersistCompleted>.Props(Blockchain_PersistCompleted));
-            Program.System.Blockchain.Tell(new Blockchain.Register(), actor);
         }
 
         private void ClaimForm_FormClosing(object sender, FormClosingEventArgs e)

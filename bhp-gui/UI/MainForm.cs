@@ -296,7 +296,6 @@ namespace Bhp.UI
         private void MainForm_Load(object sender, EventArgs e)
         {
             actor = Program.System.ActorSystem.ActorOf(EventWrapper<Blockchain.PersistCompleted>.Props(Blockchain_PersistCompleted));
-            Program.System.Blockchain.Tell(new Blockchain.Register(), actor);
             Program.System.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
             ExtensionSettings.Default.WalletConfig.IsBhpFee = Settings.Default.UnlockWallet.IsBhpFee;//BHP
         }

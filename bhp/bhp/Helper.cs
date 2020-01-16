@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bhp.IO.Caching;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -52,6 +53,43 @@ namespace Bhp
             throw new Exception();
         }
 
+        internal static void Remove<T>(this HashSet<T> set, ISet<T> other)
+        {
+            if (set.Count > other.Count)
+            {
+                set.ExceptWith(other);
+            }
+            else
+            {
+                set.RemoveWhere(u => other.Contains(u));
+            }
+        }
+
+        internal static void Remove<T>(this HashSet<T> set, FIFOSet<T> other)
+            where T : IEquatable<T>
+        {
+            if (set.Count > other.Count)
+            {
+                set.ExceptWith(other);
+            }
+            else
+            {
+                set.RemoveWhere(u => other.Contains(u));
+            }
+        }
+
+        internal static void Remove<T, V>(this HashSet<T> set, IReadOnlyDictionary<T, V> other)
+        {
+            if (set.Count > other.Count)
+            {
+                set.ExceptWith(other.Keys);
+            }
+            else
+            {
+                set.RemoveWhere(u => other.ContainsKey(u));
+            }
+        }
+
         internal static string GetVersion(this Assembly assembly)
         {
             CustomAttributeData attribute = assembly.CustomAttributes.FirstOrDefault(p => p.AttributeType == typeof(AssemblyInformationalVersionAttribute));
@@ -70,7 +108,6 @@ namespace Bhp
                 result[i] = byte.Parse(value.Substring(i * 2, 2), NumberStyles.AllowHexSpecifier);
             return result;
         }
-
         internal static byte[] ToByteArrayUnsigned(this BigInteger i, bool bigEndian)
         {
             byte[] bytes = i.ToByteArray();
@@ -81,7 +118,6 @@ namespace Bhp
 
             return bytes;
         }
-
         internal static BigInteger ToBigIntegerUnsigned(this byte[] bytes, bool bigEndian)
         {
             byte[] clone;
@@ -107,7 +143,6 @@ namespace Bhp
             Buffer.BlockCopy(bytes, 0, clone, 0, bytes.Length);
             return new BigInteger(clone);
         }
-
         internal static BigInteger Mod(this BigInteger x, BigInteger y)
         {
             x %= y;
@@ -161,6 +196,31 @@ namespace Bhp
             else
                 b[b.Length - 1] &= (byte)((1 << sizeInBits % 8) - 1);
             return new BigInteger(b);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        unsafe internal static bool NotZero(this byte[] x)
+        {
+            if (x is null)
+                throw new ArgumentNullException(nameof(x));
+            int len = x.Length;
+            if (len == 0) return false;
+            fixed (byte* xp = x)
+            {
+                long* xlp = (long*)xp;
+                for (; len >= 8; len -= 8)
+                {
+                    if (*xlp != 0) return true;
+                    xlp++;
+                }
+                byte* xbp = (byte*)xlp;
+                for (; len > 0; len--)
+                {
+                    if (*xbp != 0) return true;
+                    xbp++;
+                }
+            }
+            return false;
         }
 
         public static Fixed8 Sum(this IEnumerable<Fixed8> source)

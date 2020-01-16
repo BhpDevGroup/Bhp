@@ -42,7 +42,6 @@ namespace Bhp.BhpExtensions.RPC
             }
         }
 
-
         public Fixed8 AvailableBonus()
         {
             using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
@@ -75,7 +74,7 @@ namespace Bhp.BhpExtensions.RPC
                         new TransactionOutput
                         {
                             AssetId = Blockchain.UtilityToken.Hash,
-                            Value = snapshot.CalculateBonus(claims.Take(MAX_CLAIMS_AMOUNT)),                            
+                            Value = snapshot.CalculateBonus(claims.Take(MAX_CLAIMS_AMOUNT)),
                             ScriptHash = change_address ?? current_wallet.GetChangeAddress()
                         }
                     }
@@ -86,10 +85,8 @@ namespace Bhp.BhpExtensions.RPC
             }
         }
 
-
         public ClaimTransaction[] ClaimAll(UInt160 change_address = null)
         {
-
             if (this.AvailableBonus() == Fixed8.Zero)
             {
                 Console.WriteLine($"no gas to claim");
@@ -143,7 +140,6 @@ namespace Bhp.BhpExtensions.RPC
             }
         }
 
-
         private Transaction SignTransaction(Transaction tx)
         {
             if (tx == null)
@@ -168,7 +164,7 @@ namespace Bhp.BhpExtensions.RPC
 
             if (context.Completed)
             {
-                context.Verifiable.Witnesses = context.GetWitnesses();
+                tx.Witnesses = context.GetWitnesses();
 
                 if (tx.Size > Transaction.MaxTransactionSize)
                 {

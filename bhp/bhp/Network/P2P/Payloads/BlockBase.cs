@@ -1,7 +1,6 @@
 ﻿using Bhp.Cryptography;
 using Bhp.IO;
 using Bhp.IO.Json;
-using Bhp.Ledger;
 using Bhp.Persistence;
 using Bhp.SmartContract;
 using Bhp.VM;
@@ -40,11 +39,6 @@ namespace Bhp.Network.P2P.Payloads
             get
             {
                 return new[] { Witness };
-            }
-            set
-            {
-                if (value.Length != 1) throw new ArgumentException();
-                Witness = value[0];
             }
         }
 

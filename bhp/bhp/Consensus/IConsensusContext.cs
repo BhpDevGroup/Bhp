@@ -1,14 +1,15 @@
 using Bhp.Cryptography.ECC;
+using Bhp.IO;
 using Bhp.Network.P2P.Payloads;
+using Bhp.Persistence;
 using System;
 using System.Collections.Generic;
 
 namespace Bhp.Consensus
 {
-    public interface IConsensusContext : IDisposable
+    public interface IConsensusContext : IDisposable, ISerializable
     {
         //public const uint Version = 0;
-        ConsensusState State { get; set; }
         UInt256 PrevHash { get; }
         uint BlockIndex { get; }
         byte ViewNumber { get; }
@@ -20,38 +21,33 @@ namespace Bhp.Consensus
         UInt160 NextConsensus { get; set; }
         UInt256[] TransactionHashes { get; set; }
         Dictionary<UInt256, Transaction> Transactions { get; set; }
-        byte[][] Signatures { get; set; }
-        byte[] ExpectedView { get; set; }
-
-        int M { get; }
-
-        Header PrevHeader { get; }
-
-        bool TransactionExists(UInt256 hash);
-        bool VerifyTransaction(Transaction tx);
-
-        void ChangeView(byte view_number);
+        ConsensusPayload[] PreparationPayloads { get; set; }
+        ConsensusPayload[] CommitPayloads { get; set; }
+        ConsensusPayload[] ChangeViewPayloads { get; set; }
+        int[] LastSeenMessage { get; set; }
+        Block Block { get; set; }
+        Snapshot Snapshot { get; }
 
         Block CreateBlock();
 
-        //void Dispose();
-
-        uint GetPrimaryIndex(byte view_number);
+        bool Load();
 
         ConsensusPayload MakeChangeView();
 
-        Block MakeHeader();
+        ConsensusPayload MakeCommit();
 
-        void SignHeader();
+        Block MakeHeader();
 
         ConsensusPayload MakePrepareRequest();
 
-        ConsensusPayload MakePrepareResponse(byte[] signature);
+        ConsensusPayload MakeRecoveryRequest();
 
-        void Reset();
+        ConsensusPayload MakeRecoveryMessage();
 
-        void Fill();
+        ConsensusPayload MakePrepareResponse();
 
-        bool VerifyRequest();
+        void Reset(byte viewNumber);
+
+        void Save();
     }
 }

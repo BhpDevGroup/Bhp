@@ -79,8 +79,8 @@ namespace Bhp.UnitTests
                 mockStore.Setup(p => p.GetHeaderHashIndex()).Returns(new TestMetaDataCache<HashIndexState>());
                 mockStore.Setup(p => p.GetSnapshot()).Returns(mockSnapshot.Object);
 
-                Console.WriteLine("initialize NeoSystem");
-                TheBhpSystem = new BhpSystem(mockStore.Object); // new Mock<NeoSystem>(mockStore.Object);
+                Console.WriteLine("initialize BhpSystem");
+                TheBhpSystem = new BhpSystem(mockStore.Object); // new Mock<BhpSystem>(mockStore.Object);
             }
 
             // Create a MemoryPool with capacity of 100

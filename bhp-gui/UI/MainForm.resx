@@ -224,13 +224,13 @@
   <data name="交易TToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Transaction</value>
   </data>
-  <data name="提取小蚁币CToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
+  <data name="提取BHP币CToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="提取小蚁币CToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="提取BHP币CToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 22</value>
   </data>
-  <data name="提取小蚁币CToolStripMenuItem.Text" xml:space="preserve">
+  <data name="提取BHP币CToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;BHPGas Claim...</value>
   </data>
   <data name="toolStripSeparator7.Size" type="System.Drawing.Size, System.Drawing">
@@ -2526,10 +2526,10 @@
   <data name="&gt;&gt;高级AToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;提取小蚁币CToolStripMenuItem.Name" xml:space="preserve">
-    <value>提取小蚁币CToolStripMenuItem</value>
+  <data name="&gt;&gt;提取BHP币CToolStripMenuItem.Name" xml:space="preserve">
+    <value>提取BHP币CToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;提取小蚁币CToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;提取BHP币CToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator7.Name" xml:space="preserve">

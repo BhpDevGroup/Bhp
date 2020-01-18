@@ -149,16 +149,16 @@ namespace Bhp.UI
             string spath = Path.Combine(path, files[files.Length - 1]);
             if (!File.Exists(spath)) return false;
 
-            BRC6Wallet nep6wallet = new BRC6Wallet(GetIndexer(), spath);
+            BRC6Wallet brc6wallet = new BRC6Wallet(GetIndexer(), spath);
             try
             {
-                nep6wallet.Unlock(password);
+                brc6wallet.Unlock(password);
             }
             catch (Exception ex)
             {
                 return false;
             }
-            wallet = nep6wallet;
+            wallet = brc6wallet;
 
             ChangeWallet(wallet);       
             Bhp.Properties.Settings.Default.LastWalletPath = spath;

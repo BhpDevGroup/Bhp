@@ -50,7 +50,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.showTransactionHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.高级AToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.提取小蚁币CToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.提取BHP币CToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.requestCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.注册资产RToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -270,7 +270,7 @@
             // 高级AToolStripMenuItem
             // 
             this.高级AToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.提取小蚁币CToolStripMenuItem,
+            this.提取BHP币CToolStripMenuItem,
             this.toolStripSeparator7,
             this.requestCertificateToolStripMenuItem,
             this.注册资产RToolStripMenuItem,
@@ -287,11 +287,11 @@
             this.高级AToolStripMenuItem.Name = "高级AToolStripMenuItem";
             resources.ApplyResources(this.高级AToolStripMenuItem, "高级AToolStripMenuItem");
             // 
-            // 提取小蚁币CToolStripMenuItem
+            // 提取BHP币CToolStripMenuItem
             // 
-            resources.ApplyResources(this.提取小蚁币CToolStripMenuItem, "提取小蚁币CToolStripMenuItem");
-            this.提取小蚁币CToolStripMenuItem.Name = "提取小蚁币CToolStripMenuItem";
-            this.提取小蚁币CToolStripMenuItem.Click += new System.EventHandler(this.提取小蚁币CToolStripMenuItem_Click);
+            resources.ApplyResources(this.提取BHP币CToolStripMenuItem, "提取BHP币CToolStripMenuItem");
+            this.提取BHP币CToolStripMenuItem.Name = "提取BHP币CToolStripMenuItem";
+            this.提取BHP币CToolStripMenuItem.Click += new System.EventHandler(this.提取BHP币CToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -872,7 +872,7 @@
         private System.Windows.Forms.ToolStripMenuItem importWIFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importCertificateToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripMenuItem 提取小蚁币CToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 提取BHP币CToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem 选举EToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 重建钱包数据库RToolStripMenuItem;

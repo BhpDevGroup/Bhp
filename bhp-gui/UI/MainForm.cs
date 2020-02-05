@@ -505,18 +505,22 @@ namespace Bhp.UI
                             sb.EmitAppCall(script_hash, "name");
                             script = sb.ToArray();
                         }
-                        ApplicationEngine engine = ApplicationEngine.Run(script);
-                        if (engine.State.HasFlag(VMState.FAULT)) continue;
-                        string name = engine.ResultStack.Pop().GetString();
-                        byte decimals = (byte)engine.ResultStack.Pop().GetBigInteger();
-                        BigInteger amount = ((VMArray)engine.ResultStack.Pop()).Aggregate(BigInteger.Zero, (x, y) => x + y.GetBigInteger());
-                        if (amount == 0)
+                        string name = string.Empty;
+                        string value_text = string.Empty;
+                        using (ApplicationEngine engine = ApplicationEngine.Run(script))
                         {
-                            listView2.Items.RemoveByKey(script_hash.ToString());
-                            continue;
+                            if (engine.State.HasFlag(VMState.FAULT)) continue;
+                            name = engine.ResultStack.Pop().GetString();
+                            byte decimals = (byte)engine.ResultStack.Pop().GetBigInteger();
+                            BigInteger amount = ((VMArray)engine.ResultStack.Pop()).Aggregate(BigInteger.Zero, (x, y) => x + y.GetBigInteger());
+                            if (amount == 0)
+                            {
+                                listView2.Items.RemoveByKey(script_hash.ToString());
+                                continue;
+                            }
+                            BigDecimal balance = new BigDecimal(amount, decimals);
+                            value_text = balance.ToString();
                         }
-                        BigDecimal balance = new BigDecimal(amount, decimals);
-                        string value_text = balance.ToString();
                         if (listView2.Items.ContainsKey(script_hash.ToString()))
                         {
                             listView2.Items[script_hash.ToString()].SubItems["value"].Text = value_text;
@@ -1316,18 +1320,22 @@ namespace Bhp.UI
                             sb.EmitAppCall(script_hash, "name");
                             script = sb.ToArray();
                         }
-                        ApplicationEngine engine = ApplicationEngine.Run(script);
-                        if (engine.State.HasFlag(VMState.FAULT)) continue;
-                        string name = engine.ResultStack.Pop().GetString();
-                        byte decimals = (byte)engine.ResultStack.Pop().GetBigInteger();
-                        BigInteger amount = ((VMArray)engine.ResultStack.Pop()).Aggregate(BigInteger.Zero, (x, y) => x + y.GetBigInteger());
-                        if (amount == 0)
+                        string name = string.Empty;
+                        string value_text = string.Empty;
+                        using (ApplicationEngine engine = ApplicationEngine.Run(script))
                         {
-                            listView2.Items.RemoveByKey(script_hash.ToString());
-                            continue;
+                            if (engine.State.HasFlag(VMState.FAULT)) continue;
+                            name = engine.ResultStack.Pop().GetString();
+                            byte decimals = (byte)engine.ResultStack.Pop().GetBigInteger();
+                            BigInteger amount = ((VMArray)engine.ResultStack.Pop()).Aggregate(BigInteger.Zero, (x, y) => x + y.GetBigInteger());
+                            if (amount == 0)
+                            {
+                                listView2.Items.RemoveByKey(script_hash.ToString());
+                                continue;
+                            }
+                            BigDecimal balance = new BigDecimal(amount, decimals);
+                            value_text = balance.ToString();
                         }
-                        BigDecimal balance = new BigDecimal(amount, decimals);
-                        string value_text = balance.ToString();
                         if (listView2.Items.ContainsKey(script_hash.ToString()))
                         {
                             listView2.Items[script_hash.ToString()].SubItems["value"].Text = value_text;

@@ -136,17 +136,7 @@ namespace Bhp.Shell
                 case "tx":
                     payload = Blockchain.Singleton.GetTransaction(UInt256.Parse(args[2]));
                     break;
-                case "alert":
-                case "consensus":
-                case "filteradd":
-                case "filterload":
-                case "headers":
-                case "merkleblock":
-                case "ping":
-                case "pong":
-                case "reject":
-                case "verack":
-                case "version":
+                default:
                     Console.WriteLine($"Command \"{command}\" is not supported.");
                     return true;
             }
@@ -1432,7 +1422,7 @@ namespace Bhp.Shell
                 return true;
             }
             var pluginName = args[1];
-            
+
             if (!Plugin.Plugins.Any(u => u.Name == pluginName))
             {
                 Console.WriteLine("Plugin not found");
@@ -1443,7 +1433,7 @@ namespace Bhp.Shell
             {
                 Directory.Delete(Path.Combine("Plugins", pluginName), true);
             }
-            
+
             File.Delete(Path.Combine("Plugins", $"{pluginName}.dll"));
             Console.WriteLine($"Uninstall successful, please restart bhp-cli.");
             return true;

@@ -154,4 +154,7 @@
   <data name="$this.Text" xml:space="preserve">
     <value>提取BHPGas</value>
   </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>提取到:</value>
+  </data>
 </root>

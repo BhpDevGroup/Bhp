@@ -157,4 +157,7 @@
   <data name="$this.Text" xml:space="preserve">
     <value>Reclamar BHPGas</value>
   </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Claim to:</value>
+  </data>
 </root>

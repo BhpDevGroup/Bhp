@@ -139,7 +139,7 @@
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>68, 16</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
+  <data name="lbl_change.Text" xml:space="preserve">
     <value>找零地址：</value>
   </data>
   <data name="textBox1.Location" type="System.Drawing.Point, System.Drawing">
@@ -154,7 +154,7 @@
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 16</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="lbl_fee.Text" xml:space="preserve">
     <value>手续费：</value>
   </data>
   <data name="groupBox1.Text" xml:space="preserve">
@@ -162,5 +162,8 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>转账</value>
+  </data>
+  <data name="lbl_from.Text" xml:space="preserve">
+    <value>输入地址：</value>
   </data>
 </root>

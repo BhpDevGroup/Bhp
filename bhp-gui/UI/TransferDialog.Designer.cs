@@ -33,16 +33,18 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btn_lock = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.txOutListBox1 = new Bhp.UI.TxOutListBox();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.combo_from = new System.Windows.Forms.ComboBox();
+            this.lbl_from = new System.Windows.Forms.Label();
+            this.combo_change = new System.Windows.Forms.ComboBox();
+            this.lbl_change = new System.Windows.Forms.Label();
+            this.txt_fee = new System.Windows.Forms.TextBox();
+            this.lbl_fee = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.txOutListBox1 = new Bhp.UI.TxOutListBox();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -71,15 +73,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // txOutListBox1
-            // 
-            resources.ApplyResources(this.txOutListBox1, "txOutListBox1");
-            this.txOutListBox1.Asset = null;
-            this.txOutListBox1.Name = "txOutListBox1";
-            this.txOutListBox1.ReadOnly = false;
-            this.txOutListBox1.ScriptHash = null;
-            this.txOutListBox1.ItemsChanged += new System.EventHandler(this.txOutListBox1_ItemsChanged);
-            // 
             // button4
             // 
             resources.ApplyResources(this.button4, "button4");
@@ -104,39 +97,63 @@
             // groupBox1
             // 
             resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Controls.Add(this.comboBox1);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.combo_from);
+            this.groupBox1.Controls.Add(this.lbl_from);
+            this.groupBox1.Controls.Add(this.combo_change);
+            this.groupBox1.Controls.Add(this.lbl_change);
+            this.groupBox1.Controls.Add(this.txt_fee);
+            this.groupBox1.Controls.Add(this.lbl_fee);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
-            // comboBox1
+            // combo_from
             // 
-            resources.ApplyResources(this.comboBox1, "comboBox1");
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Name = "comboBox1";
+            resources.ApplyResources(this.combo_from, "combo_from");
+            this.combo_from.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_from.FormattingEnabled = true;
+            this.combo_from.Name = "combo_from";
             // 
-            // label2
+            // lbl_from
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lbl_from, "lbl_from");
+            this.lbl_from.Name = "lbl_from";
             // 
-            // textBox1
+            // combo_change
             // 
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
+            resources.ApplyResources(this.combo_change, "combo_change");
+            this.combo_change.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_change.FormattingEnabled = true;
+            this.combo_change.Name = "combo_change";
             // 
-            // label1
+            // lbl_change
             // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            resources.ApplyResources(this.lbl_change, "lbl_change");
+            this.lbl_change.Name = "lbl_change";
+            // 
+            // txt_fee
+            // 
+            resources.ApplyResources(this.txt_fee, "txt_fee");
+            this.txt_fee.Name = "txt_fee";
+            // 
+            // lbl_fee
+            // 
+            resources.ApplyResources(this.lbl_fee, "lbl_fee");
+            this.lbl_fee.Name = "lbl_fee";
             // 
             // timer1
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // txOutListBox1
+            // 
+            resources.ApplyResources(this.txOutListBox1, "txOutListBox1");
+            this.txOutListBox1.Asset = null;
+            this.txOutListBox1.Name = "txOutListBox1";
+            this.txOutListBox1.ReadOnly = false;
+            this.txOutListBox1.ScriptHash = null;
+            this.txOutListBox1.ItemsChanged += new System.EventHandler(this.txOutListBox1_ItemsChanged);
             // 
             // TransferDialog
             // 
@@ -166,11 +183,13 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TextBox txt_fee;
+        private System.Windows.Forms.Label lbl_fee;
+        private System.Windows.Forms.Label lbl_change;
+        private System.Windows.Forms.ComboBox combo_change;
         private System.Windows.Forms.Button btn_lock;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ComboBox combo_from;
+        private System.Windows.Forms.Label lbl_from;
     }
 }

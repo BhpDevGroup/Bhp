@@ -21,15 +21,16 @@ namespace Bhp.UI
         //By BHP
         TransactionContract transactionContract = new TransactionContract();
 
-        public Fixed8 Fee => Fixed8.Parse(textBox1.Text);
-        public UInt160 ChangeAddress => ((string)comboBox1.SelectedItem).ToScriptHash();
+        public Fixed8 Fee => Fixed8.Parse(txt_fee.Text);
+        public UInt160 ChangeAddress => ((string)combo_change.SelectedItem).ToScriptHash();
 
         public TransferDialog()
         {
             InitializeComponent();
-            textBox1.Text = "0";
-            comboBox1.Items.AddRange(Program.CurrentWallet.GetAccounts().Select(p => p.Address).ToArray());
-            comboBox1.SelectedItem = Program.CurrentWallet.GetChangeAddress().ToAddress();
+            txt_fee.Text = "0";
+            combo_change.Items.AddRange(Program.CurrentWallet.GetAccounts().Select(p => p.Address).ToArray());
+            combo_change.SelectedItem = Program.CurrentWallet.GetChangeAddress().ToAddress();
+            combo_from.Items.AddRange(Program.CurrentWallet.GetAccounts().Select(p => p.Address).ToArray());
         }
 
         public Transaction GetTransaction()
@@ -55,13 +56,27 @@ namespace Bhp.UI
                 }
             }
 
+            UInt160 fromAddress = null;
+            if (combo_from.SelectedItem != null)
+            {
+                fromAddress = ((string)combo_from.SelectedItem).ToScriptHash();
+            }
+
             if (cOutputs.Length == 0)
             {
                 tx = new ContractTransaction();
             }
             else
             {
-                UInt160[] addresses = Program.CurrentWallet.GetAccounts().Select(p => p.ScriptHash).ToArray();
+                UInt160[] addresses;
+                if (combo_from.SelectedItem == null)
+                {
+                    addresses = Program.CurrentWallet.GetAccounts().Select(p => p.ScriptHash).ToArray();
+                }
+                else
+                {
+                    addresses = Program.CurrentWallet.GetAccounts().Where(e => e.ScriptHash.Equals(fromAddress)).Select(p => p.ScriptHash).ToArray();
+                }
                 HashSet<UInt160> sAttributes = new HashSet<UInt160>();
                 using (ScriptBuilder sb = new ScriptBuilder())
                 {
@@ -135,14 +150,14 @@ namespace Bhp.UI
             tx.Witnesses = new Witness[0];
             if (tx is ContractTransaction ctx)
                 //tx = Program.CurrentWallet.MakeTransaction(ctx, change_address: ChangeAddress, fee: Fee);
-                tx = transactionContract.MakeTransaction(Program.CurrentWallet, ctx, change_address: ChangeAddress, fee: Fee);
+                tx = transactionContract.MakeTransaction(Program.CurrentWallet, ctx, from: fromAddress, change_address: ChangeAddress, fee: Fee);
             return tx;
         }
-        
+
         private void txOutListBox1_ItemsChanged(object sender, EventArgs e)
         {
             //button3.Enabled = txOutListBox1.ItemCount > 0;
-            button3.Enabled = txOutListBox1.ItemCount > 0 && Program.CurrentWallet.WalletHeight - 1 == Ledger.Blockchain.Singleton.HeaderHeight && Ledger.Blockchain.Singleton.Height == Ledger.Blockchain.Singleton.HeaderHeight;            
+            button3.Enabled = txOutListBox1.ItemCount > 0 && Program.CurrentWallet.WalletHeight - 1 == Ledger.Blockchain.Singleton.HeaderHeight && Ledger.Blockchain.Singleton.Height == Ledger.Blockchain.Singleton.HeaderHeight;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -154,7 +169,7 @@ namespace Bhp.UI
         {
             button2.Visible = false;
             groupBox1.Visible = true;
-            this.Height = 510;
+            this.Height = 560;
         }
 
         TransactionAttribute LockAttribute = null;

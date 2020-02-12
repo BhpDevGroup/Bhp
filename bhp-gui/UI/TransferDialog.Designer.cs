@@ -44,7 +44,8 @@
             this.txt_fee = new System.Windows.Forms.TextBox();
             this.lbl_fee = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.txOutListBox1 = new Bhp.UI.TxOutListBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.txOutListBox1 = new TxOutListBox();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -52,9 +53,9 @@
             // groupBox3
             // 
             resources.ApplyResources(this.groupBox3, "groupBox3");
+            this.groupBox3.Controls.Add(this.panel1);
             this.groupBox3.Controls.Add(this.btn_lock);
             this.groupBox3.Controls.Add(this.button1);
-            this.groupBox3.Controls.Add(this.txOutListBox1);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
@@ -146,8 +147,14 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // txOutListBox1
+            // panel1
             // 
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Name = "panel1";
+            this.panel1.Controls.Add(this.txOutListBox1);
+            //
+            // txOutListBox1
+            //
             resources.ApplyResources(this.txOutListBox1, "txOutListBox1");
             this.txOutListBox1.Asset = null;
             this.txOutListBox1.Name = "txOutListBox1";
@@ -179,7 +186,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
-        private TxOutListBox txOutListBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -191,5 +197,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ComboBox combo_from;
         private System.Windows.Forms.Label lbl_from;
+        private System.Windows.Forms.Panel panel1;
+        private Bhp.UI.TxOutListBox txOutListBox1;
     }
 }

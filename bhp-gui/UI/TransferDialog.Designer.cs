@@ -146,12 +146,6 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // panel1
-            // 
-            resources.ApplyResources(this.panel1, "panel1");
-            this.panel1.Name = "panel1";
-            this.panel1.Controls.Add(this.txOutListBox1);
             //
             // txOutListBox1
             //
@@ -161,6 +155,12 @@
             this.txOutListBox1.ReadOnly = false;
             this.txOutListBox1.ScriptHash = null;
             this.txOutListBox1.ItemsChanged += new System.EventHandler(this.txOutListBox1_ItemsChanged);
+            // 
+            // panel1
+            // 
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Name = "panel1";
+            this.panel1.Controls.Add(this.txOutListBox1);
             // 
             // TransferDialog
             // 

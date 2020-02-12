@@ -27,6 +27,8 @@ namespace Bhp.UI
         public TransferDialog()
         {
             InitializeComponent();
+            this.txOutListBox1.Width = 555;
+            this.txOutListBox1.Height = 245;
             txt_fee.Text = "0";
             combo_change.Items.AddRange(Program.CurrentWallet.GetAccounts().Select(p => p.Address).ToArray());
             combo_change.SelectedItem = Program.CurrentWallet.GetChangeAddress().ToAddress();

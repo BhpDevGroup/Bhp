@@ -84,10 +84,6 @@ namespace Bhp.Plugins
             uint blockIndex = snapshot.Height;
             if (blockIndex >= Settings.Default.HeightToBegin)
             {
-                string dirPath = "./Storage";
-                Directory.CreateDirectory(dirPath);
-                string path = $"{HandlePaths(dirPath, blockIndex)}/dump-block-{blockIndex.ToString()}.json";
-
                 JArray array = new JArray();
 
                 foreach (DataCache<StorageKey, StorageItem>.Trackable trackable in snapshot.Storages.GetChangeSet())
@@ -121,12 +117,6 @@ namespace Bhp.Plugins
                 bs_item["size"] = array.Count;
                 bs_item["storage"] = array;
                 bs_cache.Add(bs_item);
-
-                if ((blockIndex % Settings.Default.BlockCacheSize == 0) || (blockIndex > Settings.Default.HeightToStartRealTimeSyncing))
-                {
-                    File.WriteAllText(path, bs_cache.ToString());
-                    bs_cache.Clear();
-                }
             }
         }
 
@@ -141,7 +131,7 @@ namespace Bhp.Plugins
             uint blockIndex = snapshot.Height;
             if (bs_cache.Count > 0)
             {
-                if ((blockIndex % Settings.Default.BlockCacheSize == 0) || (blockIndex > Settings.Default.HeightToStartRealTimeSyncing))
+                if ((blockIndex % Settings.Default.BlockCacheSize == 0) || (Settings.Default.HeightToStartRealTimeSyncing != -1 && blockIndex >= Settings.Default.HeightToStartRealTimeSyncing))
                 {
                     string dirPath = "./Storage";
                     Directory.CreateDirectory(dirPath);

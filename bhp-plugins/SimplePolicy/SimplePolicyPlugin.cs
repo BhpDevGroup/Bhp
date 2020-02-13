@@ -65,7 +65,7 @@ namespace Bhp.Plugins
 
             Transaction[] free = tx_list.Where(p => p.IsLowPriority)
                 .OrderByDescending(p => p.NetworkFee / p.Size)
-                .ThenByDescending(p => p.NetworkFee)               
+                .ThenByDescending(p => p.NetworkFee)
                 .ThenByDescending(p => InHigherLowPriorityList(p))
                 .ThenBy(p => p.Hash)
                 .Take(Settings.Default.MaxFreeTransactionsPerBlock)
@@ -84,14 +84,14 @@ namespace Bhp.Plugins
         void ILogPlugin.Log(string source, LogLevel level, string message)
         {
             if (source != nameof(ConsensusService)) return;
-            //DateTime now = DateTime.UtcNow;
-            string line = $"[{DateTime.UtcNow.TimeOfDay:hh\\:mm\\:ss\\.fff}] {message}";
+            DateTime now = DateTime.UtcNow;
+            string line = $"[{now.TimeOfDay:hh\\:mm\\:ss\\.fff}] {message}";
             Console.WriteLine(line);
             if (string.IsNullOrEmpty(log_dictionary)) return;
             lock (log_dictionary)
             {
                 Directory.CreateDirectory(log_dictionary);
-                string path = Path.Combine(log_dictionary, $"{DateTime.UtcNow:yyyy-MM-dd}.log");
+                string path = Path.Combine(log_dictionary, $"{now:yyyy-MM-dd}.log");
                 File.AppendAllLines(path, new[] { line });
             }
         }

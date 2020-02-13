@@ -121,7 +121,7 @@
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 17</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="lbl_progress.Text" xml:space="preserve">
     <value>进度 : </value>
   </data>
   <data name="btn_arrange.Text" xml:space="preserve">
@@ -133,13 +133,13 @@
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 17</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
+  <data name="lbl_txs.Text" xml:space="preserve">
     <value>交易 : </value>
   </data>
   <data name="lbl_coinType.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 17</value>
   </data>
-  <data name="lbl_coinType.Text" xml:space="preserve">
+  <data name="lbl_asset.Text" xml:space="preserve">
     <value>资产 : </value>
   </data>
   <data name="$this.Text" xml:space="preserve">

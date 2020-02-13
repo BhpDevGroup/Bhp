@@ -30,22 +30,22 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArrangeWalletDialog));
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbl_progress = new System.Windows.Forms.Label();
             this.btn_arrange = new System.Windows.Forms.Button();
             this.btn_close = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lbl_txs = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.combo_asset = new System.Windows.Forms.ComboBox();
-            this.lbl_coinType = new System.Windows.Forms.Label();
+            this.lbl_asset = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // label1
+            // lbl_progress
             // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            resources.ApplyResources(this.lbl_progress, "lbl_progress");
+            this.lbl_progress.Name = "lbl_progress";
             // 
             // btn_arrange
             // 
@@ -80,10 +80,10 @@
             resources.ApplyResources(this.listBox1, "listBox1");
             this.listBox1.Name = "listBox1";
             // 
-            // label2
+            // lbl_txs
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lbl_txs, "lbl_txs");
+            this.lbl_txs.Name = "lbl_txs";
             // 
             // timer1
             // 
@@ -98,23 +98,23 @@
             this.combo_asset.Name = "combo_asset";
             this.combo_asset.SelectedIndexChanged += new System.EventHandler(this.combo_asset_SelectedIndexChanged);
             // 
-            // lbl_coinType
+            // lbl_asset
             // 
-            resources.ApplyResources(this.lbl_coinType, "lbl_coinType");
-            this.lbl_coinType.Name = "lbl_coinType";
+            resources.ApplyResources(this.lbl_asset, "lbl_asset");
+            this.lbl_asset.Name = "lbl_asset";
             // 
             // ArrangeWalletDialog
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.combo_asset);
-            this.Controls.Add(this.lbl_coinType);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lbl_asset);
+            this.Controls.Add(this.lbl_txs);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.btn_close);
             this.Controls.Add(this.btn_arrange);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbl_progress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -126,15 +126,15 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbl_progress;
         private System.Windows.Forms.Button btn_arrange;
         private System.Windows.Forms.Button btn_close;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbl_txs;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ComboBox combo_asset;
-        private System.Windows.Forms.Label lbl_coinType;
+        private System.Windows.Forms.Label lbl_asset;
     }
 }

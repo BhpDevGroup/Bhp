@@ -29,53 +29,53 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AssetRegisterDialog));
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lbl_asset = new System.Windows.Forms.Label();
+            this.combo_asset = new System.Windows.Forms.ComboBox();
+            this.lbl_name = new System.Windows.Forms.Label();
+            this.txt_name = new System.Windows.Forms.TextBox();
+            this.lbl_capped = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.txt_capped = new System.Windows.Forms.TextBox();
+            this.lbl_owner = new System.Windows.Forms.Label();
+            this.combo_owner = new System.Windows.Forms.ComboBox();
+            this.lbl_admin = new System.Windows.Forms.Label();
+            this.combo_admin = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lbl_precision = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.lbl_issuer = new System.Windows.Forms.Label();
+            this.combo_issuer = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // lbl_asset
             // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            resources.ApplyResources(this.lbl_asset, "lbl_asset");
+            this.lbl_asset.Name = "lbl_asset";
             // 
-            // comboBox1
+            // combo_asset
             // 
-            resources.ApplyResources(this.comboBox1, "comboBox1");
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            resources.ApplyResources(this.combo_asset, "combo_asset");
+            this.combo_asset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_asset.FormattingEnabled = true;
+            this.combo_asset.Name = "combo_asset";
+            this.combo_asset.SelectedIndexChanged += new System.EventHandler(this.combo_asset_SelectedIndexChanged);
             // 
-            // label2
+            // lbl_name
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lbl_name, "lbl_name");
+            this.lbl_name.Name = "lbl_name";
             // 
-            // textBox1
+            // txt_name
             // 
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
-            this.textBox1.TextChanged += new System.EventHandler(this.CheckForm);
+            resources.ApplyResources(this.txt_name, "txt_name");
+            this.txt_name.Name = "txt_name";
+            this.txt_name.TextChanged += new System.EventHandler(this.CheckForm);
             // 
-            // label3
+            // lbl_capped
             // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
+            resources.ApplyResources(this.lbl_capped, "lbl_capped");
+            this.lbl_capped.Name = "lbl_capped";
             // 
             // checkBox1
             // 
@@ -84,37 +84,37 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // textBox2
+            // txt_capped
             // 
-            resources.ApplyResources(this.textBox2, "textBox2");
-            this.textBox2.Name = "textBox2";
-            this.textBox2.TextChanged += new System.EventHandler(this.CheckForm);
+            resources.ApplyResources(this.txt_capped, "txt_capped");
+            this.txt_capped.Name = "txt_capped";
+            this.txt_capped.TextChanged += new System.EventHandler(this.CheckForm);
             // 
-            // label4
+            // lbl_owner
             // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
+            resources.ApplyResources(this.lbl_owner, "lbl_owner");
+            this.lbl_owner.Name = "lbl_owner";
             // 
-            // comboBox2
+            // combo_owner
             // 
-            resources.ApplyResources(this.comboBox2, "comboBox2");
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.CheckForm);
+            resources.ApplyResources(this.combo_owner, "combo_owner");
+            this.combo_owner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_owner.FormattingEnabled = true;
+            this.combo_owner.Name = "combo_owner";
+            this.combo_owner.SelectedIndexChanged += new System.EventHandler(this.CheckForm);
             // 
-            // label5
+            // lbl_admin
             // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
+            resources.ApplyResources(this.lbl_admin, "lbl_admin");
+            this.lbl_admin.Name = "lbl_admin";
             // 
-            // comboBox3
+            // combo_admin
             // 
-            resources.ApplyResources(this.comboBox3, "comboBox3");
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.CheckForm);
-            this.comboBox3.TextUpdate += new System.EventHandler(this.CheckForm);
+            resources.ApplyResources(this.combo_admin, "combo_admin");
+            this.combo_admin.FormattingEnabled = true;
+            this.combo_admin.Name = "combo_admin";
+            this.combo_admin.SelectedIndexChanged += new System.EventHandler(this.CheckForm);
+            this.combo_admin.TextUpdate += new System.EventHandler(this.CheckForm);
             // 
             // button1
             // 
@@ -123,10 +123,10 @@
             this.button1.Name = "button1";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // label6
+            // lbl_precision
             // 
-            resources.ApplyResources(this.label6, "label6");
-            this.label6.Name = "label6";
+            resources.ApplyResources(this.lbl_precision, "lbl_precision");
+            this.lbl_precision.Name = "lbl_precision";
             // 
             // numericUpDown1
             // 
@@ -143,40 +143,40 @@
             0,
             0});
             // 
-            // label9
+            // lbl_issuer
             // 
-            resources.ApplyResources(this.label9, "label9");
-            this.label9.Name = "label9";
+            resources.ApplyResources(this.lbl_issuer, "lbl_issuer");
+            this.lbl_issuer.Name = "lbl_issuer";
             // 
-            // comboBox4
+            // combo_issuer
             // 
-            resources.ApplyResources(this.comboBox4, "comboBox4");
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.CheckForm);
-            this.comboBox4.TextUpdate += new System.EventHandler(this.CheckForm);
+            resources.ApplyResources(this.combo_issuer, "combo_issuer");
+            this.combo_issuer.FormattingEnabled = true;
+            this.combo_issuer.Name = "combo_issuer";
+            this.combo_issuer.SelectedIndexChanged += new System.EventHandler(this.CheckForm);
+            this.combo_issuer.TextUpdate += new System.EventHandler(this.CheckForm);
             // 
             // AssetRegisterDialog
             // 
             this.AcceptButton = this.button1;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.comboBox4);
-            this.Controls.Add(this.label9);
+            this.Controls.Add(this.combo_issuer);
+            this.Controls.Add(this.lbl_issuer);
             this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.lbl_precision);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.comboBox3);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.combo_admin);
+            this.Controls.Add(this.lbl_admin);
+            this.Controls.Add(this.combo_owner);
+            this.Controls.Add(this.lbl_owner);
+            this.Controls.Add(this.txt_capped);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbl_capped);
+            this.Controls.Add(this.txt_name);
+            this.Controls.Add(this.lbl_name);
+            this.Controls.Add(this.combo_asset);
+            this.Controls.Add(this.lbl_asset);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -191,21 +191,21 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbl_asset;
+        private System.Windows.Forms.ComboBox combo_asset;
+        private System.Windows.Forms.Label lbl_name;
+        private System.Windows.Forms.TextBox txt_name;
+        private System.Windows.Forms.Label lbl_capped;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.TextBox txt_capped;
+        private System.Windows.Forms.Label lbl_owner;
+        private System.Windows.Forms.ComboBox combo_owner;
+        private System.Windows.Forms.Label lbl_admin;
+        private System.Windows.Forms.ComboBox combo_admin;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lbl_precision;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Label lbl_issuer;
+        private System.Windows.Forms.ComboBox combo_issuer;
     }
 }

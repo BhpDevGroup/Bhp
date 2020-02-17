@@ -118,109 +118,109 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_asset.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 17</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="lbl_asset.Text" xml:space="preserve">
     <value>资产种类:</value>
   </data>
-  <data name="comboBox1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="combo_asset.Location" type="System.Drawing.Point, System.Drawing">
     <value>80, 13</value>
   </data>
-  <data name="comboBox1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="combo_asset.Size" type="System.Drawing.Size, System.Drawing">
     <value>455, 25</value>
   </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_name.Location" type="System.Drawing.Point, System.Drawing">
     <value>37, 49</value>
   </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_name.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 17</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
+  <data name="lbl_name.Text" xml:space="preserve">
     <value>名称:</value>
   </data>
-  <data name="textBox1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="txt_name.Location" type="System.Drawing.Point, System.Drawing">
     <value>80, 46</value>
   </data>
-  <data name="textBox1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="txt_name.Size" type="System.Drawing.Size, System.Drawing">
     <value>455, 23</value>
   </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_capped.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 80</value>
   </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_capped.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 17</value>
   </data>
-  <data name="label3.Text" xml:space="preserve">
+  <data name="lbl_capped.Text" xml:space="preserve">
     <value>总量限制:</value>
   </data>
   <data name="checkBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>80, 82</value>
   </data>
-  <data name="textBox2.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="txt_capped.Location" type="System.Drawing.Point, System.Drawing">
     <value>103, 77</value>
   </data>
-  <data name="textBox2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="txt_capped.Size" type="System.Drawing.Size, System.Drawing">
     <value>432, 23</value>
   </data>
-  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_owner.Location" type="System.Drawing.Point, System.Drawing">
     <value>25, 142</value>
   </data>
-  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_owner.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 17</value>
   </data>
-  <data name="label4.Text" xml:space="preserve">
+  <data name="lbl_owner.Text" xml:space="preserve">
     <value>发行者:</value>
   </data>
-  <data name="comboBox2.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="combo_owner.Location" type="System.Drawing.Point, System.Drawing">
     <value>80, 139</value>
   </data>
-  <data name="comboBox2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="combo_owner.Size" type="System.Drawing.Size, System.Drawing">
     <value>455, 25</value>
   </data>
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_admin.Location" type="System.Drawing.Point, System.Drawing">
     <value>25, 175</value>
   </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_admin.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 17</value>
   </data>
-  <data name="label5.Text" xml:space="preserve">
+  <data name="lbl_admin.Text" xml:space="preserve">
     <value>管理员:</value>
   </data>
-  <data name="comboBox3.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="combo_admin.Location" type="System.Drawing.Point, System.Drawing">
     <value>80, 172</value>
   </data>
-  <data name="comboBox3.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="combo_admin.Size" type="System.Drawing.Size, System.Drawing">
     <value>455, 25</value>
   </data>
   <data name="button1.Text" xml:space="preserve">
     <value>确定</value>
   </data>
-  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_precision.Location" type="System.Drawing.Point, System.Drawing">
     <value>37, 110</value>
   </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_precision.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 17</value>
   </data>
-  <data name="label6.Text" xml:space="preserve">
+  <data name="lbl_precision.Text" xml:space="preserve">
     <value>精度:</value>
   </data>
   <data name="numericUpDown1.Location" type="System.Drawing.Point, System.Drawing">
     <value>80, 108</value>
   </data>
-  <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_issuer.Location" type="System.Drawing.Point, System.Drawing">
     <value>37, 208</value>
   </data>
-  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_issuer.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 17</value>
   </data>
-  <data name="label9.Text" xml:space="preserve">
+  <data name="lbl_issuer.Text" xml:space="preserve">
     <value>分发:</value>
   </data>
-  <data name="comboBox4.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="combo_issuer.Location" type="System.Drawing.Point, System.Drawing">
     <value>80, 205</value>
   </data>
-  <data name="comboBox4.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="combo_issuer.Size" type="System.Drawing.Size, System.Drawing">
     <value>455, 25</value>
   </data>
   <data name="$this.Text" xml:space="preserve">

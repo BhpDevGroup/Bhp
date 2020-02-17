@@ -1,6 +1,4 @@
-﻿using Bhp.VM;
-
-namespace Bhp.SmartContract.Framework
+﻿namespace Bhp.SmartContract.Framework
 {
     public class Map<TKey, TValue>
     {

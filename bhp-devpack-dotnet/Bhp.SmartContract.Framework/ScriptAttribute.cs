@@ -1,4 +1,3 @@
-using Bhp.VM;
 using System;
 
 namespace Bhp.SmartContract.Framework

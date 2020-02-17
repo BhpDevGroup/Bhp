@@ -15,16 +15,26 @@ namespace Bhp.Compiler
         //Console.WriteLine("<ERR|aaaa.cs> 这是ee一个严重的问题。");//错误输出，带文件名
         //Console.WriteLine("SUCC");//输出这个表示编译成功
         //控制台输出约定了特别的语法
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-
-            //set console
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            // Set console
+            Console.OutputEncoding = Encoding.UTF8;
             var log = new DefLogger();
             log.Log("Bhp.Compiler.MSIL console app v" + Assembly.GetEntryAssembly().GetName().Version);
 
+            // Check argmuents
+            if (args.Length == 0)
+            {
+                log.Log("You need a parameter to specify the DLL or the file name of the project.");
+                log.Log("Examples: ");
+                log.Log("  bhpn mySmartContract.dll");
+                log.Log("  bhpn mySmartContract.csproj");
+
+                return -1;
+            }
+
             bool bCompatible = false;
-            string filename = null;
+            FileInfo fileInfo = null;
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i][0] == '-')
@@ -38,24 +48,36 @@ namespace Bhp.Compiler
                 }
                 else
                 {
-                    filename = args[i];
+                    fileInfo = new FileInfo(args[i]);
                 }
             }
 
-            if (filename == null)
+            if (fileInfo == null)
             {
-                log.Log("need one param for DLL filename.");
+                log.Log("Need one param for filename (DLL or source)");
                 log.Log("[--compatible] disable brc8 function and disable SyscallInteropHash");
                 log.Log("Example:bhpn abc.dll --compatible");
-                return;
+                return 0;
             }
+
+            // Set current directory
+
+            if (!fileInfo.Exists)
+            {
+                log.Log("Could not find file " + fileInfo.FullName);
+                return -1;
+            }
+
             if (bCompatible)
             {
                 log.Log("use --compatible no brc8 and no SyscallInteropHash");
             }
-            string onlyname = System.IO.Path.GetFileNameWithoutExtension(filename);
-            string filepdb = onlyname + ".pdb";
-            var path = Path.GetDirectoryName(filename);
+
+            Stream fs;
+            Stream fspdb;
+            var onlyname = Path.GetFileNameWithoutExtension(fileInfo.Name);
+            var path = fileInfo.Directory.FullName;
+
             if (!string.IsNullOrEmpty(path))
             {
                 try
@@ -65,30 +87,86 @@ namespace Bhp.Compiler
                 catch
                 {
                     log.Log("Could not find path: " + path);
-                    Environment.Exit(-1);
+                    return -1;
                 }
+            }
+
+            switch (fileInfo.Extension.ToLowerInvariant())
+            {
+                case ".csproj":
+                    {
+                        // Compile csproj file
+
+                        log.Log("Compiling from csproj project");
+                        var output = Compiler.CompileCSProj(fileInfo.FullName);
+                        fs = new MemoryStream(output.Dll);
+                        fspdb = new MemoryStream(output.Pdb);
+                        break;
+                    }
+                case ".vbproj":
+                    {
+                        // Compile vbproj file
+
+                        log.Log("Compiling from vbproj project");
+                        var output = Compiler.CompileVBProj(fileInfo.FullName);
+                        fs = new MemoryStream(output.Dll);
+                        fspdb = new MemoryStream(output.Pdb);
+                        break;
+                    }
+                case ".cs":
+                    {
+                        // Compile C# files
+
+                        log.Log("Compiling from c# source");
+                        var output = Compiler.CompileCSFiles(new string[] { fileInfo.FullName }, new string[0]);
+                        fs = new MemoryStream(output.Dll);
+                        fspdb = new MemoryStream(output.Pdb);
+                        break;
+                    }
+                case ".vb":
+                    {
+                        // Compile VB files
+
+                        log.Log("Compiling from VB source");
+                        var output = Compiler.CompileVBFiles(new string[] { fileInfo.FullName }, new string[0]);
+                        fs = new MemoryStream(output.Dll);
+                        fspdb = new MemoryStream(output.Pdb);
+                        break;
+                    }
+                case ".dll":
+                    {
+                        string filepdb = onlyname + ".pdb";
+
+                        // Open file
+                        try
+                        {
+                            fs = fileInfo.OpenRead();
+
+                            if (File.Exists(filepdb))
+                            {
+                                fspdb = File.OpenRead(filepdb);
+                            }
+                            else
+                            {
+                                fspdb = null;
+                            }
+                        }
+                        catch (Exception err)
+                        {
+                            log.Log("Open File Error:" + err.ToString());
+                            return -1;
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        log.Log("File format not supported by bhpn: " + path);
+                        return -1;
+                    }
             }
 
             ILModule mod = new ILModule(log);
-            System.IO.Stream fs = null;
-            System.IO.Stream fspdb = null;
 
-            //open file
-            try
-            {
-                fs = System.IO.File.OpenRead(filename);
-
-                if (System.IO.File.Exists(filepdb))
-                {
-                    fspdb = System.IO.File.OpenRead(filepdb);
-                }
-
-            }
-            catch (Exception err)
-            {
-                log.Log("Open File Error:" + err.ToString());
-                return;
-            }
             //load module
             try
             {
@@ -97,7 +175,7 @@ namespace Bhp.Compiler
             catch (Exception err)
             {
                 log.Log("LoadModule Error:" + err.ToString());
-                return;
+                return -1;
             }
             byte[] bytes = null;
             bool bSucc = false;
@@ -131,7 +209,7 @@ namespace Bhp.Compiler
             catch (Exception err)
             {
                 log.Log("Convert Error:" + err.ToString());
-                return;
+                return -1;
             }
             //write bytes
             try
@@ -139,30 +217,30 @@ namespace Bhp.Compiler
 
                 string bytesname = onlyname + ".avm";
 
-                System.IO.File.Delete(bytesname);
-                System.IO.File.WriteAllBytes(bytesname, bytes);
+                File.Delete(bytesname);
+                File.WriteAllBytes(bytesname, bytes);
                 log.Log("write:" + bytesname);
                 bSucc = true;
             }
             catch (Exception err)
             {
                 log.Log("Write Bytes Error:" + err.ToString());
-                return;
+                return -1;
             }
             try
             {
 
                 string abiname = onlyname + ".abi.json";
 
-                System.IO.File.Delete(abiname);
-                System.IO.File.WriteAllText(abiname, jsonstr);
+                File.Delete(abiname);
+                File.WriteAllText(abiname, jsonstr);
                 log.Log("write:" + abiname);
                 bSucc = true;
             }
             catch (Exception err)
             {
                 log.Log("Write abi Error:" + err.ToString());
-                return;
+                return -1;
             }
             try
             {
@@ -179,6 +257,8 @@ namespace Bhp.Compiler
             {
                 log.Log("SUCC");
             }
+
+            return -1;
         }
     }
 }

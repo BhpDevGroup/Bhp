@@ -1,4 +1,4 @@
-﻿namespace Bhp.VM
+﻿namespace Bhp.SmartContract.Framework
 {
     public enum OpCode : byte
     {

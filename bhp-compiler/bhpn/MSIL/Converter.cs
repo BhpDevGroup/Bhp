@@ -72,8 +72,6 @@ namespace Bhp.Compiler.MSIL
             this.outModule = new BhpModule(this.logger);
             this.outModule.option = option == null ? ConvOption.Default : option;
 
-            ParseMetadata(this.inModule, this.outModule);
-
             foreach (var t in _in.mapType)
             {
                 if (t.Key.Contains("<"))
@@ -310,60 +308,6 @@ namespace Bhp.Compiler.MSIL
                         throw new Exception("not have right fill bytes");
                     }
                     c.needfixfunc = false;
-                }
-            }
-        }
-
-        private static void ParseMetadata(ILModule inModule, BhpModule outModule)
-        {
-            var assemblyDef = inModule.module.Assembly;
-            outModule.Title = assemblyDef.Name.Name;
-            outModule.Version = assemblyDef.Name.Version.ToString();
-
-            foreach (var attrib in assemblyDef.CustomAttributes)
-            {
-                switch (attrib.AttributeType.FullName)
-                {
-                    case "System.Reflection.AssemblyTitleAttribute":
-                        if (outModule.Title == assemblyDef.Name.Name)
-                        {
-                            outModule.Title = attrib.ConstructorArguments[0].Value.ToString();
-                        }
-                        break;
-                    case "System.Reflection.AssemblyDescriptionAttribute":
-                        if (string.IsNullOrEmpty(outModule.Description))
-                        {
-                            outModule.Description = attrib.ConstructorArguments[0].Value.ToString();
-                        }
-                        break;
-                    case "Bhp.SmartContract.Framework.ContractAuthor":
-                        outModule.Author = attrib.ConstructorArguments[0].Value.ToString();
-                        break;
-                    case "Bhp.SmartContract.Framework.ContractDescription":
-                        outModule.Description = attrib.ConstructorArguments[0].Value.ToString();
-                        break;
-                    case "Bhp.SmartContract.Framework.ContractEmail":
-                        outModule.Email = attrib.ConstructorArguments[0].Value.ToString();
-                        break;
-                    case "Bhp.SmartContract.Framework.FeaturesAttribute":
-                        {
-                            // define constants to mirror ContractPropertyState values
-                            const byte HAS_STORAGE = 1 << 0;
-                            const byte HAS_DYNAMIC_INVOKE = 1 << 1;
-                            const byte PAYABLE = 1 << 2;
-
-                            var features = (byte)attrib.ConstructorArguments[0].Value;
-                            outModule.HasDynamicInvoke = (features & HAS_DYNAMIC_INVOKE) != 0;
-                            outModule.HasStorage = (features & HAS_STORAGE) != 0;
-                            outModule.IsPayable = (features & PAYABLE) != 0;
-                        }
-                        break;
-                    case "Bhp.SmartContract.Framework.ContractTitle":
-                        outModule.Title = attrib.ConstructorArguments[0].Value.ToString();
-                        break;
-                    case "Bhp.SmartContract.Framework.ContractVersion":
-                        outModule.Version = attrib.ConstructorArguments[0].Value.ToString();
-                        break;
                 }
             }
         }
@@ -839,15 +783,12 @@ namespace Bhp.Compiler.MSIL
                 //用意为byte[] 取一部分.....
                 // en: intent to use byte[] as array.....
                 case CodeEx.Ldelem_U1:
-                    _ConvertPush(1, src, to);
-                    _Convert1by1(VM.OpCode.SUBSTR, null, to);
-                    break;
-                //用意为sbyte[] 取一部分.....
-                // en: intent to use sbyte[] as array.....
                 case CodeEx.Ldelem_I1:
-                    _ConvertPush(1, src, to);
-                    _Convert1by1(VM.OpCode.SUBSTR, null, to);
-                    break;
+                //_ConvertPush(1, src, to);
+                //_Convert1by1(VM.OpCode.SUBSTR, null, to);
+                //break;
+                //now we can use pickitem for byte[]
+
                 case CodeEx.Ldelem_Any:
                 case CodeEx.Ldelem_I:
                 //case CodeEx.Ldelem_I1:
@@ -866,7 +807,7 @@ namespace Bhp.Compiler.MSIL
                     break;
 
                 case CodeEx.Stelem_I1:
-                      {
+                    {
                         // WILL TRACE VARIABLE ORIGIN "Z" IN ALTSTACK!
                         // EXPECTS:  source[index] = b; // index and b must be variables! constants will fail!
                         /*
@@ -881,54 +822,54 @@ namespace Bhp.Compiler.MSIL
                         1 c3 PICKITEM
                         */
 
-                        if(  (to.body_Codes[addr-1].code == VM.OpCode.PICKITEM)
-                          && (to.body_Codes[addr-4].code == VM.OpCode.PICKITEM)
-                          && (to.body_Codes[addr-7].code == VM.OpCode.PICKITEM)
-                          && (to.body_Codes[addr-3].code == VM.OpCode.DUPFROMALTSTACK)
-                          && (to.body_Codes[addr-6].code == VM.OpCode.DUPFROMALTSTACK)
-                          && (to.body_Codes[addr-9].code == VM.OpCode.DUPFROMALTSTACK)
-                          && ((to.body_Codes[addr-2].code >= VM.OpCode.PUSH0) && (to.body_Codes[addr-2].code <= VM.OpCode.PUSH16))
-                          && ((to.body_Codes[addr-5].code >= VM.OpCode.PUSH0) && (to.body_Codes[addr-5].code <= VM.OpCode.PUSH16))
-                          && ((to.body_Codes[addr-8].code >= VM.OpCode.PUSH0) && (to.body_Codes[addr-8].code <= VM.OpCode.PUSH16))
+                        if ((to.body_Codes[addr - 1].code == VM.OpCode.PICKITEM)
+                          && (to.body_Codes[addr - 4].code == VM.OpCode.PICKITEM)
+                          && (to.body_Codes[addr - 7].code == VM.OpCode.PICKITEM)
+                          && (to.body_Codes[addr - 3].code == VM.OpCode.DUPFROMALTSTACK)
+                          && (to.body_Codes[addr - 6].code == VM.OpCode.DUPFROMALTSTACK)
+                          && (to.body_Codes[addr - 9].code == VM.OpCode.DUPFROMALTSTACK)
+                          && ((to.body_Codes[addr - 2].code >= VM.OpCode.PUSH0) && (to.body_Codes[addr - 2].code <= VM.OpCode.PUSH16))
+                          && ((to.body_Codes[addr - 5].code >= VM.OpCode.PUSH0) && (to.body_Codes[addr - 5].code <= VM.OpCode.PUSH16))
+                          && ((to.body_Codes[addr - 8].code >= VM.OpCode.PUSH0) && (to.body_Codes[addr - 8].code <= VM.OpCode.PUSH16))
                           )
-                          {
-                              // WILL REQUIRE TO PROCESS INFORMATION AND STORE IT AGAIN ON ALTSTACK CORRECT POSITION
-                              VM.OpCode PushZ = to.body_Codes[addr-8].code;
+                        {
+                            // WILL REQUIRE TO PROCESS INFORMATION AND STORE IT AGAIN ON ALTSTACK CORRECT POSITION
+                            VM.OpCode PushZ = to.body_Codes[addr - 8].code;
 
-                              _Convert1by1(VM.OpCode.PUSH2, null, to);
-                              _Convert1by1(VM.OpCode.PICK, null, to);
-                              _Convert1by1(VM.OpCode.PUSH2, null, to);
-                              _Convert1by1(VM.OpCode.PICK, null, to);
-                              _Convert1by1(VM.OpCode.LEFT, null, to);
-                              _Convert1by1(VM.OpCode.SWAP, null, to);
-                              _Convert1by1(VM.OpCode.CAT, null, to);
-                              _Convert1by1(VM.OpCode.ROT, null, to);
-                              _Convert1by1(VM.OpCode.ROT, null, to);
-                              _Convert1by1(VM.OpCode.OVER, null, to);
-                              _Convert1by1(VM.OpCode.ARRAYSIZE, null, to);
-                              _Convert1by1(VM.OpCode.DEC, null, to);
-                              _Convert1by1(VM.OpCode.SWAP, null, to);
-                              _Convert1by1(VM.OpCode.SUB, null, to);
-                              _Convert1by1(VM.OpCode.RIGHT, null, to);
-                              _Convert1by1(VM.OpCode.CAT, null, to);
+                            _Convert1by1(VM.OpCode.PUSH2, null, to);
+                            _Convert1by1(VM.OpCode.PICK, null, to);
+                            _Convert1by1(VM.OpCode.PUSH2, null, to);
+                            _Convert1by1(VM.OpCode.PICK, null, to);
+                            _Convert1by1(VM.OpCode.LEFT, null, to);
+                            _Convert1by1(VM.OpCode.SWAP, null, to);
+                            _Convert1by1(VM.OpCode.CAT, null, to);
+                            _Convert1by1(VM.OpCode.ROT, null, to);
+                            _Convert1by1(VM.OpCode.ROT, null, to);
+                            _Convert1by1(VM.OpCode.OVER, null, to);
+                            _Convert1by1(VM.OpCode.ARRAYSIZE, null, to);
+                            _Convert1by1(VM.OpCode.DEC, null, to);
+                            _Convert1by1(VM.OpCode.SWAP, null, to);
+                            _Convert1by1(VM.OpCode.SUB, null, to);
+                            _Convert1by1(VM.OpCode.RIGHT, null, to);
+                            _Convert1by1(VM.OpCode.CAT, null, to);
 
-                              // FINAL RESULT MUST GO BACK TO POSITION Z ON ALTSTACK
+                            // FINAL RESULT MUST GO BACK TO POSITION Z ON ALTSTACK
 
-                              // FINAL STACK:
-                              // 4 get array (dupfromaltstack)
-                              // 3 PushZ
-                              // 2 result
-                              // 1 setitem
+                            // FINAL STACK:
+                            // 4 get array (dupfromaltstack)
+                            // 3 PushZ
+                            // 2 result
+                            // 1 setitem
 
-                              _Convert1by1(VM.OpCode.DUPFROMALTSTACK, null, to);  // stack: [ array , result , ... ]
-                              _Convert1by1(PushZ, null, to);                      // stack: [ pushz, array , result , ... ]
-                              _Convert1by1(VM.OpCode.ROT, null, to);              // stack: [ result, pushz, array , ... ]
-                              _Convert1by1(VM.OpCode.SETITEM, null, to);          // stack: [ result, pushz, array , ... ]
-                          }
-                          else
-                              throw new Exception("bhpmachine currently supports only variable indexed bytearray attribution, example: byte[] source; int index = 0; byte b = 1; source[index] = b;");
-                      } // end case
-                      break;
+                            _Convert1by1(VM.OpCode.DUPFROMALTSTACK, null, to);  // stack: [ array , result , ... ]
+                            _Convert1by1(PushZ, null, to);                      // stack: [ pushz, array , result , ... ]
+                            _Convert1by1(VM.OpCode.ROT, null, to);              // stack: [ result, pushz, array , ... ]
+                            _Convert1by1(VM.OpCode.SETITEM, null, to);          // stack: [ result, pushz, array , ... ]
+                        }
+                        else
+                            throw new Exception("bhpmachine currently supports only variable indexed bytearray attribution, example: byte[] source; int index = 0; byte b = 1; source[index] = b;");
+                    } // end case
+                    break;
                 case CodeEx.Stelem_Any:
                 case CodeEx.Stelem_I:
                 //case CodeEx.Stelem_I1:
@@ -1080,7 +1021,7 @@ namespace Bhp.Compiler.MSIL
                         }
                         else
                         {//如果走到这里，是一个静态成员，但是没有添加readonly 表示
-                            throw new Exception("Just allow defined a static variable with readonly."+d.FullName);
+                            throw new Exception("Just allow defined a static variable with readonly." + d.FullName);
                         }
                     }
                     break;

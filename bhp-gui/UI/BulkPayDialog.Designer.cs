@@ -29,72 +29,72 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BulkPayDialog));
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.txt_balance = new System.Windows.Forms.TextBox();
+            this.lbl_balance = new System.Windows.Forms.Label();
+            this.combo_asset = new System.Windows.Forms.ComboBox();
+            this.lbl_asset = new System.Windows.Forms.Label();
+            this.btn_ok = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txt_payto = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // textBox3
+            // txt_balance
             // 
-            resources.ApplyResources(this.textBox3, "textBox3");
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
+            resources.ApplyResources(this.txt_balance, "txt_balance");
+            this.txt_balance.Name = "txt_balance";
+            this.txt_balance.ReadOnly = true;
             // 
-            // label4
+            // lbl_balance
             // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
+            resources.ApplyResources(this.lbl_balance, "lbl_balance");
+            this.lbl_balance.Name = "lbl_balance";
             // 
-            // comboBox1
+            // combo_asset
             // 
-            resources.ApplyResources(this.comboBox1, "comboBox1");
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            resources.ApplyResources(this.combo_asset, "combo_asset");
+            this.combo_asset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_asset.FormattingEnabled = true;
+            this.combo_asset.Name = "combo_asset";
+            this.combo_asset.SelectedIndexChanged += new System.EventHandler(this.combo_asset_SelectedIndexChanged);
             // 
-            // label3
+            // lbl_asset
             // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
+            resources.ApplyResources(this.lbl_asset, "lbl_asset");
+            this.lbl_asset.Name = "lbl_asset";
             // 
-            // button1
+            // btn_ok
             // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.btn_ok, "btn_ok");
+            this.btn_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btn_ok.Name = "btn_ok";
+            this.btn_ok.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
             resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.txt_payto);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
-            // textBox1
+            // txt_payto
             // 
-            this.textBox1.AcceptsReturn = true;
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.txt_payto.AcceptsReturn = true;
+            resources.ApplyResources(this.txt_payto, "txt_payto");
+            this.txt_payto.Name = "txt_payto";
+            this.txt_payto.TextChanged += new System.EventHandler(this.txt_payto_TextChanged);
             // 
             // BulkPayDialog
             // 
             resources.ApplyResources(this, "$this");
-            this.AcceptButton = this.button1;
+            this.AcceptButton = this.btn_ok;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.txt_balance);
+            this.Controls.Add(this.lbl_balance);
+            this.Controls.Add(this.combo_asset);
+            this.Controls.Add(this.lbl_asset);
+            this.Controls.Add(this.btn_ok);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BulkPayDialog";
@@ -108,12 +108,12 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox txt_balance;
+        private System.Windows.Forms.Label lbl_balance;
+        private System.Windows.Forms.ComboBox combo_asset;
+        private System.Windows.Forms.Label lbl_asset;
+        private System.Windows.Forms.Button btn_ok;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txt_payto;
     }
 }

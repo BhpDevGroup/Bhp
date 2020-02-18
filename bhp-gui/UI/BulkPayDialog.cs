@@ -15,14 +15,14 @@ namespace Bhp.UI
             {
                 foreach (UInt256 asset_id in Program.CurrentWallet.FindUnspentCoins().Select(p => p.Output.AssetId).Distinct())
                 {
-                    comboBox1.Items.Add(new AssetDescriptor(asset_id));
+                    combo_asset.Items.Add(new AssetDescriptor(asset_id));
                 }
                 foreach (string s in Settings.Default.BRC20Watched)
                 {
                     UInt160 asset_id = UInt160.Parse(s);
                     try
                     {
-                        comboBox1.Items.Add(new AssetDescriptor(asset_id));
+                        combo_asset.Items.Add(new AssetDescriptor(asset_id));
                     }
                     catch (ArgumentException)
                     {
@@ -32,16 +32,16 @@ namespace Bhp.UI
             }
             else
             {
-                comboBox1.Items.Add(asset);
-                comboBox1.SelectedIndex = 0;
-                comboBox1.Enabled = false;
+                combo_asset.Items.Add(asset);
+                combo_asset.SelectedIndex = 0;
+                combo_asset.Enabled = false;
             }
         }
 
         public TxOutListBoxItem[] GetOutputs()
         {
-            AssetDescriptor asset = (AssetDescriptor)comboBox1.SelectedItem;
-            return textBox1.Lines.Where(p => !string.IsNullOrWhiteSpace(p)).Select(p =>
+            AssetDescriptor asset = (AssetDescriptor)combo_asset.SelectedItem;
+            return txt_payto.Lines.Where(p => !string.IsNullOrWhiteSpace(p)).Select(p =>
             {
                 string[] line = p.Split(new[] { ' ', '\t', ',' }, StringSplitOptions.RemoveEmptyEntries);
                 return new TxOutListBoxItem
@@ -54,22 +54,22 @@ namespace Bhp.UI
             }).Where(p => p.Value.Value != 0).ToArray();
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void combo_asset_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedItem is AssetDescriptor asset)
+            if (combo_asset.SelectedItem is AssetDescriptor asset)
             {
-                textBox3.Text = Program.CurrentWallet.GetAvailable(asset.AssetId).ToString();
+                txt_balance.Text = Program.CurrentWallet.GetAvailable(asset.AssetId).ToString();
             }
             else
             {
-                textBox3.Text = "";
+                txt_balance.Text = "";
             }
-            textBox1_TextChanged(this, EventArgs.Empty);
+            txt_payto_TextChanged(this, EventArgs.Empty);
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void txt_payto_TextChanged(object sender, EventArgs e)
         {
-            button1.Enabled = comboBox1.SelectedIndex >= 0 && textBox1.TextLength > 0;
+            btn_ok.Enabled = combo_asset.SelectedIndex >= 0 && txt_payto.TextLength > 0;
         }
     }
 }

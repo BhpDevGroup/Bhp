@@ -118,25 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_balance.Location" type="System.Drawing.Point, System.Drawing">
     <value>24, 54</value>
   </data>
-  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_balance.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 17</value>
   </data>
-  <data name="label4.Text" xml:space="preserve">
+  <data name="lbl_balance.Text" xml:space="preserve">
     <value>Saldo:</value>
   </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_asset.Location" type="System.Drawing.Point, System.Drawing">
     <value>22, 17</value>
   </data>
-  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_asset.Size" type="System.Drawing.Size, System.Drawing">
     <value>46, 17</value>
   </data>
-  <data name="label3.Text" xml:space="preserve">
+  <data name="lbl_asset.Text" xml:space="preserve">
     <value>Activo:</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
+  <data name="btn_ok.Text" xml:space="preserve">
     <value>Aceptar</value>
   </data>
   <data name="groupBox1.Text" xml:space="preserve">

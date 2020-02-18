@@ -6,7 +6,6 @@ namespace Bhp.Compiler
 {
     public class MyJson
     {
-
         public static IJsonNode Parse(string json)
         {
             try
@@ -1356,9 +1355,5 @@ namespace Bhp.Compiler
                 throw new NotImplementedException();
             }
         }
-
-
-
-
     }
 }

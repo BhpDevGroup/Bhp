@@ -82,6 +82,18 @@ namespace vmtool
             }
             outjson.SetDictValue("hash", sb.ToString());
 
+            //metadata
+            var metadataJson = new MyJson.JsonNode_Object();
+            metadataJson.SetDictValue("title", module.Title);
+            metadataJson.SetDictValue("description", module.Description);
+            metadataJson.SetDictValue("version", module.Version);
+            metadataJson.SetDictValue("author", module.Author);
+            metadataJson.SetDictValue("email", module.Email);
+            metadataJson.SetDictValue("has-storage", module.HasStorage);
+            metadataJson.SetDictValue("has-dynamic-invoke", module.HasDynamicInvoke);
+            metadataJson.SetDictValue("is-payable", module.IsPayable);
+            outjson.SetDictValue("metadata", metadataJson);
+
             //entrypoint
             outjson.SetDictValue("entrypoint", "Main");
             var mainmethod = module.mapMethods[module.mainMethod];

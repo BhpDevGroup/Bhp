@@ -7,6 +7,15 @@ namespace Bhp.Compiler
 {
     public class BhpModule
     {
+        public string Title;
+        public string Description;
+        public string Version;
+        public string Author;
+        public string Email;
+        public bool HasStorage;
+        public bool HasDynamicInvoke;
+        public bool IsPayable;
+
         public BhpModule(ILogger logger)
         {
             this.logger = logger;

@@ -31,7 +31,7 @@ namespace Bhp
 
             Process p = Process.Start(pinfo);
             p.StandardInput.AutoFlush = true;
-            p.StandardInput.WriteLine("bhpn " + dllname);
+            p.StandardInput.WriteLine($"bhpn {dllname} --compatible");
             p.StandardInput.WriteLine("exit");
 
             //前四行后一行不要

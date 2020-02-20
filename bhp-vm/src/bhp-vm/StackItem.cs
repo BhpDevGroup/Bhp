@@ -1,7 +1,6 @@
 ﻿using Bhp.VM.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Text;
 using Array = Bhp.VM.Types.Array;
@@ -33,10 +32,7 @@ namespace Bhp.VM
             return new BigInteger(GetByteArray());
         }
 
-        public virtual bool GetBoolean()
-        {
-            return GetByteArray().Any(p => p != 0);
-        }
+        public abstract bool GetBoolean();
 
         public abstract byte[] GetByteArray();
 

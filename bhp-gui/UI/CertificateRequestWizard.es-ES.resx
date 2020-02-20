@@ -117,26 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="groupBox1.Text" xml:space="preserve">
+  <data name="grp_organization.Text" xml:space="preserve">
     <value>Organización</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
+  <data name="btn_ok.Text" xml:space="preserve">
     <value>Aceptar</value>
   </data>
-  <data name="button2.Text" xml:space="preserve">
+  <data name="btn_cancel.Text" xml:space="preserve">
     <value>Cancelar</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_pubKey.Location" type="System.Drawing.Point, System.Drawing">
     <value>23, 25</value>
   </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_pubKey.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 17</value>
   </data>
-  <data name="label5.Text" xml:space="preserve">
+  <data name="lbl_pubKey.Text" xml:space="preserve">
     <value>Clave pública:</value>
   </data>
-  <data name="groupBox2.Text" xml:space="preserve">
+  <data name="grp_account.Text" xml:space="preserve">
     <value>Cuenta</value>
   </data>
   <data name="$this.Text" xml:space="preserve">

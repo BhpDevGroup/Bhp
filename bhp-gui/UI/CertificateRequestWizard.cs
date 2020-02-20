@@ -17,19 +17,19 @@ namespace Bhp.UI
 
         private void CertificateRequestWizard_Load(object sender, EventArgs e)
         {
-            comboBox1.Items.AddRange(Program.CurrentWallet.GetAccounts().Where(p => !p.WatchOnly && p.Contract.Script.IsStandardContract()).Select(p => p.GetKey()).ToArray());
+            combo_pubKey.Items.AddRange(Program.CurrentWallet.GetAccounts().Where(p => !p.WatchOnly && p.Contract.Script.IsStandardContract()).Select(p => p.GetKey()).ToArray());
         }
 
         private void textBox_TextChanged(object sender, EventArgs e)
         {
-            button1.Enabled = comboBox1.SelectedIndex >= 0 && groupBox1.Controls.OfType<TextBox>().All(p => p.TextLength > 0);
+            btn_ok.Enabled = combo_pubKey.SelectedIndex >= 0 && grp_organization.Controls.OfType<TextBox>().All(p => p.TextLength > 0);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btn_ok_Click(object sender, EventArgs e)
         {
             const int ECDSA_PRIVATE_P256_MAGIC = 0x32534345;
             if (saveFileDialog1.ShowDialog() != DialogResult.OK) return;
-            KeyPair key = (KeyPair)comboBox1.SelectedItem;
+            KeyPair key = (KeyPair)combo_pubKey.SelectedItem;
             byte[] pubkey = key.PublicKey.EncodePoint(false).Skip(1).ToArray();
             byte[] prikey = BitConverter.GetBytes(ECDSA_PRIVATE_P256_MAGIC).Concat(BitConverter.GetBytes(32)).Concat(pubkey).Concat(key.PrivateKey).ToArray();
             CX509PrivateKey x509key = new CX509PrivateKey();
@@ -39,7 +39,7 @@ namespace Bhp.UI
             CX509CertificateRequestPkcs10 request = new CX509CertificateRequestPkcs10();
             request.InitializeFromPrivateKey(X509CertificateEnrollmentContext.ContextUser, x509key, null);
             request.Subject = new CX500DistinguishedName();
-            request.Subject.Encode($"CN={textBox1.Text},C={textBox2.Text},S={textBox3.Text},SERIALNUMBER={textBox4.Text}");
+            request.Subject.Encode($"CN={txt_cn.Text},C={txt_c.Text},S={txt_s.Text},SERIALNUMBER={txt_serialnumber.Text}");
             request.Encode();
             File.WriteAllText(saveFileDialog1.FileName, "-----BEGIN NEW CERTIFICATE REQUEST-----\r\n" + request.RawData + "-----END NEW CERTIFICATE REQUEST-----\r\n");
             Close();

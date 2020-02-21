@@ -9,11 +9,11 @@ namespace Bhp.UI
         {
             get
             {
-                return textBox1.Text;
+                return txt_oldPW.Text;
             }
             set
             {
-                textBox1.Text = value;
+                txt_oldPW.Text = value;
             }
         }
 
@@ -21,12 +21,12 @@ namespace Bhp.UI
         {
             get
             {
-                return textBox2.Text;
+                return txt_newPW.Text;
             }
             set
             {
-                textBox2.Text = value;
-                textBox3.Text = value;
+                txt_newPW.Text = value;
+                txt_newPW2.Text = value;
             }
         }
 
@@ -37,7 +37,7 @@ namespace Bhp.UI
 
         private void textBox_TextChanged(object sender, EventArgs e)
         {
-            button1.Enabled = textBox1.TextLength > 0 && textBox2.TextLength > 0 && textBox3.Text == textBox2.Text;
+            btn_ok.Enabled = txt_oldPW.TextLength > 0 && txt_newPW.TextLength > 0 && txt_newPW2.Text == txt_newPW.Text;
         }
     }
 }

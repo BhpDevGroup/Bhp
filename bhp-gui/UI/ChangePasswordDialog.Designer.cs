@@ -29,80 +29,80 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangePasswordDialog));
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.lbl_oldPW = new System.Windows.Forms.Label();
+            this.txt_oldPW = new System.Windows.Forms.TextBox();
+            this.lbl_newPW = new System.Windows.Forms.Label();
+            this.txt_newPW = new System.Windows.Forms.TextBox();
+            this.lbl_newPW2 = new System.Windows.Forms.Label();
+            this.txt_newPW2 = new System.Windows.Forms.TextBox();
+            this.btn_ok = new System.Windows.Forms.Button();
+            this.btn_cancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // label1
+            // lbl_oldPW
             // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            resources.ApplyResources(this.lbl_oldPW, "lbl_oldPW");
+            this.lbl_oldPW.Name = "lbl_oldPW";
             // 
-            // textBox1
+            // txt_oldPW
             // 
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
-            this.textBox1.UseSystemPasswordChar = true;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            resources.ApplyResources(this.txt_oldPW, "txt_oldPW");
+            this.txt_oldPW.Name = "txt_oldPW";
+            this.txt_oldPW.UseSystemPasswordChar = true;
+            this.txt_oldPW.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
-            // label2
+            // lbl_newPW
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lbl_newPW, "lbl_newPW");
+            this.lbl_newPW.Name = "lbl_newPW";
             // 
-            // textBox2
+            // txt_newPW
             // 
-            resources.ApplyResources(this.textBox2, "textBox2");
-            this.textBox2.Name = "textBox2";
-            this.textBox2.UseSystemPasswordChar = true;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            resources.ApplyResources(this.txt_newPW, "txt_newPW");
+            this.txt_newPW.Name = "txt_newPW";
+            this.txt_newPW.UseSystemPasswordChar = true;
+            this.txt_newPW.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
-            // label3
+            // lbl_newPW2
             // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
+            resources.ApplyResources(this.lbl_newPW2, "lbl_newPW2");
+            this.lbl_newPW2.Name = "lbl_newPW2";
             // 
-            // textBox3
+            // txt_newPW2
             // 
-            resources.ApplyResources(this.textBox3, "textBox3");
-            this.textBox3.Name = "textBox3";
-            this.textBox3.UseSystemPasswordChar = true;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            resources.ApplyResources(this.txt_newPW2, "txt_newPW2");
+            this.txt_newPW2.Name = "txt_newPW2";
+            this.txt_newPW2.UseSystemPasswordChar = true;
+            this.txt_newPW2.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
-            // button1
+            // btn_ok
             // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.btn_ok, "btn_ok");
+            this.btn_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btn_ok.Name = "btn_ok";
+            this.btn_ok.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btn_cancel
             // 
-            resources.ApplyResources(this.button2, "button2");
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Name = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.btn_cancel, "btn_cancel");
+            this.btn_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btn_cancel.Name = "btn_cancel";
+            this.btn_cancel.UseVisualStyleBackColor = true;
             // 
             // ChangePasswordDialog
             // 
-            this.AcceptButton = this.button1;
+            this.AcceptButton = this.btn_ok;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.button2;
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label1);
+            this.CancelButton = this.btn_cancel;
+            this.Controls.Add(this.btn_cancel);
+            this.Controls.Add(this.btn_ok);
+            this.Controls.Add(this.txt_newPW2);
+            this.Controls.Add(this.lbl_newPW2);
+            this.Controls.Add(this.txt_newPW);
+            this.Controls.Add(this.lbl_newPW);
+            this.Controls.Add(this.txt_oldPW);
+            this.Controls.Add(this.lbl_oldPW);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -115,13 +115,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label lbl_oldPW;
+        private System.Windows.Forms.TextBox txt_oldPW;
+        private System.Windows.Forms.Label lbl_newPW;
+        private System.Windows.Forms.TextBox txt_newPW;
+        private System.Windows.Forms.Label lbl_newPW2;
+        private System.Windows.Forms.TextBox txt_newPW2;
+        private System.Windows.Forms.Button btn_ok;
+        private System.Windows.Forms.Button btn_cancel;
     }
 }

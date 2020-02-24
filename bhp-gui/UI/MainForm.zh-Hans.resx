@@ -540,4 +540,10 @@
   <data name="destroyToolStripMenuItem.Text" xml:space="preserve">
     <value>创建销毁地址</value>
   </data>
+  <data name="claToolStripMenuItem.Text" xml:space="preserve">
+    <value>提取BhpGas</value>
+  </data>
+  <data name="showTransactionHistoryToolStripMenuItem.Text" xml:space="preserve">
+    <value>显示历史交易</value>
+  </data>
 </root>

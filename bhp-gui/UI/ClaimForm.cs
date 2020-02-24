@@ -18,6 +18,8 @@ namespace Bhp.UI
         public ClaimForm()
         {
             InitializeComponent();
+            this.Width = 430;
+            this.Height = 208;
         }
 
         private void CalculateBonusUnavailable(uint height)
@@ -38,7 +40,7 @@ namespace Bhp.UI
 
             using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
             {
-                textBox2.Text = snapshot.CalculateBonus(references, height).ToString();
+                txt_unavailable.Text = snapshot.CalculateBonus(references, height).ToString();
             }
         }
 
@@ -47,8 +49,8 @@ namespace Bhp.UI
             using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
             {
                 Fixed8 bonus_available = snapshot.CalculateBonus(Program.CurrentWallet.GetUnclaimedCoins().Select(p => p.Reference));
-                textBox1.Text = bonus_available.ToString();
-                if (bonus_available == Fixed8.Zero) button1.Enabled = false;
+                txt_available.Text = bonus_available.ToString();
+                if (bonus_available == Fixed8.Zero) btn_claimAll.Enabled = false;
                 CalculateBonusUnavailable(snapshot.Height + 1);
             }
             BindAddresses();
@@ -76,7 +78,7 @@ namespace Bhp.UI
         {
             CoinReference[] claims = Program.CurrentWallet.GetUnclaimedCoins().Select(p => p.Reference).ToArray();
             if (claims.Length == 0) return;
-            var address = combo_address.Text;
+            var address = combo_claimTo.Text;
             CoinReference[] getClaims;
 
             if (claims.Length > 50)
@@ -119,21 +121,21 @@ namespace Bhp.UI
         {
             var accounts = Program.CurrentWallet.GetAccounts();
             var addresses = accounts.Select(c => c.ScriptHash.ToAddress()).ToArray();
-            combo_address.Items.Clear();
-            combo_address.Items.AddRange(addresses);
-            combo_address.SelectedIndex = 0;
+            combo_claimTo.Items.Clear();
+            combo_claimTo.Items.AddRange(addresses);
+            combo_claimTo.SelectedIndex = 0;
         }
 
         private void combo_address_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                combo_address.Text.ToScriptHash();
-                button1.Enabled = true;
+                combo_claimTo.Text.ToScriptHash();
+                btn_claimAll.Enabled = true;
             }
             catch (FormatException)
             {
-                button1.Enabled = false;
+                btn_claimAll.Enabled = false;
             }
         }
     }

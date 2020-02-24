@@ -124,7 +124,7 @@
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 17</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="lbl_available.Text" xml:space="preserve">
     <value>可提取：</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
@@ -133,13 +133,13 @@
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>68, 17</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
+  <data name="lbl_unavailable.Text" xml:space="preserve">
     <value>不可提取：</value>
   </data>
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
     <value>170, 92</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
+  <data name="btn_claimAll.Text" xml:space="preserve">
     <value>全部提取</value>
   </data>
   <data name="textBox1.Location" type="System.Drawing.Point, System.Drawing">
@@ -154,7 +154,7 @@
   <data name="$this.Text" xml:space="preserve">
     <value>提取BHPGas</value>
   </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>提取到:</value>
+  <data name="lbl_claimTo.Text" xml:space="preserve">
+    <value>提取到：</value>
   </data>
 </root>

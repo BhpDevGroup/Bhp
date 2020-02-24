@@ -29,70 +29,70 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimForm));
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.combo_address = new System.Windows.Forms.ComboBox();
+            this.lbl_available = new System.Windows.Forms.Label();
+            this.lbl_unavailable = new System.Windows.Forms.Label();
+            this.btn_claimAll = new System.Windows.Forms.Button();
+            this.txt_available = new System.Windows.Forms.TextBox();
+            this.txt_unavailable = new System.Windows.Forms.TextBox();
+            this.lbl_claimTo = new System.Windows.Forms.Label();
+            this.combo_claimTo = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
-            // label1
+            // lbl_available
             // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            resources.ApplyResources(this.lbl_available, "lbl_available");
+            this.lbl_available.Name = "lbl_available";
             // 
-            // label2
+            // lbl_unavailable
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lbl_unavailable, "lbl_unavailable");
+            this.lbl_unavailable.Name = "lbl_unavailable";
             // 
-            // button1
+            // btn_claimAll
             // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            resources.ApplyResources(this.btn_claimAll, "btn_claimAll");
+            this.btn_claimAll.Name = "btn_claimAll";
+            this.btn_claimAll.UseVisualStyleBackColor = true;
+            this.btn_claimAll.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBox1
+            // txt_available
             // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
+            this.txt_available.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            resources.ApplyResources(this.txt_available, "txt_available");
+            this.txt_available.Name = "txt_available";
+            this.txt_available.ReadOnly = true;
             // 
-            // textBox2
+            // txt_unavailable
             // 
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            resources.ApplyResources(this.textBox2, "textBox2");
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
+            this.txt_unavailable.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            resources.ApplyResources(this.txt_unavailable, "txt_unavailable");
+            this.txt_unavailable.Name = "txt_unavailable";
+            this.txt_unavailable.ReadOnly = true;
             // 
-            // label3
+            // lbl_claimTo
             // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
+            resources.ApplyResources(this.lbl_claimTo, "lbl_claimTo");
+            this.lbl_claimTo.Name = "lbl_claimTo";
             // 
-            // combo_address
+            // combo_claimTo
             // 
-            this.combo_address.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.combo_address.FormattingEnabled = true;
-            resources.ApplyResources(this.combo_address, "combo_address");
-            this.combo_address.Name = "combo_address";
-            this.combo_address.TextChanged += new System.EventHandler(this.combo_address_TextChanged);
+            this.combo_claimTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_claimTo.FormattingEnabled = true;
+            resources.ApplyResources(this.combo_claimTo, "combo_claimTo");
+            this.combo_claimTo.Name = "combo_claimTo";
+            this.combo_claimTo.TextChanged += new System.EventHandler(this.combo_address_TextChanged);
             // 
             // ClaimForm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.combo_address);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.combo_claimTo);
+            this.Controls.Add(this.lbl_claimTo);
+            this.Controls.Add(this.txt_unavailable);
+            this.Controls.Add(this.txt_available);
+            this.Controls.Add(this.btn_claimAll);
+            this.Controls.Add(this.lbl_unavailable);
+            this.Controls.Add(this.lbl_available);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "ClaimForm";
@@ -105,12 +105,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox combo_address;
+        private System.Windows.Forms.Label lbl_available;
+        private System.Windows.Forms.Label lbl_unavailable;
+        private System.Windows.Forms.Button btn_claimAll;
+        private System.Windows.Forms.TextBox txt_available;
+        private System.Windows.Forms.TextBox txt_unavailable;
+        private System.Windows.Forms.Label lbl_claimTo;
+        private System.Windows.Forms.ComboBox combo_claimTo;
     }
 }

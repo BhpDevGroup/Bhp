@@ -29,68 +29,68 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContractDetailsDialog));
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.lbl_address = new System.Windows.Forms.Label();
+            this.txt_address = new System.Windows.Forms.TextBox();
+            this.lbl_scriptHash = new System.Windows.Forms.Label();
+            this.txt_scriptHash = new System.Windows.Forms.TextBox();
+            this.lbl_redeemScript = new System.Windows.Forms.Label();
+            this.txt_redeemScript = new System.Windows.Forms.TextBox();
+            this.btn_close = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // label1
+            // lbl_address
             // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            resources.ApplyResources(this.lbl_address, "lbl_address");
+            this.lbl_address.Name = "lbl_address";
             // 
-            // textBox1
+            // txt_address
             // 
-            resources.ApplyResources(this.textBox1, "textBox1");
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
+            resources.ApplyResources(this.txt_address, "txt_address");
+            this.txt_address.Name = "txt_address";
+            this.txt_address.ReadOnly = true;
             // 
-            // label2
+            // lbl_scriptHash
             // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
+            resources.ApplyResources(this.lbl_scriptHash, "lbl_scriptHash");
+            this.lbl_scriptHash.Name = "lbl_scriptHash";
             // 
-            // textBox2
+            // txt_scriptHash
             // 
-            resources.ApplyResources(this.textBox2, "textBox2");
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
+            resources.ApplyResources(this.txt_scriptHash, "txt_scriptHash");
+            this.txt_scriptHash.Name = "txt_scriptHash";
+            this.txt_scriptHash.ReadOnly = true;
             // 
-            // label4
+            // lbl_redeemScript
             // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
+            resources.ApplyResources(this.lbl_redeemScript, "lbl_redeemScript");
+            this.lbl_redeemScript.Name = "lbl_redeemScript";
             // 
-            // textBox3
+            // txt_redeemScript
             // 
-            resources.ApplyResources(this.textBox3, "textBox3");
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
+            resources.ApplyResources(this.txt_redeemScript, "txt_redeemScript");
+            this.txt_redeemScript.Name = "txt_redeemScript";
+            this.txt_redeemScript.ReadOnly = true;
             // 
-            // button1
+            // btn_close
             // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.btn_close, "btn_close");
+            this.btn_close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btn_close.Name = "btn_close";
+            this.btn_close.UseVisualStyleBackColor = true;
             // 
             // ContractDetailsDialog
             // 
-            this.AcceptButton = this.button1;
+            this.AcceptButton = this.btn_close;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.button1;
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label1);
+            this.CancelButton = this.btn_close;
+            this.Controls.Add(this.btn_close);
+            this.Controls.Add(this.txt_redeemScript);
+            this.Controls.Add(this.lbl_redeemScript);
+            this.Controls.Add(this.txt_scriptHash);
+            this.Controls.Add(this.lbl_scriptHash);
+            this.Controls.Add(this.txt_address);
+            this.Controls.Add(this.lbl_address);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -103,13 +103,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lbl_address;
+        private System.Windows.Forms.TextBox txt_address;
+        private System.Windows.Forms.Label lbl_scriptHash;
+        private System.Windows.Forms.TextBox txt_scriptHash;
+        private System.Windows.Forms.Label lbl_redeemScript;
+        private System.Windows.Forms.TextBox txt_redeemScript;
+        private System.Windows.Forms.Button btn_close;
 
     }
 }

@@ -9,9 +9,9 @@ namespace Bhp.UI
         public ContractDetailsDialog(Contract contract)
         {
             InitializeComponent();
-            textBox1.Text = contract.ScriptHash.ToAddress();
-            textBox2.Text = contract.ScriptHash.ToString();
-            textBox3.Text = contract.Script.ToHexString();
+            txt_address.Text = contract.ScriptHash.ToAddress();
+            txt_scriptHash.Text = contract.ScriptHash.ToString();
+            txt_redeemScript.Text = contract.Script.ToHexString();
         }
     }
 }

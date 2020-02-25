@@ -118,25 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_address.Location" type="System.Drawing.Point, System.Drawing">
     <value>39, 15</value>
   </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_address.Size" type="System.Drawing.Size, System.Drawing">
     <value>65, 17</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="lbl_address.Text" xml:space="preserve">
     <value>Dirección:</value>
   </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_scriptHash.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 50</value>
   </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_scriptHash.Size" type="System.Drawing.Size, System.Drawing">
     <value>98, 17</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
+  <data name="lbl_scriptHash.Text" xml:space="preserve">
     <value>Hash del script:</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
+  <data name="btn_close.Text" xml:space="preserve">
     <value>Cancelar</value>
   </data>
   <data name="$this.Text" xml:space="preserve">

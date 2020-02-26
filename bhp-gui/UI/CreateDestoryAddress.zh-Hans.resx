@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="lbl_account.Location" type="System.Drawing.Point, System.Drawing">
     <value>36, 15</value>
   </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="lbl_account.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 17</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="lbl_account.Text" xml:space="preserve">
     <value>账户:</value>
   </data>
-  <data name="comboBox1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="combo_account.Location" type="System.Drawing.Point, System.Drawing">
     <value>77, 12</value>
   </data>
-  <data name="comboBox1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="combo_account.Size" type="System.Drawing.Size, System.Drawing">
     <value>348, 25</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
@@ -142,10 +142,10 @@
   <data name="dateTimePicker1.Size" type="System.Drawing.Size, System.Drawing">
     <value>348, 23</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
+  <data name="btn_create.Text" xml:space="preserve">
     <value>创建</value>
   </data>
-  <data name="button2.Text" xml:space="preserve">
+  <data name="btn_cancel.Text" xml:space="preserve">
     <value>取消</value>
   </data>
   <data name="$this.Text" xml:space="preserve">

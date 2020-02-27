@@ -220,6 +220,12 @@
     <Compile Include="UI\SigningDialog.Designer.cs">
       <DependentUpon>SigningDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\SignZipDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SignZipDialog.designer.cs">
+      <DependentUpon>SignZipDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\TradeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -636,6 +642,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SigningTxDialog.zh-Hans.resx">
       <DependentUpon>SigningTxDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SignZipDialog.es-ES.resx">
+      <DependentUpon>SignZipDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SignZipDialog.resx">
+      <DependentUpon>SignZipDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SignZipDialog.zh-Hans.resx">
+      <DependentUpon>SignZipDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\TradeForm.es-ES.resx">
       <DependentUpon>TradeForm.cs</DependentUpon>

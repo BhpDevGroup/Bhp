@@ -64,6 +64,7 @@
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.signZipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助HToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.查看帮助VToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.官网WToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -283,7 +284,8 @@
             this.signDataToolStripMenuItem,
             this.toolStripSeparator9,
             this.optionsToolStripMenuItem,
-            this.toolStripMenuItem2});
+            this.toolStripMenuItem2,
+            this.signZipToolStripMenuItem});
             this.高级AToolStripMenuItem.Name = "高级AToolStripMenuItem";
             resources.ApplyResources(this.高级AToolStripMenuItem, "高级AToolStripMenuItem");
             // 
@@ -366,6 +368,12 @@
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             resources.ApplyResources(this.toolStripMenuItem2, "toolStripMenuItem2");
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click_1);
+            // 
+            // signZipToolStripMenuItem
+            // 
+            this.signZipToolStripMenuItem.Name = "signZipToolStripMenuItem";
+            resources.ApplyResources(this.signZipToolStripMenuItem, "signZipToolStripMenuItem");
+            this.signZipToolStripMenuItem.Click += new System.EventHandler(this.signZipToolStripMenuItem_Click);
             // 
             // 帮助HToolStripMenuItem
             // 
@@ -918,6 +926,7 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem showTransactionHistoryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem signZipToolStripMenuItem;
     }
 }
 

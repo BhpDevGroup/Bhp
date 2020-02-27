@@ -298,6 +298,7 @@ namespace Bhp.UI
             actor = Program.System.ActorSystem.ActorOf(EventWrapper<Blockchain.PersistCompleted>.Props(Blockchain_PersistCompleted));
             Program.System.StartNode(Settings.Default.P2P.Port, Settings.Default.P2P.WsPort);
             ExtensionSettings.Default.WalletConfig.IsBhpFee = Settings.Default.UnlockWallet.IsBhpFee;//BHP
+            ExtensionSettings.Default.Certificate.Name = Settings.Default.Certificate.Name;//BHP
         }
 
         bool WindowsClosed = false;
@@ -1487,6 +1488,14 @@ namespace Bhp.UI
         private void showTransactionHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             showTransactionHistoryToolStripMenuItem.Checked = !showTransactionHistoryToolStripMenuItem.Checked;
+        }
+
+        private void signZipToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using(SignZipDialog dialog = new SignZipDialog())
+            {
+                dialog.ShowDialog();
+            }
         }
     }
 }

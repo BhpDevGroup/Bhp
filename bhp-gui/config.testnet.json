@@ -20,6 +20,9 @@
     },
     "UnlockWallet": {
       "IsBhpFee": false
+    },
+    "Certificate": {
+      "Name": "bhpa.io.crt"
     }
   }
 }

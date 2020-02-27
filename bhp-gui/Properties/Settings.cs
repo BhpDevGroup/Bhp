@@ -12,6 +12,7 @@ namespace Bhp.Properties
         public BrowserSettings Urls { get; }
         public ContractSettings Contracts { get; }
         public UnlockWalletSettings UnlockWallet { get; }
+        public CertificateSettings Certificate { get; }
 
         public Settings()
         {
@@ -28,6 +29,7 @@ namespace Bhp.Properties
             this.Urls = new BrowserSettings(section.GetSection("Urls"));
             this.Contracts = new ContractSettings(section.GetSection("Contracts"));
             this.UnlockWallet = new UnlockWalletSettings(section.GetSection("UnlockWallet"));
+            this.Certificate = new CertificateSettings(section.GetSection("Certificate"));
         }
     }
 
@@ -99,10 +101,22 @@ namespace Bhp.Properties
         public UnlockWalletSettings(IConfigurationSection section)
         {
             if (section.Exists())
-            {                
+            {
                 this.IsBhpFee = bool.Parse(section.GetSection("IsBhpFee").Value);
             }
         }
     }
 
+    internal class CertificateSettings
+    {
+        public string Name { get; }
+
+        public CertificateSettings(IConfigurationSection section)
+        {
+            if (section.Exists())
+            {
+                this.Name = section.GetSection("Name").Value;
+            }
+        }
+    }
 }

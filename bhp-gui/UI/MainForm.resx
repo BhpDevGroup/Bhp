@@ -320,6 +320,12 @@
   <data name="toolStripMenuItem2.Text" xml:space="preserve">
     <value>transfer</value>
   </data>
+  <data name="signZipToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>194, 22</value>
+  </data>
+  <data name="signZipToolStripMenuItem.Text" xml:space="preserve">
+    <value>Sign Zip</value>
+  </data>
   <data name="高级AToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>77, 21</value>
   </data>
@@ -2608,6 +2614,12 @@
     <value>toolStripMenuItem2</value>
   </data>
   <data name="&gt;&gt;toolStripMenuItem2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;signZipToolStripMenuItem.Name" xml:space="preserve">
+    <value>signZipToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;signZipToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;帮助HToolStripMenuItem.Name" xml:space="preserve">

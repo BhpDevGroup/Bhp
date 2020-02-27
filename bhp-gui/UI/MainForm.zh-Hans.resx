@@ -546,4 +546,7 @@
   <data name="showTransactionHistoryToolStripMenuItem.Text" xml:space="preserve">
     <value>显示历史交易</value>
   </data>
+  <data name="signZipToolStripMenuItem.Text" xml:space="preserve">
+    <value>压缩包签名</value>
+  </data>
 </root>

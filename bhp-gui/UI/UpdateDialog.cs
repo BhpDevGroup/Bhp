@@ -1,4 +1,5 @@
-﻿using Bhp.Properties;
+﻿using Bhp.BhpExtensions.CertificateSign;
+using Bhp.Properties;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -34,6 +35,69 @@ namespace Bhp.UI
             progressBar1.Value = e.ProgressPercentage;
         }
 
+        //by bhp
+        private void Web_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled || e.Error != null) return;
+
+            if (!VerifyZip())
+            {
+                progressBar1.Value = 0;
+                button1.Enabled = true;
+                button2.Enabled = true;
+                return;
+            }
+
+            DirectoryInfo di = new DirectoryInfo("update");
+            if (di.Exists) di.Delete(true);
+            di.Create();
+            ZipFile.ExtractToDirectory(download_path, di.Name);
+            FileSystemInfo[] fs = di.GetFileSystemInfos();
+            if (fs.Length == 1 && fs[0] is DirectoryInfo)
+            {
+                ((DirectoryInfo)fs[0]).MoveTo("update2");
+                di.Delete();
+                Directory.Move("update2", di.Name);
+            }
+            File.WriteAllBytes("update.bat", Resources.UpdateBat);
+            Close();
+            if (Program.MainForm != null) Program.MainForm.Close();
+            Process.Start("update.bat");
+        }
+
+        //by bhp
+        private static bool VerifyZip()
+        {
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string updateZip = Path.Combine(basePath, "update.zip");
+            try
+            {
+                if (!RSASign.VerifyZip(updateZip)) return false;
+                if (File.Exists(updateZip))
+                {
+                    File.Delete(updateZip);
+                }
+                DirectoryInfo updateDir = new DirectoryInfo(Path.Combine(basePath, "update"));
+                FileInfo[] files = updateDir.GetFiles();
+                for (int i = 0; i < 2; i++)
+                {
+                    if (files[i].Extension == ".zip")
+                    {
+                        File.Copy(files[i].FullName, Path.Combine(basePath, "update.zip"));
+                        break;
+                    }
+                }
+                RSASign.DeleteDirectory(Path.Combine(basePath, "update"));
+                RSASign.DeleteDirectory(Path.Combine(basePath, "signzip"));
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /*
         private void Web_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Cancelled || e.Error != null) return;
@@ -53,6 +117,7 @@ namespace Bhp.UI
             if (Program.MainForm != null) Program.MainForm.Close();
             Process.Start("update.bat");
         }
+        */
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -71,5 +136,15 @@ namespace Bhp.UI
             download_path = "update.zip";
             web.DownloadFileAsync(new Uri(download_url), download_path);
         }
+
+        /*
+        private void button2_Click(object sender, EventArgs e)
+        {
+            button1.Enabled = false;
+            button2.Enabled = false;
+            download_path = "update.zip";
+            web.DownloadFileAsync(new Uri(download_url), download_path);
+        }
+        */
     }
 }

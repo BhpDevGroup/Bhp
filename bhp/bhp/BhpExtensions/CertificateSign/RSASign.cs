@@ -151,7 +151,38 @@ namespace Bhp.BhpExtensions.CertificateSign
             return true;
         }
 
-        public static bool VerifyZip(string path)
+        public static bool GetAndVerifyZip()
+        {
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string updateZip = Path.Combine(basePath, "update.zip");
+            try
+            {
+                if (!VerifyZip(updateZip)) return false;
+                if (File.Exists(updateZip))
+                {
+                    File.Delete(updateZip);
+                }
+                DirectoryInfo updateDir = new DirectoryInfo(Path.Combine(basePath, "update"));
+                FileInfo[] files = updateDir.GetFiles();
+                for (int i = 0; i < 2; i++)
+                {
+                    if (files[i].Extension == ".zip")
+                    {
+                        File.Copy(files[i].FullName, Path.Combine(basePath, "update.zip"));
+                        break;
+                    }
+                }
+                DeleteDirectory(Path.Combine(basePath, "update"));
+                DeleteDirectory(Path.Combine(basePath, "signzip"));
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private static bool VerifyZip(string path)
         {
             if (!File.Exists(path)) return false;
 

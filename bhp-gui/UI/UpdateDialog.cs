@@ -40,7 +40,7 @@ namespace Bhp.UI
         {
             if (e.Cancelled || e.Error != null) return;
 
-            if (!VerifyZip())
+            if (!RSASign.GetAndVerifyZip())
             {
                 progressBar1.Value = 0;
                 button1.Enabled = true;
@@ -63,38 +63,6 @@ namespace Bhp.UI
             Close();
             if (Program.MainForm != null) Program.MainForm.Close();
             Process.Start("update.bat");
-        }
-
-        //by bhp
-        private static bool VerifyZip()
-        {
-            string basePath = AppDomain.CurrentDomain.BaseDirectory;
-            string updateZip = Path.Combine(basePath, "update.zip");
-            try
-            {
-                if (!RSASign.VerifyZip(updateZip)) return false;
-                if (File.Exists(updateZip))
-                {
-                    File.Delete(updateZip);
-                }
-                DirectoryInfo updateDir = new DirectoryInfo(Path.Combine(basePath, "update"));
-                FileInfo[] files = updateDir.GetFiles();
-                for (int i = 0; i < 2; i++)
-                {
-                    if (files[i].Extension == ".zip")
-                    {
-                        File.Copy(files[i].FullName, Path.Combine(basePath, "update.zip"));
-                        break;
-                    }
-                }
-                RSASign.DeleteDirectory(Path.Combine(basePath, "update"));
-                RSASign.DeleteDirectory(Path.Combine(basePath, "signzip"));
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
         }
 
         /*

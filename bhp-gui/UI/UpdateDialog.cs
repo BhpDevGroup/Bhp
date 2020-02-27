@@ -104,15 +104,5 @@ namespace Bhp.UI
             download_path = "update.zip";
             web.DownloadFileAsync(new Uri(download_url), download_path);
         }
-
-        /*
-        private void button2_Click(object sender, EventArgs e)
-        {
-            button1.Enabled = false;
-            button2.Enabled = false;
-            download_path = "update.zip";
-            web.DownloadFileAsync(new Uri(download_url), download_path);
-        }
-        */
     }
 }

@@ -151,7 +151,7 @@ namespace Bhp.BhpExtensions.CertificateSign
             return true;
         }
 
-        public static bool GetAndVerifyZip(string zipPath)
+        public static bool GetAndVerifyZip(string zipPath = "")
         {
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
             string updateZip = Path.Combine(basePath, "update.zip");

@@ -142,7 +142,7 @@ namespace Bhp.BhpExtensions.CertificateSign
                         //如果 使用了 streamreader 在删除前 必须先关闭流 ，否则无法删除 sr.close();
                         File.Delete(i.FullName);      //删除指定文件
                     }
-                }                
+                }
             }
             catch
             {
@@ -151,7 +151,7 @@ namespace Bhp.BhpExtensions.CertificateSign
             return true;
         }
 
-        public static bool GetAndVerifyZip()
+        public static bool GetAndVerifyZip(string zipPath)
         {
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
             string updateZip = Path.Combine(basePath, "update.zip");
@@ -168,7 +168,14 @@ namespace Bhp.BhpExtensions.CertificateSign
                 {
                     if (files[i].Extension == ".zip")
                     {
-                        File.Copy(files[i].FullName, Path.Combine(basePath, "update.zip"));
+                        if (string.IsNullOrEmpty(zipPath))
+                        {
+                            File.Copy(files[i].FullName, Path.Combine(basePath, "update.zip"));
+                        }
+                        else
+                        {
+                            File.Copy(files[i].FullName, zipPath);
+                        }
                         break;
                     }
                 }

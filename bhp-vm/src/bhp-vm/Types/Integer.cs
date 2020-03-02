@@ -37,7 +37,7 @@ namespace Bhp.VM.Types
 
         public override bool GetBoolean()
         {
-            return !value.IsZero;
+            return value != BigInteger.Zero;
         }
 
         public override byte[] GetByteArray()

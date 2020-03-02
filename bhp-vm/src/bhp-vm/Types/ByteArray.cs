@@ -28,13 +28,6 @@ namespace Bhp.VM.Types
             return value.SequenceEqual(bytes_other);
         }
 
-        public override bool GetBoolean()
-        {
-            if (value.Length > ExecutionEngine.MaxSizeForBigInteger)
-                return true;
-            return value.Any(p => p != 0);
-        }
-
         public override byte[] GetByteArray()
         {
             return value;

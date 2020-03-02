@@ -1,5 +1,8 @@
-﻿namespace Bhp.VM
+﻿using System;
+
+namespace Bhp.VM
 {
+    [Flags]
     public enum VMState : byte
     {
         NONE = 0,

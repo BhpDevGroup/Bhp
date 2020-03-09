@@ -1,0 +1,8 @@
+﻿{
+  "PluginConfiguration": {
+    "DBPath": "Brc20BalanceData",
+    "TrackHistory" : true,
+    "RecordNullAddressHistory": false,
+    "MaxResults" : 1000
+  }
+}

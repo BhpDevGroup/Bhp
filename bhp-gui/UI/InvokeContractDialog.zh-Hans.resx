@@ -220,4 +220,7 @@
   <data name="$this.Text" xml:space="preserve">
     <value>调用合约</value>
   </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>见证者：</value>
+  </data>
 </root>

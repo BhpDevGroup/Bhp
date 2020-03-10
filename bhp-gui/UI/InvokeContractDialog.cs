@@ -4,11 +4,13 @@ using Bhp.Network.P2P.Payloads;
 using Bhp.Properties;
 using Bhp.SmartContract;
 using Bhp.VM;
+using Bhp.Wallets;
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using static Bhp.Network.RPC.RpcServer;
 
 namespace Bhp.UI
 {
@@ -31,6 +33,7 @@ namespace Bhp.UI
                 tabControl1.SelectedTab = tabPage2;
                 textBox6.Text = tx.Script.ToHexString();
             }
+            comboBox2.Items.AddRange(Program.CurrentWallet.GetAccounts().Select(p => p.Address).ToArray());
         }
 
         public InvocationTransaction GetTransaction()
@@ -140,7 +143,14 @@ namespace Bhp.UI
             if (tx.Inputs == null) tx.Inputs = new CoinReference[0];
             if (tx.Outputs == null) tx.Outputs = new TransactionOutput[0];
             if (tx.Witnesses == null) tx.Witnesses = new Witness[0];
-            using (ApplicationEngine engine = ApplicationEngine.Run(tx.Script, tx, testMode: true))
+            CheckWitnessHashes checkWitnessHashes = null;
+            if (comboBox2.SelectedItem != null)
+            {
+                UInt160 WitnessAddress = ((string)comboBox2.SelectedItem).ToScriptHash();
+                checkWitnessHashes = new CheckWitnessHashes(new UInt160[] { WitnessAddress });
+            }
+            using (ApplicationEngine engine = ApplicationEngine.Run(tx.Script, checkWitnessHashes, testMode: true))
+            //using (ApplicationEngine engine = ApplicationEngine.Run(tx.Script, tx, testMode: true))
             {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine($"VM State: {engine.State}");

@@ -5,25 +5,15 @@ namespace SotrageContract
 {
     public class SotrageContract : SmartContract
     {
-        static readonly byte[] superAdmin = Bhp.SmartContract.Framework.Helper.ToScriptHash("AXo6nRuiFxLqS9XnYS8x1f25eM5mGxkAq7");//超级管理员地址
-        public static object Main(uint timestamp, string operation)
+        static readonly byte[] owner = "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY".ToScriptHash();//超级管理员地址
+        static readonly string address = "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY";
+        public static object Main(string operation)
         {
-            if (Runtime.Trigger == TriggerType.Verification)//取钱才会涉及这里
-            {
-                Header header = Blockchain.GetHeader(Blockchain.GetHeight());
-                if (header.Timestamp < timestamp && Storage.Get(Storage.CurrentContext, "lock") == null)
-                    return false;
-                return true;
-            }
-            else if (Runtime.Trigger == TriggerType.VerificationR)//取钱才会涉及这里
-            {
-                return false;
-            }
-            else if (Runtime.Trigger == TriggerType.Application)
+            if (Runtime.Trigger == TriggerType.Application)
             {
                 if (operation == "put")
                 {
-                    if (!Runtime.CheckWitness(superAdmin)) return false;
+                    if (!Runtime.CheckWitness(owner)) return false;
                     Storage.Put(Storage.CurrentContext, "lock", "hello");
                     return true;
                 }
@@ -33,48 +23,38 @@ namespace SotrageContract
                 }
                 else if (operation == "delete")
                 {
-                    if (!Runtime.CheckWitness(superAdmin)) return false;
+                    if (!Runtime.CheckWitness(owner)) return false;
                     Storage.Delete(Storage.CurrentContext, "lock");
                     return true;
                 }
-                //if (operation == "upgrade")//合约的升级就是在合约中要添加这段代码来实现
-                //{
-                //    //不是管理员 不能操作
-                //    if (!Runtime.CheckWitness(superAdmin))
-                //        return false;
-
-                //    if (args.Length != 1 && args.Length != 9)
-                //        return false;
-
-                //    byte[] script = Blockchain.GetContract(ExecutionEngine.ExecutingScriptHash).Script;
-                //    byte[] new_script = (byte[])args[0];
-                //    //如果传入的脚本一样 不继续操作
-                //    if (script == new_script)
-                //        return false;
-
-                //    byte[] parameter_list = new byte[] { 0x07, 0x10 };
-                //    byte return_type = 0x05;
-                //    bool need_storage = (bool)(object)05;
-                //    string name = "test";
-                //    string version = "1.1";
-                //    string author = "NEL";
-                //    string email = "0";
-                //    string description = "test";
-
-                //    if (args.Length == 9)
-                //    {
-                //        parameter_list = (byte[])args[1];
-                //        return_type = (byte)args[2];
-                //        need_storage = (bool)args[3];
-                //        name = (string)args[4];
-                //        version = (string)args[5];
-                //        author = (string)args[6];
-                //        email = (string)args[7];
-                //        description = (string)args[8];
-                //    }
-                //    Contract.Migrate(new_script, parameter_list, return_type, (ContractPropertyState)(05), name, version, author, email, description);
-                //    return true;
-                //}
+                else if (operation == "putMap")
+                {
+                    if (!Runtime.CheckWitness(owner)) return false;
+                    StorageMap contract = Storage.CurrentContext.CreateMap(address);
+                    contract.Put("mymap", "aaaaaaaaaaa");
+                    //return contract.Get("mymap");
+                    return true;
+                }
+                else if (operation == "getMap")
+                {
+                    return Storage.Get(Storage.CurrentContext, "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY\u0000mymap");//gas0.149
+                }
+                else if (operation == "getMap2")
+                {
+                    return Storage.Get(Storage.CurrentContext, address + "\u0000mymap");//gas0.154
+                }
+                else if (operation == "getMap3")
+                {
+                    return Storage.Get(Storage.CurrentContext, "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY\x00mymap");//gas0.157
+                }
+                else if (operation == "getMap4")
+                {
+                    return Storage.Get(Storage.CurrentContext, address + "\x00mymap");//gas0.157
+                }
+                else if (operation == "getMap5")
+                {
+                    return Storage.Get(Storage.CurrentContext, address);//return null
+                }
             }
             return false;
         }

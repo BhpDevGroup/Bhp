@@ -36,6 +36,7 @@ namespace Bhp.UI
         }
 
         //by bhp
+        /*
         private void Web_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Cancelled || e.Error != null) return;
@@ -64,8 +65,8 @@ namespace Bhp.UI
             if (Program.MainForm != null) Program.MainForm.Close();
             Process.Start("update.bat");
         }
+        */
 
-        /*
         private void Web_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Cancelled || e.Error != null) return;
@@ -85,7 +86,6 @@ namespace Bhp.UI
             if (Program.MainForm != null) Program.MainForm.Close();
             Process.Start("update.bat");
         }
-        */
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

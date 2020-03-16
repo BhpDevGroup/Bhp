@@ -12,14 +12,14 @@ namespace Bhp.UI
         public CreateLockAccountDialog()
         {
             InitializeComponent();
-            comboBox1.Items.AddRange(Program.CurrentWallet.GetAccounts().Where(p => !p.WatchOnly && p.Contract.Script.IsStandardContract()).Select(p => p.GetKey()).ToArray());
+            combo_account.Items.AddRange(Program.CurrentWallet.GetAccounts().Where(p => !p.WatchOnly && p.Contract.Script.IsStandardContract()).Select(p => p.GetKey()).ToArray());
         }
 
         public Contract GetContract()
         {
-            uint timestamp = dateTimePicker1.Value.ToTimestamp();
+            uint timestamp = dtp_unlockTime.Value.ToTimestamp();
 
-            if (dateTimePicker1.Value <= DateTime.Now) return null;//BY BHP
+            if (dtp_unlockTime.Value <= DateTime.Now) return null;//BY BHP
 
             using (ScriptBuilder sb = new ScriptBuilder())
             {
@@ -33,12 +33,12 @@ namespace Bhp.UI
 
         public KeyPair GetKey()
         {
-            return (KeyPair)comboBox1.SelectedItem;
+            return (KeyPair)combo_account.SelectedItem;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void combo_account_SelectedIndexChanged(object sender, EventArgs e)
         {
-            button1.Enabled = comboBox1.SelectedIndex >= 0;
+            btn_ok.Enabled = combo_account.SelectedIndex >= 0;
         }
     }
 }

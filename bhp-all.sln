@@ -71,6 +71,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RpcBrc20Tracker", "bhp-plug
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrateContract", "smartcontractapp\MigrateContract\MigrateContract.csproj", "{102B4F32-F25C-48BC-8658-75EFA049C733}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BHPNFT", "smartcontractapp\HashContract\BHPNFT.csproj", "{A1C74A6C-F917-4B4F-9566-6B99AAF0F297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -189,6 +191,10 @@ Global
 		{102B4F32-F25C-48BC-8658-75EFA049C733}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{102B4F32-F25C-48BC-8658-75EFA049C733}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{102B4F32-F25C-48BC-8658-75EFA049C733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1C74A6C-F917-4B4F-9566-6B99AAF0F297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C74A6C-F917-4B4F-9566-6B99AAF0F297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C74A6C-F917-4B4F-9566-6B99AAF0F297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C74A6C-F917-4B4F-9566-6B99AAF0F297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +226,7 @@ Global
 		{0B8491E1-F126-4229-AD95-0CB492330104} = {DD9B55CB-14B1-4BE8-956C-03B9795C1BC3}
 		{AC79E21E-A16A-4DA2-A1BF-35527B035CAC} = {0603E67D-9487-488C-AE85-B5B6B98DBF14}
 		{102B4F32-F25C-48BC-8658-75EFA049C733} = {C540F9EE-9702-40AC-8374-3F22EC644255}
+		{A1C74A6C-F917-4B4F-9566-6B99AAF0F297} = {C540F9EE-9702-40AC-8374-3F22EC644255}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F7AEE2ED-6735-41F5-B496-4B77336AA777}

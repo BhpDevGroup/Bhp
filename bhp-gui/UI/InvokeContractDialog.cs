@@ -30,10 +30,41 @@ namespace Bhp.UI
             this.tx = tx;
             if (tx != null)
             {
-                tabControl1.SelectedTab = tabPage2;
+                tabControl1.SelectedTab = tabPage_custom;
                 textBox6.Text = tx.Script.ToHexString();
             }
-            comboBox2.Items.AddRange(Program.CurrentWallet.GetAccounts().Select(p => p.Address).ToArray());
+            combo_witnessAbi.Items.AddRange(Program.CurrentWallet.GetAccounts().Select(p => p.Address).ToArray());
+            combo_witnessFunc.Items.AddRange(Program.CurrentWallet.GetAccounts().Select(p => p.Address).ToArray());
+        }
+
+        public InvocationTransaction GetInvokeTransaction()
+        {
+            UInt160 WitnessAddress = null;
+            if (tabControl1.SelectedTab.Name == "tabPage_abi")
+            {
+                if (combo_witnessAbi.SelectedItem != null)
+                {
+                    WitnessAddress = ((string)combo_witnessAbi.SelectedItem).ToScriptHash();                    
+                }
+            }
+            else if (tabControl1.SelectedTab.Name == "tabPage_func")
+            {
+                if (combo_witnessFunc.SelectedItem != null)
+                {
+                    WitnessAddress = ((string)combo_witnessFunc.SelectedItem).ToScriptHash();                    
+                }
+            }
+
+            Fixed8 fee = tx.Gas.Equals(Fixed8.Zero) ? net_fee : Fixed8.Zero;
+            return Program.CurrentWallet.MakeTransaction(new InvocationTransaction
+            {
+                Version = tx.Version,
+                Script = tx.Script,
+                Gas = tx.Gas,
+                Attributes = tx.Attributes,
+                Inputs = tx.Inputs,
+                Outputs = tx.Outputs
+            }, from: WitnessAddress, fee: fee);
         }
 
         public InvocationTransaction GetTransaction()
@@ -143,13 +174,28 @@ namespace Bhp.UI
             if (tx.Inputs == null) tx.Inputs = new CoinReference[0];
             if (tx.Outputs == null) tx.Outputs = new TransactionOutput[0];
             if (tx.Witnesses == null) tx.Witnesses = new Witness[0];
+
+            IScriptContainer container = tx;
             CheckWitnessHashes checkWitnessHashes = null;
-            if (comboBox2.SelectedItem != null)
+            if (tabControl1.SelectedTab.Name == "tabPage_abi")
             {
-                UInt160 WitnessAddress = ((string)comboBox2.SelectedItem).ToScriptHash();
-                checkWitnessHashes = new CheckWitnessHashes(new UInt160[] { WitnessAddress });
+                if (combo_witnessAbi.SelectedItem != null)
+                {
+                    UInt160 WitnessAddress = ((string)combo_witnessAbi.SelectedItem).ToScriptHash();
+                    checkWitnessHashes = new CheckWitnessHashes(new UInt160[] { WitnessAddress });
+                    container = checkWitnessHashes;
+                }
             }
-            using (ApplicationEngine engine = ApplicationEngine.Run(tx.Script, checkWitnessHashes, testMode: true))
+            else if (tabControl1.SelectedTab.Name == "tabPage_func")
+            {
+                if (combo_witnessFunc.SelectedItem != null)
+                {
+                    UInt160 WitnessAddress = ((string)combo_witnessFunc.SelectedItem).ToScriptHash();
+                    checkWitnessHashes = new CheckWitnessHashes(new UInt160[] { WitnessAddress });
+                    container = checkWitnessHashes;
+                }
+            }
+            using (ApplicationEngine engine = ApplicationEngine.Run(tx.Script, container, testMode: true))
             //using (ApplicationEngine engine = ApplicationEngine.Run(tx.Script, tx, testMode: true))
             {
                 StringBuilder sb = new StringBuilder();

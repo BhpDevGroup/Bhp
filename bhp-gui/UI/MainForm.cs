@@ -777,7 +777,8 @@ namespace Bhp.UI
             using (InvokeContractDialog dialog = new InvokeContractDialog())
             {
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                Helper.SignAndShowInformation(dialog.GetTransaction());
+                //Helper.SignAndShowInformation(dialog.GetTransaction());
+                Helper.SignAndShowInformation(dialog.GetInvokeTransaction());
             }
         }
 

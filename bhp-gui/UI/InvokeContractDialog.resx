@@ -148,7 +148,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button2.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;button2.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -172,7 +172,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox5.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;textBox5.ZOrder" xml:space="preserve">
     <value>4</value>
@@ -202,7 +202,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
     <value>6</value>
@@ -226,7 +226,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox4.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;textBox4.ZOrder" xml:space="preserve">
     <value>8</value>
@@ -256,7 +256,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label4.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
     <value>10</value>
@@ -280,7 +280,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox3.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;textBox3.ZOrder" xml:space="preserve">
     <value>12</value>
@@ -310,7 +310,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label3.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
     <value>13</value>
@@ -334,7 +334,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox2.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;textBox2.ZOrder" xml:space="preserve">
     <value>11</value>
@@ -361,7 +361,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
     <value>9</value>
@@ -388,7 +388,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button1.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
     <value>7</value>
@@ -412,7 +412,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox1.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;textBox1.ZOrder" xml:space="preserve">
     <value>5</value>
@@ -439,7 +439,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+    <value>tabPage_func</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>3</value>
@@ -466,7 +466,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button6.Parent" xml:space="preserve">
-    <value>tabPage2</value>
+    <value>tabPage_custom</value>
   </data>
   <data name="&gt;&gt;button6.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -496,7 +496,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox6.Parent" xml:space="preserve">
-    <value>tabPage2</value>
+    <value>tabPage_custom</value>
   </data>
   <data name="&gt;&gt;textBox6.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -657,6 +657,30 @@
   <data name="openFileDialog1.Filter" xml:space="preserve">
     <value>AVM File|*.avm</value>
   </data>
+  <data name="&gt;&gt;combo_witnessAbi.Name" xml:space="preserve">
+    <value>combo_witnessAbi</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessAbi.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessAbi.Parent" xml:space="preserve">
+    <value>tabPage_abi</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessAbi.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessAbi.Name" xml:space="preserve">
+    <value>lbl_witnessAbi</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessAbi.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessAbi.Parent" xml:space="preserve">
+    <value>tabPage_abi</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessAbi.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="&gt;&gt;button8.Name" xml:space="preserve">
     <value>button8</value>
   </data>
@@ -664,10 +688,10 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button8.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;button8.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="&gt;&gt;textBox9.Name" xml:space="preserve">
     <value>textBox9</value>
@@ -676,10 +700,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox9.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;textBox9.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="&gt;&gt;label10.Name" xml:space="preserve">
     <value>label10</value>
@@ -688,10 +712,10 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label10.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="&gt;&gt;comboBox1.Name" xml:space="preserve">
     <value>comboBox1</value>
@@ -700,10 +724,10 @@
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;comboBox1.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;comboBox1.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="&gt;&gt;label9.Name" xml:space="preserve">
     <value>label9</value>
@@ -712,10 +736,10 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label9.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="&gt;&gt;button7.Name" xml:space="preserve">
     <value>button7</value>
@@ -724,10 +748,10 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button7.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;button7.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="&gt;&gt;textBox8.Name" xml:space="preserve">
     <value>textBox8</value>
@@ -736,10 +760,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox8.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;textBox8.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="&gt;&gt;label8.Name" xml:space="preserve">
     <value>label8</value>
@@ -748,141 +772,114 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label8.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
-  <data name="tabPage3.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="tabPage_abi.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 26</value>
   </data>
-  <data name="tabPage3.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="tabPage_abi.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
-  <data name="tabPage3.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="tabPage_abi.Size" type="System.Drawing.Size, System.Drawing">
     <value>457, 219</value>
   </data>
-  <data name="tabPage3.TabIndex" type="System.Int32, mscorlib">
+  <data name="tabPage_abi.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="tabPage3.Text" xml:space="preserve">
+  <data name="tabPage_abi.Text" xml:space="preserve">
     <value>ABI</value>
   </data>
-  <data name="&gt;&gt;tabPage3.Name" xml:space="preserve">
-    <value>tabPage3</value>
+  <data name="&gt;&gt;tabPage_abi.Name" xml:space="preserve">
+    <value>tabPage_abi</value>
   </data>
-  <data name="&gt;&gt;tabPage3.Type" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_abi.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tabPage3.Parent" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_abi.Parent" xml:space="preserve">
     <value>tabControl1</value>
   </data>
-  <data name="&gt;&gt;tabPage3.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_abi.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="comboBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>89, 158</value>
+  <data name="&gt;&gt;combo_witnessFunc.Name" xml:space="preserve">
+    <value>combo_witnessFunc</value>
   </data>
-  <data name="comboBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>362, 25</value>
-  </data>
-  <data name="comboBox2.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;comboBox2.Name" xml:space="preserve">
-    <value>comboBox2</value>
-  </data>
-  <data name="&gt;&gt;comboBox2.Type" xml:space="preserve">
+  <data name="&gt;&gt;combo_witnessFunc.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;comboBox2.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+  <data name="&gt;&gt;combo_witnessFunc.Parent" xml:space="preserve">
+    <value>tabPage_func</value>
   </data>
-  <data name="&gt;&gt;comboBox2.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;combo_witnessFunc.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="label11.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;lbl_witnessFunc.Name" xml:space="preserve">
+    <value>lbl_witnessFunc</value>
   </data>
-  <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 161</value>
-  </data>
-  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 17</value>
-  </data>
-  <data name="label11.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="label11.Text" xml:space="preserve">
-    <value>Witness:</value>
-  </data>
-  <data name="&gt;&gt;label11.Name" xml:space="preserve">
-    <value>label11</value>
-  </data>
-  <data name="&gt;&gt;label11.Type" xml:space="preserve">
+  <data name="&gt;&gt;lbl_witnessFunc.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;label11.Parent" xml:space="preserve">
-    <value>tabPage1</value>
+  <data name="&gt;&gt;lbl_witnessFunc.Parent" xml:space="preserve">
+    <value>tabPage_func</value>
   </data>
-  <data name="&gt;&gt;label11.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;lbl_witnessFunc.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="tabPage_func.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 26</value>
   </data>
-  <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="tabPage_func.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
-  <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="tabPage_func.Size" type="System.Drawing.Size, System.Drawing">
     <value>457, 219</value>
   </data>
-  <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
+  <data name="tabPage_func.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="tabPage1.Text" xml:space="preserve">
+  <data name="tabPage_func.Text" xml:space="preserve">
     <value>Function</value>
   </data>
-  <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
-    <value>tabPage1</value>
+  <data name="&gt;&gt;tabPage_func.Name" xml:space="preserve">
+    <value>tabPage_func</value>
   </data>
-  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_func.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tabPage1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_func.Parent" xml:space="preserve">
     <value>tabControl1</value>
   </data>
-  <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_func.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="tabPage_custom.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 26</value>
   </data>
-  <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+  <data name="tabPage_custom.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
-  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="tabPage_custom.Size" type="System.Drawing.Size, System.Drawing">
     <value>457, 219</value>
   </data>
-  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
+  <data name="tabPage_custom.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="tabPage2.Text" xml:space="preserve">
+  <data name="tabPage_custom.Text" xml:space="preserve">
     <value>Custom</value>
   </data>
-  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
-    <value>tabPage2</value>
+  <data name="&gt;&gt;tabPage_custom.Name" xml:space="preserve">
+    <value>tabPage_custom</value>
   </data>
-  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_custom.Type" xml:space="preserve">
     <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_custom.Parent" xml:space="preserve">
     <value>tabControl1</value>
   </data>
-  <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;tabPage_custom.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
   <data name="tabControl1.Location" type="System.Drawing.Point, System.Drawing">
@@ -904,6 +901,57 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;tabControl1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="combo_witnessAbi.Location" type="System.Drawing.Point, System.Drawing">
+    <value>89, 97</value>
+  </data>
+  <data name="combo_witnessAbi.Size" type="System.Drawing.Size, System.Drawing">
+    <value>362, 25</value>
+  </data>
+  <data name="combo_witnessAbi.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessAbi.Name" xml:space="preserve">
+    <value>combo_witnessAbi</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessAbi.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessAbi.Parent" xml:space="preserve">
+    <value>tabPage_abi</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessAbi.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lbl_witnessAbi.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_witnessAbi.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lbl_witnessAbi.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 100</value>
+  </data>
+  <data name="lbl_witnessAbi.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 17</value>
+  </data>
+  <data name="lbl_witnessAbi.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="lbl_witnessAbi.Text" xml:space="preserve">
+    <value>Witness:</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessAbi.Name" xml:space="preserve">
+    <value>lbl_witnessAbi</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessAbi.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessAbi.Parent" xml:space="preserve">
+    <value>tabPage_abi</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessAbi.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="button8.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
@@ -934,10 +982,10 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button8.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;button8.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="textBox9.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -958,10 +1006,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox9.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;textBox9.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="label10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -988,10 +1036,10 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label10.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="comboBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>89, 36</value>
@@ -1009,10 +1057,10 @@
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;comboBox1.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;comboBox1.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1039,10 +1087,10 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label9.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="button7.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
@@ -1069,10 +1117,10 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button7.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;button7.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="textBox8.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -1093,10 +1141,10 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;textBox8.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;textBox8.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="label8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1123,10 +1171,61 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label8.Parent" xml:space="preserve">
-    <value>tabPage3</value>
+    <value>tabPage_abi</value>
   </data>
   <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
+  </data>
+  <data name="combo_witnessFunc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>89, 158</value>
+  </data>
+  <data name="combo_witnessFunc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>362, 25</value>
+  </data>
+  <data name="combo_witnessFunc.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessFunc.Name" xml:space="preserve">
+    <value>combo_witnessFunc</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessFunc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessFunc.Parent" xml:space="preserve">
+    <value>tabPage_func</value>
+  </data>
+  <data name="&gt;&gt;combo_witnessFunc.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lbl_witnessFunc.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_witnessFunc.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lbl_witnessFunc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 161</value>
+  </data>
+  <data name="lbl_witnessFunc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 17</value>
+  </data>
+  <data name="lbl_witnessFunc.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="lbl_witnessFunc.Text" xml:space="preserve">
+    <value>Witness:</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessFunc.Name" xml:space="preserve">
+    <value>lbl_witnessFunc</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessFunc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessFunc.Parent" xml:space="preserve">
+    <value>tabPage_func</value>
+  </data>
+  <data name="&gt;&gt;lbl_witnessFunc.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;textBox7.Name" xml:space="preserve">
     <value>textBox7</value>

@@ -8,8 +8,8 @@
     <ProjectGuid>{6C609B15-BF0F-456A-B846-C11285A68017}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BRC5Contract</RootNamespace>
-    <AssemblyName>BRC5Contract</AssemblyName>
+    <RootNamespace>BRC20Contract</RootNamespace>
+    <AssemblyName>BRC20Contract</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

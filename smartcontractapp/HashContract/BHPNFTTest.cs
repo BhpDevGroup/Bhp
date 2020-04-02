@@ -111,14 +111,14 @@ namespace BHPNFT
         public delegate void deleSupportedStandardsModify(string[] newSupportedStandards);
         [DisplayName("supportedStandardsModify")]
         public static event deleSupportedStandardsModify onSupportedStandardsModify;
-        public delegate void deleIsOpenChange(bool isOpen);
-        [DisplayName("isOpenChange")]
-        public static event deleIsOpenChange onIsOpenChange;
+        //public delegate void deleIsOpenChange(bool isOpen);
+        //[DisplayName("isOpenChange")]
+        //public static event deleIsOpenChange onIsOpenChange;
 
         #endregion
 
         //超级管理員
-        static readonly byte[] superAdmin = Helper.ToScriptHash("ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY");
+        static readonly byte[] superAdmin = Helper.ToScriptHash("AWWx2F1Ph9oJtbU8H2mcJGDgDeFDH8geWs");
 
         #region  token 定义
         public class Token
@@ -277,12 +277,6 @@ namespace BHPNFT
             return getPledgedAddrNFTlist(addr);
         }
 
-        //查询质押地址的nft资产列表
-        public static Map<BigInteger, BigInteger> tokenIDsOfApproveMint(byte[] addr)
-        {
-            return getApproveMintAddr(addr);
-        }
-
         #endregion
 
         #region 基础查询（不对外）
@@ -304,7 +298,7 @@ namespace BHPNFT
 
         }
 
-        //查询appove地址所有的nft资产索引
+        //查询appove地址所有的nft资产索引（地址发行了那些资产）
         public static Map<BigInteger, BigInteger> getApprovedAddrNFTlist(byte[] addr)
         {
             StorageMap approvedAddrNFTlist = Storage.CurrentContext.CreateMap("approvedAddrNFTlist");
@@ -338,22 +332,7 @@ namespace BHPNFT
 
         }
 
-        //查询授权发行地址 发行的资产（地址发行了那些资产）
-        public static Map<BigInteger, BigInteger> getApproveMintAddr(byte[] addr)
-        {
-            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");
-            var data = addrApproveMintAddrs.Get(addr);
-
-            if (data.Length > 0)
-            {
-                return Helper.Deserialize(data) as Map<BigInteger, BigInteger>;
-            }
-            else
-            {
-                return new Map<BigInteger, BigInteger>();
-            }
-
-        }
+       
 
         #endregion
 
@@ -461,40 +440,6 @@ namespace BHPNFT
             }
         }
 
-
-        //增加授权发行地址 发行的nft资产索引
-        public static void addrApproveMintAddrAdd(byte[] addr, BigInteger tokenID)
-        {
-            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");//0,存储addr拥有NFT总数//第一个位置存储个数
-
-            Map<BigInteger, BigInteger> addrApproveMintlist = getApproveMintAddr(addr);
-            if (addrApproveMintlist.HasKey(0))
-            {
-                addrApproveMintlist[0] = addrApproveMintlist[0] + 1; //第一个位置存储个数
-            }
-            else
-            {
-                addrApproveMintlist[0] = 1;
-            }
-            addrApproveMintlist[tokenID] = 1;
-
-            addrApproveMintAddrs.Put(addr, Helper.Serialize(addrApproveMintlist));
-        }
-
-        //删除授权发行地址 发行nft资产索引
-        public static void addrApproveMintAddrRemove(byte[] addr, BigInteger tokenID)
-        {
-            StorageMap addrApproveMintNFTlistMap = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");//0,存储addr拥有NFT总数
-
-            Map<BigInteger, BigInteger> addrApproveMintNFTlist = getApproveMintAddr(addr);
-
-            if (addrApproveMintNFTlist.HasKey(tokenID))
-            {
-                addrApproveMintNFTlist[0] = addrApproveMintNFTlist[0] - 1;
-                addrApproveMintNFTlist.Remove(tokenID);
-                addrApproveMintNFTlistMap.Put(addr, Helper.Serialize(addrApproveMintNFTlist));
-            }
-        }
         #endregion
 
         #region 转账 （对外）
@@ -540,20 +485,20 @@ namespace BHPNFT
             {
                 Token token = Helper.Deserialize(data) as Token;
                 if (!Runtime.CheckWitness(token.approved)) return false;
+                byte[] approvedAddr = token.approved;
                 BigInteger assetState = token.assetState;
                 //自己只能转出资产状态为1，正常状态的资产
                 if (assetState == 1)
                 {
                     var addrFrom = token.owner;
                     token.owner = addrTo;
-
                     token.approved = new byte[0];//删除授权地址
 
                     tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
                     addrNFTlistRemove(addrFrom, tokenID);
                     addrNFTlistAdd(addrTo, tokenID);
                     
-                    approvedAddrNFTlistRemove(token.approved, tokenID); //删除授权地址该资产索引
+                    approvedAddrNFTlistRemove(approvedAddr, tokenID); //删除授权地址该资产索引
 
                     onTransfer(addrFrom, addrTo, 1);
                     onNFTTransfer(addrFrom, addrTo, tokenID);
@@ -575,6 +520,7 @@ namespace BHPNFT
             {
                 Token token = Helper.Deserialize(data) as Token;
                 if (!Runtime.CheckWitness(token.pledger)) return false;
+                byte[] pledgerAddr = token.pledger;
                 BigInteger assetState = token.assetState;
                 //只能转出资产状态为3，质押状态的资产
                 if (assetState == 3)
@@ -586,7 +532,7 @@ namespace BHPNFT
                     tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
                     addrNFTlistRemove(addrFrom, tokenID);
                     addrNFTlistAdd(addrTo, tokenID);
-                    pledgedAddrNFTlistRemove(token.pledger, tokenID); //转出后，质押地址不在对资产有操作权，删除质押地址资产索引
+                    pledgedAddrNFTlistRemove(pledgerAddr, tokenID); //转出后，质押地址不在对资产有操作权，删除质押地址资产索引
                     onTransfer(addrFrom, addrTo, 1);
                     onNFTTransfer(addrFrom, addrTo, tokenID);
                     return true;
@@ -652,17 +598,15 @@ namespace BHPNFT
                 token.assetState = 3; //质押状态
                 token.isIncomePledged = isIncomePledged;
 
-                tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
-
-                //此处应增加质押地址所有资产索引
+                //此处应增加质押地址所拥有资产索引
                 pledgedAddrNFTlistAdd(addr, tokenID);
+
+                tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
 
                 onPledged(token.owner, token.pledger, 1);
                 onNFTPledged(token.owner, token.pledger, tokenID);
-
                 return true;
             }
-
             return false;
         }
 
@@ -676,16 +620,14 @@ namespace BHPNFT
                 Token token = Helper.Deserialize(data) as Token;
 
                 byte [] pledgerAddr = token.pledger;
-                if (!(Runtime.CheckWitness(token.pledger) || Runtime.CheckWitness(superAdmin))) return false;
+                if (!Runtime.CheckWitness(token.pledger)) return false;
 
                 token.pledger = new byte[0]; //质押地址置空
                 token.isIncomePledged = false;
                 token.assetState = 1; //质押状态改为正常
-
-                tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
-
-                //此处应删除质押地址的资产索引
+                //删除质押地址的资产索引
                 pledgedAddrNFTlistRemove(pledgerAddr, tokenID);
+                tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
 
                 onPledged(token.owner, token.pledger, 1);
                 onNFTPledged(token.owner, token.pledger, tokenID);
@@ -693,25 +635,6 @@ namespace BHPNFT
                 return true;
             }
             return false;
-        }
-
-        #endregion
-
-        #region 内部判断 （不对外）
-        //判断发行地址是否在授权发行地址
-        public static bool isMintAddress(byte[] addr) 
-        {
-            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");
-            var data = addrApproveMintAddrs.Get(addr);
-
-            if (data.Length > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         #endregion
@@ -767,6 +690,77 @@ namespace BHPNFT
         }
 
         #endregion
+
+        #region 授权发行地址增、减、查询, 判断地址是否为授权发行地址（对外）
+
+        //查询授权发行地址
+        public static Map<byte[], BigInteger> getApproveMintAddr()
+        {
+            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");
+            var data = addrApproveMintAddrs.Get("approveMintKey");
+
+            if (data.Length > 0)
+            {
+                return Helper.Deserialize(data) as Map<byte[], BigInteger>;
+            }
+            else
+            {
+                return new Map<byte[], BigInteger>();
+            }
+        }
+
+        //增加授权发行地址(仅超级管理员可操作)
+        public static bool ApproveMintAddrAdd(byte[] addr)
+        {
+            if (!Runtime.CheckWitness(superAdmin)) return false;
+            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");//0,存储addr拥有NFT总数//第一个位置存储个数
+
+            Map<byte[], BigInteger> addrApproveMintlist = getApproveMintAddr();
+            byte[] number = new byte[1] { 0 };
+            if (addrApproveMintlist.HasKey(number))
+            {
+                addrApproveMintlist[number] = addrApproveMintlist[number] + 1; //第一个位置存储个数
+            }
+            else
+            {
+                addrApproveMintlist[number] = 1;
+            }
+            addrApproveMintlist[addr] = 1;
+
+            addrApproveMintAddrs.Put("approveMintKey", Helper.Serialize(addrApproveMintlist));
+            return true;
+        }
+
+        //删除授权发行地址(仅超级管理员可操作)
+        public static bool ApproveMintAddrRemove(byte[] addr)
+        {
+            if (!Runtime.CheckWitness(superAdmin)) return false;
+
+            StorageMap addrApproveMintNFTlistMap = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");
+
+            Map<byte[], BigInteger> addrApproveMintNFTlist = getApproveMintAddr();
+            byte[] number = new byte[1] { 0 };
+            if (addrApproveMintNFTlist.HasKey(number))
+            {
+                addrApproveMintNFTlist[number] = addrApproveMintNFTlist[number] - 1;
+                addrApproveMintNFTlist.Remove(addr);
+                addrApproveMintNFTlistMap.Put("approveMintKey", Helper.Serialize(addrApproveMintNFTlist));
+            }
+            return true;
+        }
+
+        //判断发行地址是否在授权发行地址
+        public static bool isMintAddress(byte[] addr)
+        {
+            Map<byte[], BigInteger> addrApproveMintNFTlist = getApproveMintAddr();
+            if (addrApproveMintNFTlist.HasKey(addr))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        #endregion 
 
         #region 修改NFT属性 (仅超级管理员可修改) （对外）
 
@@ -1005,18 +999,13 @@ namespace BHPNFT
                     if (args.Length != 1) return false;
                     return tokenIDsOfPledged((byte[])args[0]);
                 }
-                if (operation == "tokenIDsOfApproveMint")
-                {
-                    if (args.Length != 1) return false;
-                    return tokenIDsOfApproveMint((byte[])args[0]);
-                }
                 #endregion
 
                 #region 铸币
                 //代币合约所有者操作(superAdmin)
                 if (operation == "mintToken")
                 {
-                    if (args.Length != 4) return false;
+                    if (args.Length != 15) return false;
                     return mintToken((byte[])args[0], (byte[])args[1], (BigInteger)args[2], (BigInteger)args[3],
                         (BigInteger)args[4], (BigInteger)args[5], (BigInteger)args[6],(BigInteger)args[7], (BigInteger)args[8], 
                         (BigInteger)args[9],(BigInteger)args[10], (BigInteger)args[11], (BigInteger)args[12], (BigInteger)args[13],(BigInteger)args[14]);
@@ -1060,10 +1049,38 @@ namespace BHPNFT
                 }
 
                 #endregion
+
+                #region 授权地址操作
+
+                //获取发行地址
+                if (operation == "getApproveMintAddr")
+                {
+                    return getApproveMintAddr();
+                }
+                //增加发行地址（仅超级管理员）
+                if (operation == "approveMintAddrAdd")
+                {
+                    if (args.Length != 1) return false;
+                    return ApproveMintAddrAdd((byte[])args[0]);
+                }
+                //删除发行地址（仅超级管理员）
+                if (operation == "approveMintAddrRemove")
+                {
+                    if (args.Length != 1) return false;
+                    return ApproveMintAddrRemove((byte[])args[0]);
+                }
+                //判断地址是否为发行地址
+                if (operation == "isMintAddress")
+                {
+                    if (args.Length != 1) return false;
+                    return isMintAddress((byte[])args[0]);
+                }
+
+                #endregion
+
             }
             return false;
         }
 
-      
     }
 }

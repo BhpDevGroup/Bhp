@@ -7,7 +7,7 @@ using Bhp.SmartContract.Framework.Services.System;
 
 namespace BHPNFT
 {
-    public class BHPNFTTest : SmartContract
+    public partial class BHPNFT : SmartContract
     {
         //代币操作方法
 
@@ -68,7 +68,7 @@ namespace BHPNFT
         public delegate void deleMint(byte[] addrOwner, BigInteger amount);
         [DisplayName("mint")]
         public static event deleMint onMint;
-        public delegate void deleNFTMint(byte[] addrOwner, BigInteger tokenID, Token token);
+        public delegate void deleNFTMint(byte[] addrOwner, BigInteger tokenID, Asset token);
         [DisplayName("NFTmint")]
         public static event deleNFTMint onNFTMint;
 
@@ -120,14 +120,14 @@ namespace BHPNFT
         //超级管理員
         static readonly byte[] superAdmin = Helper.ToScriptHash("AWWx2F1Ph9oJtbU8H2mcJGDgDeFDH8geWs");
 
-        #region  token 定义
-        public class Token
+        #region  asset 定义
+        public class Asset
         {
-            public Token()
+            public Asset()
             {
-                token_id = 0;
+                asset_id = 0;
                 owner = new byte[0]; //资产拥有
-                approved = new byte[0];//授权地址
+                spender = new byte[0];//授权地址
                 issuer = new byte[0]; //发行地址
                 pledger = new byte[0]; //质押人地址
                 ownershipStartDate = 20200101; //所有权开始日期
@@ -150,9 +150,9 @@ namespace BHPNFT
             }
             //不能使用get set
 
-            public BigInteger token_id;// 代币ID
+            public BigInteger asset_id;// 代币ID
             public byte[] owner; //代币所有权地址
-            public byte[] approved;//代币授权处置权地址
+            public byte[] spender;//代币授权处置权地址
             public byte[] issuer; //发行人地址
             public byte[] pledger; //质押人地址
             public BigInteger ownershipStartDate; //所有权开始日期
@@ -179,7 +179,7 @@ namespace BHPNFT
             StorageMap sysState = Storage.CurrentContext.CreateMap("sysState");
             var data = sysState.Get("name");
             if (data.Length > 0) return data.AsString();
-            return "myBNN";
+            return "BTCT";
         }
 
         public static string symbol()
@@ -187,12 +187,12 @@ namespace BHPNFT
             StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
             var data = sysStateMap.Get("symbol");
             if (data.Length > 0) return data.AsString();
-            return "myBNS";
+            return "BTCT";
         }
 
         public static BigInteger decimals()
         {
-            return 0;
+            return 2;
         }
 
         public static string[] supportedStandards()
@@ -214,27 +214,27 @@ namespace BHPNFT
         #region 查询 (对外)
 
         //通过资产id查询资产信息
-        public static Token getToken(BigInteger tokenID)
+        public static Asset getToken(BigInteger tokenID)
         {
             StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
 
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
-                Token token = Helper.Deserialize(data) as Token;
+                Asset token = Helper.Deserialize(data) as Asset;
 
                 return token;
             }
-            return new Token();
+            return new Asset();
         }
 
         //返回代币的授权信息，代币授权地址
         public static byte[] allowance(BigInteger tokenID)
         {
-            Token token = getToken(tokenID);
-            if (token.approved.Length > 0)
+            Asset token = getToken(tokenID);
+            if (token.spender.Length > 0)
             {
-                return token.owner.Concat(token.approved);
+                return token.owner.Concat(token.spender);
             }
             else
             {
@@ -454,7 +454,7 @@ namespace BHPNFT
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
-                Token token = Helper.Deserialize(data) as Token;
+                Asset token = Helper.Deserialize(data) as Asset;
                 if (!Runtime.CheckWitness(token.owner)) return false;
                 BigInteger assetState = token.assetState;
                 //自己只能转出资产状态为1，正常状态的资产
@@ -483,16 +483,16 @@ namespace BHPNFT
             //token 存在
             if (data.Length > 0)
             {
-                Token token = Helper.Deserialize(data) as Token;
-                if (!Runtime.CheckWitness(token.approved)) return false;
-                byte[] approvedAddr = token.approved;
+                Asset token = Helper.Deserialize(data) as Asset;
+                if (!Runtime.CheckWitness(token.spender)) return false;
+                byte[] approvedAddr = token.spender;
                 BigInteger assetState = token.assetState;
                 //自己只能转出资产状态为1，正常状态的资产
                 if (assetState == 1)
                 {
                     var addrFrom = token.owner;
                     token.owner = addrTo;
-                    token.approved = new byte[0];//删除授权地址
+                    token.spender = new byte[0];//删除授权地址
 
                     tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
                     addrNFTlistRemove(addrFrom, tokenID);
@@ -518,7 +518,7 @@ namespace BHPNFT
             //token 存在
             if (data.Length > 0)
             {
-                Token token = Helper.Deserialize(data) as Token;
+                Asset token = Helper.Deserialize(data) as Asset;
                 if (!Runtime.CheckWitness(token.pledger)) return false;
                 byte[] pledgerAddr = token.pledger;
                 BigInteger assetState = token.assetState;
@@ -554,22 +554,22 @@ namespace BHPNFT
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
-                Token token = Helper.Deserialize(data) as Token;
+                Asset token = Helper.Deserialize(data) as Asset;
                 if (!Runtime.CheckWitness(token.owner)) return false;
 
                 if (!revoke)
                 {
-                    token.approved = addr;
+                    token.spender = addr;
                     approvedAddrNFTlistAdd(addr, tokenID); //增加授权地址索引
                 }
                 else
                 {
-                    token.approved = new byte[0];
+                    token.spender = new byte[0];
                     approvedAddrNFTlistRemove(addr, tokenID);
                 }
                 tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
-                onApprove(token.owner, token.approved, 1);
-                onNFTApprove(token.owner, token.approved, tokenID);
+                onApprove(token.owner, token.spender, 1);
+                onNFTApprove(token.owner, token.spender, tokenID);
 
                 return true;
             }
@@ -590,9 +590,9 @@ namespace BHPNFT
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
-                Token token = Helper.Deserialize(data) as Token;
+                Asset token = Helper.Deserialize(data) as Asset;
                 //
-                if (!(Runtime.CheckWitness(token.owner) || Runtime.CheckWitness(token.approved))) return false;
+                if (!(Runtime.CheckWitness(token.owner) || Runtime.CheckWitness(token.spender))) return false;
 
                 token.pledger = addr;
                 token.assetState = 3; //质押状态
@@ -617,7 +617,7 @@ namespace BHPNFT
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
-                Token token = Helper.Deserialize(data) as Token;
+                Asset token = Helper.Deserialize(data) as Asset;
 
                 byte [] pledgerAddr = token.pledger;
                 if (!Runtime.CheckWitness(token.pledger)) return false;
@@ -655,10 +655,10 @@ namespace BHPNFT
                 StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
                 StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
                 BigInteger totalSupply = sysStateMap.Get("totalSupply").AsBigInteger();
-                Token newToken = new Token();
-                newToken.token_id = totalSupply + 1;
+                Asset newToken = new Asset();
+                newToken.asset_id = totalSupply + 1;
                 newToken.owner = owner;
-                newToken.approved = new byte[0];
+                newToken.spender = new byte[0];
                 newToken.issuer = issuerAddr; //发行地址
                 newToken.pledger = new byte[0]; //质押人地址
                 newToken.ownershipStartDate = ownershipStartDate; //所有权开始日期
@@ -676,12 +676,12 @@ namespace BHPNFT
                 newToken.assetType = assetType; //算力类型，1，单挖；2,双挖; 3，高波
                 newToken.assetState = assetState; //Normal, //1：正常状态，可转让、可质押
 
-                sysStateMap.Put("totalSupply", newToken.token_id);
-                tokenMap.Put(newToken.token_id.AsByteArray(), Helper.Serialize(newToken));
-                addrNFTlistAdd(owner, newToken.token_id);
+                sysStateMap.Put("totalSupply", newToken.asset_id);
+                tokenMap.Put(newToken.asset_id.AsByteArray(), Helper.Serialize(newToken));
+                addrNFTlistAdd(owner, newToken.asset_id);
 
                 onMint(owner, 1);
-                onNFTMint(owner, newToken.token_id, newToken);
+                onNFTMint(owner, newToken.asset_id, newToken);
 
                 return true;
             }
@@ -774,7 +774,7 @@ namespace BHPNFT
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
-                Token token = Helper.Deserialize(data) as Token;
+                Asset token = Helper.Deserialize(data) as Asset;
                 switch (attributeName)
                 {
                     case "ownershipStartDate": token.ownershipStartDate = (BigInteger)attributeValue; break;
@@ -801,7 +801,7 @@ namespace BHPNFT
                     case "assetState": token.assetState = (BigInteger)attributeValue; break;
                     default: break;
                 }
-                tokenMap.Put(token.token_id.AsByteArray(), Helper.Serialize(token));
+                tokenMap.Put(token.asset_id.AsByteArray(), Helper.Serialize(token));
                 onNFTModify(tokenID, attributeName, attributeValue);
                 return true;
             }
@@ -883,204 +883,5 @@ namespace BHPNFT
         }
         
         #endregion
-
-        public static object Main(string operation, object[] args)
-        {
-            //UTXO转账转入转出都不允许
-            if (Runtime.Trigger == TriggerType.Verification || Runtime.Trigger == TriggerType.VerificationR)
-            {
-                return false;
-            }
-            else if (Runtime.Trigger == TriggerType.Application)
-            {
-                #region 基础方法
-                //无入参只读类 
-                if (operation == "name")
-                {
-                    return name();
-                }
-                if (operation == "symbol")
-                {
-                    return symbol();
-                }
-                if (operation == "decimals")
-                {
-                    return decimals();
-                }
-                if (operation == "supportedStandards")
-                {
-                    return supportedStandards();
-                }
-                if (operation == "totalSupply")
-                {
-                    return totalSupply();
-                }
-                #endregion
-
-                #region 转账
-                if (operation == "transfer")
-                {
-                    if (args.Length != 2) return false;
-                    return transfer((byte[])args[0], (BigInteger)args[1]);
-                }
-                if (operation == "transferFrom")
-                {
-                    if (args.Length != 2) return false;
-                    return transferFrom((byte[])args[0], (BigInteger)args[1]);
-                }
-                if (operation == "transferTo")
-                {
-                    if (args.Length != 2) return false;
-                    return transferTo((byte[])args[0], (BigInteger)args[1]);
-                }
-                #endregion
-
-                #region 授权
-                if (operation == "approve")
-                {
-                    if (args.Length != 2 && args.Length != 3) return false;
-                    if (args.Length == 2) return approve((byte[])args[0], (BigInteger)args[1], false);
-                    return approve((byte[])args[0], (BigInteger)args[1], (bool)args[2]);
-                }
-
-                #endregion
-
-                #region 质押、解质押
-               
-                if (operation == "pledger")
-                {
-                    if (args.Length != 3) return false;
-                    return pledgerNFT((byte[])args[0],(BigInteger)args[1],(bool)args[2]);
-                }
-                if (operation == "unpledger")
-                {
-                    if (args.Length != 1) return false;
-                    return unPledge((BigInteger)args[0]);
-                }
-
-                #endregion
-
-                #region 查询
-                //单token_id只读类
-                if (operation == "allowance")
-                {
-                    if (args.Length != 1) return false;
-                    return allowance((BigInteger)args[0]);
-                }
-                if (operation == "ownerOf")
-                {
-                    if (args.Length != 1) return false;
-                    return ownerOf((BigInteger)args[0]);
-                }
-
-                if (operation == "token")
-                {
-                    if (args.Length != 1) return false;
-                    return getToken((BigInteger)args[0]);
-                }
-                //所有权类
-                if (operation == "balanceOf")
-                {
-                    if (args.Length != 1) return false;
-                    return balanceOf((byte[])args[0]);
-                }
-                if (operation == "tokenIDsOfOwner")
-                {
-                    if (args.Length != 1) return false;
-                    return tokenIDsOfOwner((byte[])args[0]);
-                }
-                if (operation == "tokenIDsOfApproved")
-                {
-                    if (args.Length != 1) return false;
-                    return tokenIDsOfApproved((byte[])args[0]);
-                }
-                if (operation == "tokenIDsOfPledged")
-                {
-                    if (args.Length != 1) return false;
-                    return tokenIDsOfPledged((byte[])args[0]);
-                }
-                #endregion
-
-                #region 铸币
-                //代币合约所有者操作(superAdmin)
-                if (operation == "mintToken")
-                {
-                    if (args.Length != 15) return false;
-                    return mintToken((byte[])args[0], (byte[])args[1], (BigInteger)args[2], (BigInteger)args[3],
-                        (BigInteger)args[4], (BigInteger)args[5], (BigInteger)args[6],(BigInteger)args[7], (BigInteger)args[8], 
-                        (BigInteger)args[9],(BigInteger)args[10], (BigInteger)args[11], (BigInteger)args[12], (BigInteger)args[13],(BigInteger)args[14]);
-                }
-                #endregion
-
-                #region 修改NFT属性
-
-                if (operation == "modifyNFTattribute")
-                {
-                    if (args.Length != 3) return false;
-                    return modifyNFTattribute((BigInteger)args[0],(string)args[1], (object)args[2]);
-                }
-                #endregion
-
-                #region 修改合约属性
-                //设置操作（仅superAdmin）
-                if (operation == "setName")
-                {
-                    if (args.Length != 1) return false;
-                    return setName((string)args[0]);
-                }
-                if (operation == "setSymbol")
-                {
-                    if (args.Length != 1) return false;
-                    return setSymbol((string)args[0]);
-                }
-                if (operation == "setSupportedStandards")
-                {
-                    if (args.Length != 1) return false;
-                    return setSupportedStandards((string[])args[0]);
-                }
-
-                #endregion
-
-                #region 合约升级
-
-                if (operation == "migrate")
-                {
-                    return migrateContract(args);
-                }
-
-                #endregion
-
-                #region 授权地址操作
-
-                //获取发行地址
-                if (operation == "getApproveMintAddr")
-                {
-                    return getApproveMintAddr();
-                }
-                //增加发行地址（仅超级管理员）
-                if (operation == "approveMintAddrAdd")
-                {
-                    if (args.Length != 1) return false;
-                    return ApproveMintAddrAdd((byte[])args[0]);
-                }
-                //删除发行地址（仅超级管理员）
-                if (operation == "approveMintAddrRemove")
-                {
-                    if (args.Length != 1) return false;
-                    return ApproveMintAddrRemove((byte[])args[0]);
-                }
-                //判断地址是否为发行地址
-                if (operation == "isMintAddress")
-                {
-                    if (args.Length != 1) return false;
-                    return isMintAddress((byte[])args[0]);
-                }
-
-                #endregion
-
-            }
-            return false;
-        }
-
     }
 }

@@ -68,36 +68,50 @@ namespace BRC20
             balances.Put(to, amount);
             OnIssue(to, amount);
 
+            //do something ...
+            //add totolsupply
+
             return true;
         }
 
         /// <summary>
         /// 授权to地址操作from地址中的资产，最大数量为amount
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="sender"></param>
+        /// <param name="spender"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        private static bool Approve(byte[] from, byte[] to, BigInteger amount)
+        private static bool Approve(byte[] sender, byte[] spender, BigInteger amount)
         {
-            if (!ValidateAddress(from)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
-            if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
-            if (!IsPayable(to)) return false;
+            if (!ValidateAddress(sender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(spender)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
+            if (!IsPayable(spender)) return false;
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
-            if (!Runtime.CheckWitness(from)) return false; //只能自己操作
+            if (!Runtime.CheckWitness(sender)) return false; //只能自己操作
 
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            BigInteger fromAmount = balances.Get(from).ToBigInteger();
+            BigInteger fromAmount = balances.Get(sender).ToBigInteger();
 
-            if (fromAmount < amount) return false; //余额不足
-            if (amount == 0 || from == to) return true; //自己授权自己
+            if (fromAmount < amount)//可以授权
+            {
+                //do something ...
+                return true;
+            }
+           
+            if (amount == 0)//取消授权 
+            {
+                //do something ...
+                return true;
+            }
+
+            if (sender == spender) return true; //自己授权自己
 
             StorageMap balancesApprove = Storage.CurrentContext.CreateMap(StoragePrefixApprove);
 
             //方案一 ，采用from+to作为KEY，存储授权金额，简单
             //问题，如果多次授权不同的地址时，会有存储空间的浪费，
             //可借助于另外一个MAP来记录未被授权的余额，在授权时判断可用余额
-            byte[] approveKey = from.Concat(to);
+            byte[] approveKey = sender.Concat(spender);
             balancesApprove.Put(approveKey, amount);
 
             /*
@@ -110,7 +124,7 @@ namespace BRC20
             */
 
             //触发事件
-            OnApprove(from, to, amount);
+            OnApprove(sender, spender, amount);
             return true;
         }
 
@@ -141,8 +155,6 @@ namespace BRC20
             //from余额
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             BigInteger fromAmount = balances.Get(from).ToBigInteger();
-
-            if (fromAmount < amountOfApprove) return false; //可用余额不足
 
             if (amount == 0 || from == to) return true;
 

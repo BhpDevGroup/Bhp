@@ -60,7 +60,7 @@ namespace BRC20
 
                 #region ADMIN METHODS
                 if (operation == "deploy") return Deploy();
-                if (operation == "migrate") return Migrate((byte[])args[0], (string)args[1]);
+                if (operation == "migrate") return Migrate(args);
                 if (operation == "destroy") return Destroy();
                 #endregion
             }

@@ -1,14 +1,21 @@
 ﻿using Bhp.SmartContract.Framework;
 using Bhp.SmartContract.Framework.Services.Bhp;
 using System.Numerics;
-using System.ComponentModel;
-using Helper = Bhp.SmartContract.Framework.Helper;
-using Bhp.SmartContract.Framework.Services.System;
 
 namespace BHPNFT
 {
     public partial class BHPNFT : SmartContract
     {
+
+        #region Storage key prefixes
+        static readonly string StoragePrefixSysState = "sysState";
+        static readonly string StoragePrefixAsset = "asset";
+        static readonly string StoragePrefixAddrList = "addrNFTlist";
+        static readonly string StoragePrefixApprovedAddrList = "approvedAddrNFTlist";
+        static readonly string StoragePrefixPledgedAddrList = "pledgedAddrNFTlist";
+        static readonly string StoragePrefixMintAddr = "addrApproveMintAddrs";
+        #endregion
+
         public static object Main(string operation, object[] args)
         {
             //UTXO转账转入转出都不允许
@@ -101,7 +108,7 @@ namespace BHPNFT
                 if (operation == "token")
                 {
                     if (args.Length != 1) return false;
-                    return getToken((BigInteger)args[0]);
+                    return GetAsset((BigInteger)args[0]);
                 }
                 //所有权类
                 if (operation == "balanceOf")

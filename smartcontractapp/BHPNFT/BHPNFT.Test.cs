@@ -176,7 +176,7 @@ namespace BHPNFT
         #region 基础方法 (对外)
         public static string name()
         {
-            StorageMap sysState = Storage.CurrentContext.CreateMap("sysState");
+            StorageMap sysState = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
             var data = sysState.Get("name");
             if (data.Length > 0) return data.AsString();
             return "BTCT";
@@ -184,7 +184,7 @@ namespace BHPNFT
 
         public static string symbol()
         {
-            StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
+            StorageMap sysStateMap = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
             var data = sysStateMap.Get("symbol");
             if (data.Length > 0) return data.AsString();
             return "BTCT";
@@ -197,7 +197,7 @@ namespace BHPNFT
 
         public static string[] supportedStandards()
         {
-            StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
+            StorageMap sysStateMap = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
             var data = sysStateMap.Get("supportedStandards");
             if (data.Length > 0) return Helper.Deserialize(data) as string[];
             return new string[] { "BRC-20" };
@@ -205,20 +205,20 @@ namespace BHPNFT
 
         public static BigInteger totalSupply()
         {
-            StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
+            StorageMap sysStateMap = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
             return sysStateMap.Get("totalSupply").AsBigInteger();
         }
-        
+
         #endregion
 
         #region 查询 (对外)
 
         //通过资产id查询资产信息
-        public static Asset getToken(BigInteger tokenID)
+        public static Asset GetAsset(BigInteger assetId)
         {
-            StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+            StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
 
-            var data = tokenMap.Get(tokenID.AsByteArray());
+            var data = tokenMap.Get(assetId.AsByteArray());
             if (data.Length > 0)
             {
                 Asset token = Helper.Deserialize(data) as Asset;
@@ -229,9 +229,9 @@ namespace BHPNFT
         }
 
         //返回代币的授权信息，代币授权地址
-        public static byte[] allowance(BigInteger tokenID)
+        public static byte[] allowance(BigInteger assetId)
         {
-            Asset token = getToken(tokenID);
+            Asset token = GetAsset(assetId);
             if (token.spender.Length > 0)
             {
                 return token.owner.Concat(token.spender);
@@ -245,7 +245,7 @@ namespace BHPNFT
         //获取代币所有权地址
         public static byte[] ownerOf(BigInteger tokenID)
         {
-            return getToken(tokenID).owner;
+            return GetAsset(tokenID).owner;
         }
 
         //查询owner地址拥有的nft个数
@@ -284,7 +284,7 @@ namespace BHPNFT
         //查询地址所有的nft资产索引
         public static Map<BigInteger, BigInteger> getAddrNFTlist(byte[] addr)
         {
-            StorageMap addrNFTlistMap = Storage.CurrentContext.CreateMap("addrNFTlist");
+            StorageMap addrNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixAddrList);
             var data = addrNFTlistMap.Get(addr);
 
             if (data.Length > 0)
@@ -301,7 +301,7 @@ namespace BHPNFT
         //查询appove地址所有的nft资产索引（地址发行了那些资产）
         public static Map<BigInteger, BigInteger> getApprovedAddrNFTlist(byte[] addr)
         {
-            StorageMap approvedAddrNFTlist = Storage.CurrentContext.CreateMap("approvedAddrNFTlist");
+            StorageMap approvedAddrNFTlist = Storage.CurrentContext.CreateMap(StoragePrefixApprovedAddrList);
             var data = approvedAddrNFTlist.Get(addr);
 
             if (data.Length > 0)
@@ -318,7 +318,7 @@ namespace BHPNFT
         //查询pledged地址所有的nft资产索引
         public static Map<BigInteger, BigInteger> getPledgedAddrNFTlist(byte[] addr)
         {
-            StorageMap pledgedAddrNFTlist = Storage.CurrentContext.CreateMap("pledgedAddrNFTlist");
+            StorageMap pledgedAddrNFTlist = Storage.CurrentContext.CreateMap(StoragePrefixPledgedAddrList);
             var data = pledgedAddrNFTlist.Get(addr);
 
             if (data.Length > 0)
@@ -332,7 +332,7 @@ namespace BHPNFT
 
         }
 
-       
+
 
         #endregion
 
@@ -341,7 +341,7 @@ namespace BHPNFT
         //增加owner地址nft资产索引
         public static void addrNFTlistAdd(byte[] addr, BigInteger tokenID)
         {
-            StorageMap addrNFTlistMap = Storage.CurrentContext.CreateMap("addrNFTlist");//0,存储addr拥有NFT总数//第一个位置存储个数
+            StorageMap addrNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixAddrList);//0,存储addr拥有NFT总数//第一个位置存储个数
 
             Map<BigInteger, BigInteger> addrNFTlist = getAddrNFTlist(addr);
             if (addrNFTlist.HasKey(0))
@@ -360,7 +360,7 @@ namespace BHPNFT
         //删除owner地址拥有的nft资产索引
         public static void addrNFTlistRemove(byte[] addr, BigInteger tokenID)
         {
-            StorageMap addrNFTlistMap = Storage.CurrentContext.CreateMap("addrNFTlist");//0,存储addr拥有NFT总数
+            StorageMap addrNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixAddrList);//0,存储addr拥有NFT总数
 
             Map<BigInteger, BigInteger> addrNFTlist = getAddrNFTlist(addr);
 
@@ -375,7 +375,7 @@ namespace BHPNFT
         //增加approved地址nft资产索引
         public static void approvedAddrNFTlistAdd(byte[] addr, BigInteger tokenID)
         {
-            StorageMap approvedAddrNFTlistMap = Storage.CurrentContext.CreateMap("approvedAddrNFTlist");//0,存储addr拥有NFT总数//第一个位置存储个数
+            StorageMap approvedAddrNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixApprovedAddrList);//0,存储addr拥有NFT总数//第一个位置存储个数
 
             Map<BigInteger, BigInteger> approvedAddrNFTlist = getApprovedAddrNFTlist(addr);
             if (approvedAddrNFTlist.HasKey(0))
@@ -390,11 +390,11 @@ namespace BHPNFT
 
             approvedAddrNFTlistMap.Put(addr, Helper.Serialize(approvedAddrNFTlist));
         }
-        
+
         //删除approved地址拥有的nft资产索引
         public static void approvedAddrNFTlistRemove(byte[] addr, BigInteger tokenID)
         {
-            StorageMap approvedAddrNFTlistMap = Storage.CurrentContext.CreateMap("approvedAddrNFTlist");//0,存储addr拥有NFT总数
+            StorageMap approvedAddrNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixApprovedAddrList);//0,存储addr拥有NFT总数
 
             Map<BigInteger, BigInteger> approvedAddrNFTlist = getApprovedAddrNFTlist(addr);
 
@@ -409,7 +409,7 @@ namespace BHPNFT
         //增加pledged地址nft资索引
         public static void pledgedAddrNFTlistAdd(byte[] addr, BigInteger tokenID)
         {
-            StorageMap pledgedAddrNFTlistMap = Storage.CurrentContext.CreateMap("pledgedAddrNFTlist");//0,存储addr拥有NFT总数//第一个位置存储个数
+            StorageMap pledgedAddrNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixPledgedAddrList);//0,存储addr拥有NFT总数//第一个位置存储个数
 
             Map<BigInteger, BigInteger> pledgedAddrNFTlist = getPledgedAddrNFTlist(addr);
             if (pledgedAddrNFTlist.HasKey(0))
@@ -424,11 +424,11 @@ namespace BHPNFT
 
             pledgedAddrNFTlistMap.Put(addr, Helper.Serialize(pledgedAddrNFTlist));
         }
-      
+
         //删除pledged地址拥有的nft资产索引
         public static void pledgedAddrNFTlistRemove(byte[] addr, BigInteger tokenID)
         {
-            StorageMap pledgedAddrNFTlistMap = Storage.CurrentContext.CreateMap("pledgedAddrNFTlist");//0,存储addr拥有NFT总数
+            StorageMap pledgedAddrNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixPledgedAddrList);//0,存储addr拥有NFT总数
 
             Map<BigInteger, BigInteger> pledgedAddrNFTlist = getPledgedAddrNFTlist(addr);
 
@@ -450,7 +450,7 @@ namespace BHPNFT
             //判断地址长度
             if (addrTo.Length != 20) return false;
 
-            StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+            StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
@@ -478,7 +478,7 @@ namespace BHPNFT
         {
             if (addrTo.Length != 20) return false;
 
-            StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+            StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
             var data = tokenMap.Get(tokenID.AsByteArray());
             //token 存在
             if (data.Length > 0)
@@ -497,7 +497,7 @@ namespace BHPNFT
                     tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
                     addrNFTlistRemove(addrFrom, tokenID);
                     addrNFTlistAdd(addrTo, tokenID);
-                    
+
                     approvedAddrNFTlistRemove(approvedAddr, tokenID); //删除授权地址该资产索引
 
                     onTransfer(addrFrom, addrTo, 1);
@@ -513,7 +513,7 @@ namespace BHPNFT
         {
             if (addrTo.Length != 20) return false;
 
-            StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+            StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
             var data = tokenMap.Get(tokenID.AsByteArray());
             //token 存在
             if (data.Length > 0)
@@ -528,7 +528,7 @@ namespace BHPNFT
                     var addrFrom = token.owner;
                     token.owner = addrTo;
                     token.pledger = new byte[0]; //删除质押地址
-                    
+
                     tokenMap.Put(tokenID.AsByteArray(), Helper.Serialize(token));
                     addrNFTlistRemove(addrFrom, tokenID);
                     addrNFTlistAdd(addrTo, tokenID);
@@ -550,7 +550,7 @@ namespace BHPNFT
         {
             if (addr.Length != 20) return false;
 
-            StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+            StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
@@ -580,13 +580,13 @@ namespace BHPNFT
         #endregion
 
         #region 质押、解质押 （对外）
-       
+
         // 质押资产
         public static bool pledgerNFT(byte[] addr, BigInteger tokenID, bool isIncomePledged)
         {
             if (addr.Length != 20) return false;
 
-            StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+            StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
@@ -611,15 +611,16 @@ namespace BHPNFT
         }
 
         //解除质押
-        public static bool unPledge(BigInteger tokenID) {
+        public static bool unPledge(BigInteger tokenID)
+        {
 
-            StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+            StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
             {
                 Asset token = Helper.Deserialize(data) as Asset;
 
-                byte [] pledgerAddr = token.pledger;
+                byte[] pledgerAddr = token.pledger;
                 if (!Runtime.CheckWitness(token.pledger)) return false;
 
                 token.pledger = new byte[0]; //质押地址置空
@@ -641,19 +642,19 @@ namespace BHPNFT
 
         #region 铸币（对外）
         //铸币
-        public static bool mintToken(byte[] issuerAddr, byte[] owner, BigInteger ownershipStartDate, 
-            BigInteger basicHashPowerAmount, BigInteger basicHashPowerExpiryDate, 
-            BigInteger floatingHashPowerAmount,BigInteger floatingHashPowerExpiryDate,
+        public static bool mintToken(byte[] issuerAddr, byte[] owner, BigInteger ownershipStartDate,
+            BigInteger basicHashPowerAmount, BigInteger basicHashPowerExpiryDate,
+            BigInteger floatingHashPowerAmount, BigInteger floatingHashPowerExpiryDate,
             BigInteger regularHashPowerAmount, BigInteger regularHashPowerExpiryDate,
              BigInteger uptoStdHashPowerAmount, BigInteger uptoStdHashPowerExpiryDate,
             BigInteger unLockDate, BigInteger incomePercent,
             BigInteger assetType, BigInteger assetState)
         {
             if (Runtime.CheckWitness(superAdmin)) issuerAddr = superAdmin; //超级管理员铸币那么发行者即为超级管理员
-            if (Runtime.CheckWitness(superAdmin)  || (Runtime.CheckWitness(issuerAddr) && isMintAddress(issuerAddr)))
+            if (Runtime.CheckWitness(superAdmin) || (Runtime.CheckWitness(issuerAddr) && isMintAddress(issuerAddr)))
             {
-                StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
-                StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+                StorageMap sysStateMap = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
+                StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
                 BigInteger totalSupply = sysStateMap.Get("totalSupply").AsBigInteger();
                 Asset newToken = new Asset();
                 newToken.asset_id = totalSupply + 1;
@@ -686,7 +687,7 @@ namespace BHPNFT
                 return true;
             }
             return false;
-           
+
         }
 
         #endregion
@@ -696,7 +697,7 @@ namespace BHPNFT
         //查询授权发行地址
         public static Map<byte[], BigInteger> getApproveMintAddr()
         {
-            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");
+            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);
             var data = addrApproveMintAddrs.Get("approveMintKey");
 
             if (data.Length > 0)
@@ -713,7 +714,7 @@ namespace BHPNFT
         public static bool ApproveMintAddrAdd(byte[] addr)
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
-            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");//0,存储addr拥有NFT总数//第一个位置存储个数
+            StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);//0,存储addr拥有NFT总数//第一个位置存储个数
 
             Map<byte[], BigInteger> addrApproveMintlist = getApproveMintAddr();
             byte[] number = new byte[1] { 0 };
@@ -736,7 +737,7 @@ namespace BHPNFT
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
-            StorageMap addrApproveMintNFTlistMap = Storage.CurrentContext.CreateMap("addrApproveMintAddrs");
+            StorageMap addrApproveMintNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);
 
             Map<byte[], BigInteger> addrApproveMintNFTlist = getApproveMintAddr();
             byte[] number = new byte[1] { 0 };
@@ -769,7 +770,7 @@ namespace BHPNFT
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
-            StorageMap tokenMap = Storage.CurrentContext.CreateMap("token");
+            StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
 
             var data = tokenMap.Get(tokenID.AsByteArray());
             if (data.Length > 0)
@@ -807,17 +808,17 @@ namespace BHPNFT
             }
             return false;
         }
-        
+
         #endregion
 
         #region 修改合约属性（仅超级管理员） （对外）
-        
+
         //修改名称
         public static bool setName(string newName)
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
-            StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
+            StorageMap sysStateMap = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
             sysStateMap.Put("name", newName);
 
             onNameModify(newName);
@@ -829,7 +830,7 @@ namespace BHPNFT
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
-            StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
+            StorageMap sysStateMap = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
             sysStateMap.Put("symbol", newSymbol);
 
             onSymbolModify(newSymbol);
@@ -841,7 +842,7 @@ namespace BHPNFT
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
-            StorageMap sysStateMap = Storage.CurrentContext.CreateMap("sysState");
+            StorageMap sysStateMap = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
             sysStateMap.Put("supportedStandards", Helper.Serialize(newSupportedStandards));
 
             onSupportedStandardsModify(newSupportedStandards);
@@ -851,7 +852,7 @@ namespace BHPNFT
         #endregion
 
         #region 合约升级，仅超级管理员操作。 （对外）
-       
+
         //合约升级
         private static bool Migrate(byte[] script, byte[] plist, byte rtype, ContractPropertyState cps, string name, string version, string author, string email, string description)
         {
@@ -881,7 +882,7 @@ namespace BHPNFT
             string description = (string)args[8];
             return Migrate(new_script, parameter_list, return_type, cps, name, version, author, email, description);
         }
-        
+
         #endregion
     }
 }

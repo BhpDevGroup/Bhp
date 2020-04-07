@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BHPNFT.cs" />
+    <Compile Include="BHPNFT.Admin.cs" />
     <Compile Include="BHPNFT.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

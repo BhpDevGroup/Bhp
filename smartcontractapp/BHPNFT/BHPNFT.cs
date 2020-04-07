@@ -1,11 +1,14 @@
 ﻿using Bhp.SmartContract.Framework;
 using Bhp.SmartContract.Framework.Services.Bhp;
 using System.Numerics;
+using Helper = Bhp.SmartContract.Framework.Helper;
 
 namespace BHPNFT
 {
     public partial class BHPNFT : SmartContract
     {
+        //超级管理員
+        static readonly byte[] superAdmin = Helper.ToScriptHash("AWWx2F1Ph9oJtbU8H2mcJGDgDeFDH8geWs");
 
         #region Storage key prefixes
         static readonly string StoragePrefixSysState = "sysState";

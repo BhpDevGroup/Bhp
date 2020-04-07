@@ -65,12 +65,14 @@ namespace BRC20
             if (!Runtime.CheckWitness(Owner)) return false;
 
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            balances.Put(to, amount);
+            BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;
+            balances.Put(to, toAmount + amount);
+
+            StorageMap contract = Storage.CurrentContext.CreateMap(StoragePrefixContract);
+            BigInteger totalSupply = contract.Get("totalSupply")?.ToBigInteger() ?? 0;
+            contract.Put("totalSupply", totalSupply + amount);
+
             OnIssue(to, amount);
-
-            //do something ...
-            //add totolsupply
-
             return true;
         }
 
@@ -97,7 +99,7 @@ namespace BRC20
                 //do something ...
                 return true;
             }
-           
+
             if (amount == 0)//取消授权 
             {
                 //do something ...

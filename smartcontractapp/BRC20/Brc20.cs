@@ -55,7 +55,7 @@ namespace BRC20
                 #endregion
 
                 #region BRC10 METHODS
-                if (operation == "supportedStandards") return new string[] { "BRC5", "BRC10" };
+                if (operation == "supportedStandards") return new string[] { "BRC5", "BRC10", "BRC20" };
                 #endregion
 
                 #region ADMIN METHODS

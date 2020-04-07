@@ -10,7 +10,7 @@ namespace BHPNFT
     {
         #region 铸币（对外）
         //铸币
-        public static bool mintToken(byte[] issuerAddr, byte[] owner, BigInteger ownershipStartDate,
+        public static bool MintToken(byte[] issuerAddr, byte[] owner, BigInteger ownershipStartDate,
             BigInteger basicHashPowerAmount, BigInteger basicHashPowerExpiryDate,
             BigInteger floatingHashPowerAmount, BigInteger floatingHashPowerExpiryDate,
             BigInteger regularHashPowerAmount, BigInteger regularHashPowerExpiryDate,
@@ -19,7 +19,7 @@ namespace BHPNFT
             BigInteger assetType, BigInteger assetState)
         {
             if (Runtime.CheckWitness(superAdmin)) issuerAddr = superAdmin; //超级管理员铸币那么发行者即为超级管理员
-            if (Runtime.CheckWitness(superAdmin) || (Runtime.CheckWitness(issuerAddr) && isMintAddress(issuerAddr)))
+            if (Runtime.CheckWitness(superAdmin) || (Runtime.CheckWitness(issuerAddr) && IsMintAddress(issuerAddr)))
             {
                 StorageMap sysStateMap = Storage.CurrentContext.CreateMap(StoragePrefixSysState);
                 StorageMap tokenMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
@@ -47,7 +47,7 @@ namespace BHPNFT
 
                 sysStateMap.Put("totalSupply", newToken.asset_id);
                 tokenMap.Put(newToken.asset_id.AsByteArray(), Helper.Serialize(newToken));
-                addrNFTlistAdd(owner, newToken.asset_id);
+                AddAddrNFTlist(owner, newToken.asset_id);
 
                 onMint(owner, 1);
                 onNFTMint(owner, newToken.asset_id, newToken);
@@ -63,7 +63,7 @@ namespace BHPNFT
         #region 授权发行地址增、减、查询, 判断地址是否为授权发行地址（对外）
 
         //查询授权发行地址
-        public static Map<byte[], BigInteger> getApproveMintAddr()
+        public static Map<byte[], BigInteger> GetApproveMintAddr()
         {
             StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);
             var data = addrApproveMintAddrs.Get("approveMintKey");
@@ -84,7 +84,7 @@ namespace BHPNFT
             if (!Runtime.CheckWitness(superAdmin)) return false;
             StorageMap addrApproveMintAddrs = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);//0,存储addr拥有NFT总数//第一个位置存储个数
 
-            Map<byte[], BigInteger> addrApproveMintlist = getApproveMintAddr();
+            Map<byte[], BigInteger> addrApproveMintlist = GetApproveMintAddr();
             byte[] number = new byte[1] { 0 };
             if (addrApproveMintlist.HasKey(number))
             {
@@ -107,7 +107,7 @@ namespace BHPNFT
 
             StorageMap addrApproveMintNFTlistMap = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);
 
-            Map<byte[], BigInteger> addrApproveMintNFTlist = getApproveMintAddr();
+            Map<byte[], BigInteger> addrApproveMintNFTlist = GetApproveMintAddr();
             byte[] number = new byte[1] { 0 };
             if (addrApproveMintNFTlist.HasKey(number))
             {
@@ -119,9 +119,9 @@ namespace BHPNFT
         }
 
         //判断发行地址是否在授权发行地址
-        public static bool isMintAddress(byte[] addr)
+        public static bool IsMintAddress(byte[] addr)
         {
-            Map<byte[], BigInteger> addrApproveMintNFTlist = getApproveMintAddr();
+            Map<byte[], BigInteger> addrApproveMintNFTlist = GetApproveMintAddr();
             if (addrApproveMintNFTlist.HasKey(addr))
             {
                 return true;
@@ -133,7 +133,7 @@ namespace BHPNFT
         #region 修改NFT属性 (仅超级管理员可修改) （对外）
 
         //修改NFT属性 
-        public static bool modifyNFTattribute(BigInteger tokenID, string attributeName, object attributeValue)
+        public static bool ModifyNFTattribute(BigInteger tokenID, string attributeName, object attributeValue)
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
@@ -181,7 +181,7 @@ namespace BHPNFT
         #region 修改合约属性（仅超级管理员） （对外）
 
         //修改名称
-        public static bool setName(string newName)
+        public static bool SetName(string newName)
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
@@ -193,7 +193,7 @@ namespace BHPNFT
         }
 
         //修改Symbol
-        public static bool setSymbol(string newSymbol)
+        public static bool SetSymbol(string newSymbol)
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
@@ -205,7 +205,7 @@ namespace BHPNFT
         }
 
         //修改支持标准
-        public static bool setSupportedStandards(string[] newSupportedStandards)
+        public static bool SetSupportedStandards(string[] newSupportedStandards)
         {
             if (!Runtime.CheckWitness(superAdmin)) return false;
 
@@ -227,7 +227,7 @@ namespace BHPNFT
             return true;
         }
 
-        private static object migrateContract(object[] args)
+        private static object MigrateContract(object[] args)
         {
             if (!Runtime.CheckWitness(superAdmin))
                 return false;

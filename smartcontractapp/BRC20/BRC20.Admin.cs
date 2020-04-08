@@ -58,13 +58,7 @@ namespace BRC20
 
         public static bool Destroy()
         {
-            if (!Runtime.CheckWitness(Owner))
-            {
-                return false;
-            }
-
-            Contract.Destroy();
-            return true;
+            return false;
         }
     }
 }

@@ -57,12 +57,16 @@ namespace BRC20
         /// <param name="to">目标地址</param>
         /// <param name="amount">数量</param>
         /// <returns></returns>
-        private static bool Issue(byte[] to, BigInteger amount)
+        private static bool Mint(byte[] to, BigInteger amount)
         {
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(to)) return false;
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
-            if (!Runtime.CheckWitness(Owner)) return false;
+
+            StorageMap issuerContract = Storage.CurrentContext.CreateMap(StoragePrefixIssuer);
+            byte[] issuer = issuerContract.Get("issuer");
+            if (issuer == null) throw new FormatException("Set issuer address first.");
+            if (!Runtime.CheckWitness(issuer)) return false;
 
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;

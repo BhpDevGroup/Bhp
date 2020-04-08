@@ -50,7 +50,7 @@ namespace BRC20
                 if (operation == "totalSupply") return TotalSupply();
                 if (operation == "balanceOf") return BalanceOf((byte[])args[0]);
                 if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
-                if (operation == "issue") return Issue((byte[])args[0], (BigInteger)args[1]);
+                if (operation == "mint") return Mint((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "approve") return Approve((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3]);
                 #endregion

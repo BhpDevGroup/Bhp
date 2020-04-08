@@ -12,7 +12,7 @@ namespace BRC20
         static readonly string Name = "RUSD";
         static readonly string Symbol = "RUSD";
         static readonly ulong Decimals = 2;
-        static readonly ulong InitialSupply = 10000;        
+        static readonly ulong InitialSupply = 0;
         static readonly byte[] Owner = "AXAU9QQmB4cJvejnBGtugoQErRJzgzssG2".ToScriptHash();
         static readonly byte[] Token = new byte[] { 0x89, 0x77, 0x20, 0xd8, 0xcd, 0x76, 0xf4, 0xf0, 0x0a, 0xbf, 0xa3, 0x7c, 0x0e, 0xdd, 0x88, 0x9c, 0x20, 0x8f, 0xde, 0x9b };
         #endregion

@@ -173,6 +173,8 @@ namespace BRC20
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             BigInteger fromAmount = balances.Get(sender).ToBigInteger();
 
+            if (fromAmount < amount) return false;//余额不足                     
+
             //sender==to时，转账给自己不更新自己余额，但更新授权余额
             if (sender != to)
             {

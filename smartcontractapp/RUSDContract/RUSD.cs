@@ -12,6 +12,7 @@ namespace RUSDContract
         static readonly string Name = "RUSD";//名称
         static readonly string Symbol = "RUSD";//简称
         static readonly ulong Decimals = 2;//精度
+        static readonly string Version = "v1.0.0.0";//版本
         static readonly ulong InitialSupply = 0;//初始化资产金额
         static readonly byte[] Owner = "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY".ToScriptHash();//管理员地址
         #endregion
@@ -64,6 +65,7 @@ namespace RUSDContract
                 if (operation == "symbol") return Symbol;
                 if (operation == "decimals") return Decimals;
                 if (operation == "supportedStandards") return new string[] { "BAS101" };
+                if (operation == "version") return Version;
                 if (operation == "totalSupply") return TotalSupply();
                 if (operation == "balanceOf") return BalanceOf((byte[])args[0]);
                 if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);

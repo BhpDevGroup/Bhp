@@ -59,10 +59,11 @@ namespace RUSDContract
             }
             else if (Runtime.Trigger == TriggerType.Application)
             {
-                #region BRC20 METHODS
+                #region BAS101 METHODS
                 if (operation == "name") return Name;
                 if (operation == "symbol") return Symbol;
                 if (operation == "decimals") return Decimals;
+                if (operation == "supportedStandards") return new string[] { "BAS101" };
                 if (operation == "totalSupply") return TotalSupply();
                 if (operation == "balanceOf") return BalanceOf((byte[])args[0]);
                 if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
@@ -73,10 +74,6 @@ namespace RUSDContract
                 if (operation == "approve") return Approve((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3]);
                 if (operation == "destroyAsset") return DestroyAsset((byte[])args[0]);
-                #endregion
-
-                #region BRC10 METHODS
-                if (operation == "supportedStandards") return new string[] { "BRC5", "BRC10", "BRC20" };
                 #endregion
 
                 #region ADMIN METHODS

@@ -192,5 +192,23 @@ namespace BRC20
             OnTransferFrom(spender, from, to, amount);
             return true;
         }
+
+        /// <summary>
+        /// 销毁自己的资产
+        /// </summary>
+        /// <param name="destroyAddr">需要销毁的地址</param>
+        /// <returns></returns>
+        public static bool DestroyAsset(byte[] destroyAddr)
+        {
+            if (!ValidateAddress(destroyAddr)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
+            if (!Runtime.CheckWitness(destroyAddr)) return false; //只能自己能操作
+
+            StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
+            balances.Delete(destroyAddr);
+
+            OnDestroyAsset(destroyAddr);
+
+            return true;
+        }
     }
 }

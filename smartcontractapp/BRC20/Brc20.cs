@@ -26,6 +26,8 @@ namespace BRC20
         public static event Action<byte[], byte[], byte[], BigInteger> OnTransferFrom;
         [DisplayName("Transfer")]
         public static event Action<byte[], byte[], BigInteger> OnTransfer;
+        [DisplayName("DestroyAsset")]
+        public static event Action<byte[]> OnDestroyAsset;
         #endregion
 
         #region Storage key prefixes
@@ -53,6 +55,7 @@ namespace BRC20
                 if (operation == "mint") return Mint((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "approve") return Approve((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3]);
+                if (operation == "destroyAsset") return DestroyAsset((byte[])args[0]);
                 #endregion
 
                 #region BRC10 METHODS

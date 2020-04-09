@@ -81,7 +81,7 @@ namespace BRC20
         }
 
         /// <summary>
-        /// 授权to地址操作from地址中的资产，最大数量为amount
+        /// 授权spender地址操作sender地址中的资产，最大数量为amount
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="spender"></param>
@@ -126,6 +126,7 @@ namespace BRC20
         /// <returns></returns>
         private static bool TransferFrom(byte[] spender, byte[] from, byte[] to, BigInteger amount)
         {
+            if (!ValidateAddress(spender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(from)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(to)) return false;
@@ -134,10 +135,13 @@ namespace BRC20
 
             StorageMap balancesApprove = Storage.CurrentContext.CreateMap(StoragePrefixApprove);
 
-            //取授权的金额，采用方案一
-            byte[] approveKey = from.Concat(spender);
-            BigInteger amountOfApprove = balancesApprove.Get(approveKey)?.ToBigInteger() ?? 0;
+            byte[] fromApprove = balancesApprove.Get(from);
+            if (from == null) return false;
 
+            Map<byte[], BigInteger> spenderMap = (Map<byte[], BigInteger>)from.Deserialize();
+            if (!spenderMap.HasKey(spender)) return false;
+
+            BigInteger amountOfApprove = spenderMap[spender];
             if (amountOfApprove < amount) return false; //授权余额不足
 
             //from余额
@@ -163,11 +167,12 @@ namespace BRC20
             //处理授权余额
             if (amountOfApprove == amount)
             {
-                balancesApprove.Delete(approveKey);
+                balancesApprove.Delete(from);
             }
             else
             {
-                balancesApprove.Put(approveKey, amountOfApprove - amount);
+                spenderMap[spender] = amountOfApprove - amount;
+                balancesApprove.Put(from, spenderMap.Serialize());
             }
 
             //触发事件

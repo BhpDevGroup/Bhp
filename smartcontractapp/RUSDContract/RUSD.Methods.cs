@@ -24,7 +24,7 @@ namespace RUSDContract
         /// <returns>地址拥有的资产金额</returns>
         private static BigInteger BalanceOf(byte[] address)
         {
-            if (!ValidateAddress(address)) throw new FormatException("The parameter 'account' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(address)) throw new FormatException("The parameter 'address' SHOULD be 20-byte addresses.");
 
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             return balances.Get(address).ToBigInteger();
@@ -108,8 +108,8 @@ namespace RUSDContract
         /// <returns>true:授权成功, false:授权失败</returns>
         private static bool Approve(byte[] sender, byte[] spender, BigInteger amount)
         {
-            if (!ValidateAddress(sender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
-            if (!ValidateAddress(spender)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(spender)) throw new FormatException("The parameters 'spender' SHOULD be 20-byte addresses.");
             if (!IsPayable(spender)) return false;
 
             if (amount < 0) throw new InvalidOperationException("The parameter amount cannot be less than 0.");
@@ -149,8 +149,8 @@ namespace RUSDContract
         /// <returns>true:授权地址转账成功, false:授权地址转账失败</returns>
         private static bool TransferFrom(byte[] spender, byte[] sender, byte[] to, BigInteger amount)
         {
-            if (!ValidateAddress(spender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
-            if (!ValidateAddress(sender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(spender)) throw new FormatException("The parameter 'spender' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(to)) return false;
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
@@ -166,8 +166,6 @@ namespace RUSDContract
 
             BigInteger amountOfApprove = spenderMap[spender];
             if (amountOfApprove < amount) return false; //授权余额不足
-
-            if (amount == 0) return true;
 
             //from余额
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
@@ -213,16 +211,30 @@ namespace RUSDContract
         /// 销毁自己的资产
         /// </summary>
         /// <param name="destroyAddr">需要销毁的地址</param>
+        /// <param name="amount">需要销毁的金额</param>
         /// <returns>true:销毁成功, false:销毁失败</returns>
-        public static bool DestroyAsset(byte[] destroyAddr)
+        public static bool DestroyAsset(byte[] destroyAddr, BigInteger amount)
         {
-            if (!ValidateAddress(destroyAddr)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(destroyAddr)) throw new FormatException("The parameter 'destroyAddr' SHOULD be 20-byte addresses.");
             if (!Runtime.CheckWitness(destroyAddr)) return false; //只能自己能操作
 
-            StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            balances.Delete(destroyAddr);
+            if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
 
-            OnDestroyAsset(destroyAddr);
+            StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
+            BigInteger ownedAmount = balances.Get(destroyAddr).ToBigInteger();
+
+            if (ownedAmount < amount) return false;
+
+            if (ownedAmount == amount)
+            {
+                balances.Delete(destroyAddr);
+            }
+            else
+            {
+                balances.Put(destroyAddr, ownedAmount - amount);
+            }
+
+            OnDestroyAsset(destroyAddr, amount);
             return true;
         }
     }

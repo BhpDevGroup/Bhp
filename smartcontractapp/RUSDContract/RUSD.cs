@@ -42,7 +42,7 @@ namespace RUSDContract
         /// 资产销毁事件
         /// </summary>
         [DisplayName("DestroyAsset")]
-        public static event Action<byte[]> OnDestroyAsset;
+        public static event Action<byte[], BigInteger> OnDestroyAsset;
         #endregion
 
         #region Storage key prefixes
@@ -75,7 +75,7 @@ namespace RUSDContract
                 if (operation == "mint") return Mint((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "approve") return Approve((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3]);
-                if (operation == "destroyAsset") return DestroyAsset((byte[])args[0]);
+                if (operation == "destroyAsset") return DestroyAsset((byte[])args[0], (BigInteger)args[1]);
                 #endregion
 
                 #region ADMIN METHODS

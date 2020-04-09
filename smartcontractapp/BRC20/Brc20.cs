@@ -13,7 +13,7 @@ namespace BRC20
         static readonly string Symbol = "RUSD";//简称
         static readonly ulong Decimals = 2;//精度
         static readonly ulong InitialSupply = 0;//初始化资产金额
-        static readonly byte[] Owner = "AXAU9QQmB4cJvejnBGtugoQErRJzgzssG2".ToScriptHash();//管理员地址
+        static readonly byte[] Owner = "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY".ToScriptHash();//管理员地址
         #endregion
 
         #region Notifications

@@ -14,7 +14,7 @@ namespace BRC20
         private static BigInteger TotalSupply()
         {
             StorageMap contract = Storage.CurrentContext.CreateMap(StoragePrefixContract);
-            return contract.Get("totalSupply")?.ToBigInteger() ?? 0;
+            return contract.Get("totalSupply").ToBigInteger();
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace BRC20
             if (!ValidateAddress(address)) throw new FormatException("The parameter 'account' SHOULD be 20-byte addresses.");
 
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            return balances.Get(address)?.ToBigInteger() ?? 0;
+            return balances.Get(address).ToBigInteger();
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace BRC20
                 balances.Put(from, fromAmount - amount);
             }
 
-            BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;
+            BigInteger toAmount = balances.Get(to).ToBigInteger();
             balances.Put(to, toAmount + amount);
 
             OnTransfer(from, to, amount);
@@ -87,12 +87,12 @@ namespace BRC20
 
             //铸币
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;
+            BigInteger toAmount = balances.Get(to).ToBigInteger();
             balances.Put(to, toAmount + amount);
 
             //更新发行总量
             StorageMap contract = Storage.CurrentContext.CreateMap(StoragePrefixContract);
-            BigInteger totalSupply = contract.Get("totalSupply")?.ToBigInteger() ?? 0;
+            BigInteger totalSupply = contract.Get("totalSupply").ToBigInteger();
             contract.Put("totalSupply", totalSupply + amount);
 
             OnMint(to, amount);
@@ -187,7 +187,7 @@ namespace BRC20
                 }
 
                 //处理to余额
-                BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;
+                BigInteger toAmount = balances.Get(to).ToBigInteger();
                 balances.Put(to, toAmount + amount);
             }
 

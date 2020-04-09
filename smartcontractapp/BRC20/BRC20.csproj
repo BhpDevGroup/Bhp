@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BRC20.Admin.cs" />
-    <Compile Include="BRC20.Crowdsale.cs" />
     <Compile Include="Brc20.cs" />
     <Compile Include="BRC20.Helpers.cs" />
     <Compile Include="BRC20.Methods.cs" />

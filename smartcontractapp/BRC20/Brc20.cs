@@ -8,33 +8,47 @@ namespace BRC20
 {
     public partial class BRC20 : SmartContract
     {
-        #region Token Settings
-        static readonly string Name = "RUSD";
-        static readonly string Symbol = "RUSD";
-        static readonly ulong Decimals = 2;
-        static readonly ulong InitialSupply = 0;
-        static readonly byte[] Owner = "AXAU9QQmB4cJvejnBGtugoQErRJzgzssG2".ToScriptHash();
-        static readonly byte[] Token = new byte[] { 0x89, 0x77, 0x20, 0xd8, 0xcd, 0x76, 0xf4, 0xf0, 0x0a, 0xbf, 0xa3, 0x7c, 0x0e, 0xdd, 0x88, 0x9c, 0x20, 0x8f, 0xde, 0x9b };
+        #region Asset Settings
+        static readonly string Name = "RUSD";//名称
+        static readonly string Symbol = "RUSD";//简称
+        static readonly ulong Decimals = 2;//精度
+        static readonly ulong InitialSupply = 0;//初始化资产金额
+        static readonly byte[] Owner = "AXAU9QQmB4cJvejnBGtugoQErRJzgzssG2".ToScriptHash();//管理员地址
         #endregion
 
-        #region Notifications 
+        #region Notifications
+        /// <summary>
+        /// 铸币事件
+        /// </summary>
         [DisplayName("Mint")]
         public static event Action<byte[], BigInteger> OnMint;
+        /// <summary>
+        /// 授权事件
+        /// </summary>
         [DisplayName("Approve")]
         public static event Action<byte[], byte[], BigInteger> OnApprove;
+        /// <summary>
+        /// 被授权者转账事件
+        /// </summary>
         [DisplayName("TransferFrom")]
         public static event Action<byte[], byte[], byte[], BigInteger> OnTransferFrom;
+        /// <summary>
+        /// 转账事件
+        /// </summary>
         [DisplayName("Transfer")]
         public static event Action<byte[], byte[], BigInteger> OnTransfer;
+        /// <summary>
+        /// 资产销毁事件
+        /// </summary>
         [DisplayName("DestroyAsset")]
         public static event Action<byte[]> OnDestroyAsset;
         #endregion
 
         #region Storage key prefixes
-        static readonly string StoragePrefixContract = "11";
-        static readonly string StoragePrefixBalance = "22";
-        static readonly string StoragePrefixApprove = "33";
-        static readonly string StoragePrefixMintAddr = "44";
+        static readonly string StoragePrefixContract = "contract";//合约
+        static readonly string StoragePrefixBalance = "balance";//资产
+        static readonly string StoragePrefixApprove = "approve";//授权
+        static readonly string StoragePrefixMintAddr = "mint";//铸币
         #endregion
 
         public static object Main(string operation, object[] args)
@@ -52,6 +66,9 @@ namespace BRC20
                 if (operation == "totalSupply") return TotalSupply();
                 if (operation == "balanceOf") return BalanceOf((byte[])args[0]);
                 if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
+                #endregion
+
+                #region Asset METHODS
                 if (operation == "mint") return Mint((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "approve") return Approve((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3]);

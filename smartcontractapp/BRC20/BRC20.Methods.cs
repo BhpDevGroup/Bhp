@@ -7,20 +7,36 @@ namespace BRC20
 {
     public partial class BRC20 : SmartContract
     {
+        /// <summary>
+        /// 获取已发行资产
+        /// </summary>
+        /// <returns>已发行资产金额</returns>
         private static BigInteger TotalSupply()
         {
             StorageMap contract = Storage.CurrentContext.CreateMap(StoragePrefixContract);
             return contract.Get("totalSupply")?.ToBigInteger() ?? 0;
         }
 
-        private static BigInteger BalanceOf(byte[] account)
+        /// <summary>
+        /// 获取地址拥有的资产金额
+        /// </summary>
+        /// <param name="address">地址</param>
+        /// <returns>地址拥有的资产金额</returns>
+        private static BigInteger BalanceOf(byte[] address)
         {
-            if (!ValidateAddress(account)) throw new FormatException("The parameter 'account' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(address)) throw new FormatException("The parameter 'account' SHOULD be 20-byte addresses.");
 
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            return balances.Get(account)?.ToBigInteger() ?? 0;
+            return balances.Get(address)?.ToBigInteger() ?? 0;
         }
 
+        /// <summary>
+        /// 转账
+        /// </summary>
+        /// <param name="from">输入地址</param>
+        /// <param name="to">输出地址</param>
+        /// <param name="amount">转账金额</param>
+        /// <returns>true:转账成功, false:转账失败</returns>
         private static bool Transfer(byte[] from, byte[] to, BigInteger amount)
         {
             if (!ValidateAddress(from)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
@@ -32,8 +48,8 @@ namespace BRC20
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             BigInteger fromAmount = balances.Get(from).ToBigInteger();
 
-            if (fromAmount < amount) return false;
-            if (amount == 0 || from == to) return true;
+            if (fromAmount < amount) return false;//余额不足
+            if (amount == 0 || from == to) return true;//无需操作存储区
 
             if (fromAmount == amount)
             {
@@ -52,26 +68,29 @@ namespace BRC20
         }
 
         /// <summary>
-        /// 发行资产
+        /// 铸币
         /// </summary>
         /// <param name="to">目标地址</param>
         /// <param name="amount">数量</param>
-        /// <returns></returns>
+        /// <returns>true:铸币成功, false:铸币失败</returns>
         private static bool Mint(byte[] to, BigInteger amount)
         {
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(to)) return false;
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
 
+            //验证铸币地址
             StorageMap mintContract = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);
             byte[] mintAddr = mintContract.Get("mintAddr");
             if (mintAddr == null) throw new FormatException("Set mint address first.");
             if (!Runtime.CheckWitness(mintAddr)) return false;
 
+            //铸币
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;
             balances.Put(to, toAmount + amount);
 
+            //更新发行总量
             StorageMap contract = Storage.CurrentContext.CreateMap(StoragePrefixContract);
             BigInteger totalSupply = contract.Get("totalSupply")?.ToBigInteger() ?? 0;
             contract.Put("totalSupply", totalSupply + amount);
@@ -83,10 +102,10 @@ namespace BRC20
         /// <summary>
         /// 授权spender地址操作sender地址中的资产，最大数量为amount
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="spender"></param>
-        /// <param name="amount"></param>
-        /// <returns></returns>
+        /// <param name="sender">拥有者地址</param>
+        /// <param name="spender">被授权者地址</param>
+        /// <param name="amount">授权金额</param>
+        /// <returns>true:授权成功, false:授权失败</returns>
         private static bool Approve(byte[] sender, byte[] spender, BigInteger amount)
         {
             if (!ValidateAddress(sender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
@@ -99,16 +118,20 @@ namespace BRC20
 
             StorageMap balancesApprove = Storage.CurrentContext.CreateMap(StoragePrefixApprove);
 
-            if (amount == 0)//取消授权 
+            if (amount == 0)//取消授权
             {
-                balancesApprove.Delete(sender);
-                return true;
+                byte[] fromApprove = balancesApprove.Get(sender);
+                Map<byte[], BigInteger> spenderMap = (Map<byte[], BigInteger>)fromApprove.Deserialize();
+                if (spenderMap.HasKey(spender))
+                {
+                    balancesApprove.Delete(sender);
+                }
             }
             else
             {
-                Map<byte[], BigInteger> spenderMap = new Map<byte[], BigInteger>();
-                spenderMap[spender] = amount;
-                balancesApprove.Put(sender, spenderMap.Serialize());
+                Map<byte[], BigInteger> newSpenderMap = new Map<byte[], BigInteger>();
+                newSpenderMap[spender] = amount;
+                balancesApprove.Put(sender, newSpenderMap.Serialize());
             }
 
             //触发事件
@@ -120,14 +143,14 @@ namespace BRC20
         /// 从授权地址转账
         /// </summary>
         /// <param name="spender">操作地址</param>
-        /// <param name="from">源地址</param>
+        /// <param name="sender">源地址</param>
         /// <param name="to">目的地址</param>
         /// <param name="amount">金额</param>
-        /// <returns></returns>
-        private static bool TransferFrom(byte[] spender, byte[] from, byte[] to, BigInteger amount)
+        /// <returns>true:授权地址转账成功, false:授权地址转账失败</returns>
+        private static bool TransferFrom(byte[] spender, byte[] sender, byte[] to, BigInteger amount)
         {
             if (!ValidateAddress(spender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
-            if (!ValidateAddress(from)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(sender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(to)) return false;
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
@@ -135,48 +158,52 @@ namespace BRC20
 
             StorageMap balancesApprove = Storage.CurrentContext.CreateMap(StoragePrefixApprove);
 
-            byte[] fromApprove = balancesApprove.Get(from);
-            if (from == null) return false;
+            byte[] fromApprove = balancesApprove.Get(sender);
+            if (fromApprove == null) return false;
 
-            Map<byte[], BigInteger> spenderMap = (Map<byte[], BigInteger>)from.Deserialize();
-            if (!spenderMap.HasKey(spender)) return false;
+            Map<byte[], BigInteger> spenderMap = (Map<byte[], BigInteger>)fromApprove.Deserialize();
+            if (!spenderMap.HasKey(spender)) return false;//只能被授权者才能操作
 
             BigInteger amountOfApprove = spenderMap[spender];
             if (amountOfApprove < amount) return false; //授权余额不足
 
+            if (amount == 0) return true;
+
             //from余额
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            BigInteger fromAmount = balances.Get(from).ToBigInteger();
+            BigInteger fromAmount = balances.Get(sender).ToBigInteger();
 
-            if (amount == 0 || from == to) return true;
-
-            //处理from余额
-            if (fromAmount == amount)
+            //sender==to时，转账给自己不更新自己余额，但更新授权余额
+            if (sender != to)
             {
-                balances.Delete(from);
-            }
-            else
-            {
-                balances.Put(from, fromAmount - amount);
-            }
+                //处理from余额
+                if (fromAmount == amount)
+                {
+                    balances.Delete(sender);
+                }
+                else
+                {
+                    balances.Put(sender, fromAmount - amount);
+                }
 
-            //处理to余额
-            BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;
-            balances.Put(to, toAmount + amount);
+                //处理to余额
+                BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;
+                balances.Put(to, toAmount + amount);
+            }
 
             //处理授权余额
             if (amountOfApprove == amount)
             {
-                balancesApprove.Delete(from);
+                balancesApprove.Delete(sender);
             }
             else
             {
                 spenderMap[spender] = amountOfApprove - amount;
-                balancesApprove.Put(from, spenderMap.Serialize());
+                balancesApprove.Put(sender, spenderMap.Serialize());
             }
 
             //触发事件
-            OnTransferFrom(spender, from, to, amount);
+            OnTransferFrom(spender, sender, to, amount);
             return true;
         }
 
@@ -184,7 +211,7 @@ namespace BRC20
         /// 销毁自己的资产
         /// </summary>
         /// <param name="destroyAddr">需要销毁的地址</param>
-        /// <returns></returns>
+        /// <returns>true:销毁成功, false:销毁失败</returns>
         public static bool DestroyAsset(byte[] destroyAddr)
         {
             if (!ValidateAddress(destroyAddr)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
@@ -194,7 +221,6 @@ namespace BRC20
             balances.Delete(destroyAddr);
 
             OnDestroyAsset(destroyAddr);
-
             return true;
         }
     }

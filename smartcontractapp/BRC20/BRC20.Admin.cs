@@ -61,13 +61,13 @@ namespace BRC20
             return false;
         }
 
-        public static bool SetIssuer(byte[] issuer)
+        public static bool SetMintAddr(byte[] mintAddr)
         {
             if (!Runtime.CheckWitness(Owner)) return false;
-            if (!ValidateAddress(issuer)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(mintAddr)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
 
-            StorageMap contract = Storage.CurrentContext.CreateMap(StoragePrefixIssuer);
-            contract.Put("issuer", issuer);
+            StorageMap contract = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);
+            contract.Put("mintAddr", mintAddr);
             return true;
         }
     }

@@ -63,10 +63,10 @@ namespace BRC20
             if (!IsPayable(to)) return false;
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
 
-            StorageMap issuerContract = Storage.CurrentContext.CreateMap(StoragePrefixIssuer);
-            byte[] issuer = issuerContract.Get("issuer");
-            if (issuer == null) throw new FormatException("Set issuer address first.");
-            if (!Runtime.CheckWitness(issuer)) return false;
+            StorageMap mintContract = Storage.CurrentContext.CreateMap(StoragePrefixMintAddr);
+            byte[] mintAddr = mintContract.Get("mintAddr");
+            if (mintAddr == null) throw new FormatException("Set mint address first.");
+            if (!Runtime.CheckWitness(mintAddr)) return false;
 
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             BigInteger toAmount = balances.Get(to)?.ToBigInteger() ?? 0;
@@ -76,7 +76,7 @@ namespace BRC20
             BigInteger totalSupply = contract.Get("totalSupply")?.ToBigInteger() ?? 0;
             contract.Put("totalSupply", totalSupply + amount);
 
-            OnIssue(to, amount);
+            OnMint(to, amount);
             return true;
         }
 

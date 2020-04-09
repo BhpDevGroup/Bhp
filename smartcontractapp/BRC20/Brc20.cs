@@ -18,8 +18,8 @@ namespace BRC20
         #endregion
 
         #region Notifications 
-        [DisplayName("Issue")]
-        public static event Action<byte[], BigInteger> OnIssue;
+        [DisplayName("Mint")]
+        public static event Action<byte[], BigInteger> OnMint;
         [DisplayName("Approve")]
         public static event Action<byte[], byte[], BigInteger> OnApprove;
         [DisplayName("TransferFrom")]
@@ -32,7 +32,7 @@ namespace BRC20
         static readonly string StoragePrefixContract = "11";
         static readonly string StoragePrefixBalance = "22";
         static readonly string StoragePrefixApprove = "33";
-        static readonly string StoragePrefixIssuer = "44";
+        static readonly string StoragePrefixMintAddr = "44";
         #endregion
 
         public static object Main(string operation, object[] args)
@@ -63,7 +63,7 @@ namespace BRC20
                 if (operation == "deploy") return Deploy();
                 if (operation == "migrate") return Migrate(args);
                 if (operation == "destroy") return Destroy();
-                if (operation == "setIssuer") return SetIssuer((byte[])args[0]);
+                if (operation == "setMintAddr") return SetMintAddr((byte[])args[0]);
                 #endregion
             }
             return false;

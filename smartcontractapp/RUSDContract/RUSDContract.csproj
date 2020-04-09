@@ -8,8 +8,8 @@
     <ProjectGuid>{15B088F1-A506-44FE-AFAB-39CA9823CB80}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BRC20</RootNamespace>
-    <AssemblyName>BRC20</AssemblyName>
+    <RootNamespace>RUSDContract</RootNamespace>
+    <AssemblyName>RUSDContract</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,10 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BRC20.Admin.cs" />
-    <Compile Include="Brc20.cs" />
-    <Compile Include="BRC20.Helpers.cs" />
-    <Compile Include="BRC20.Methods.cs" />
+    <Compile Include="RUSD.Admin.cs" />
+    <Compile Include="RUSD.cs" />
+    <Compile Include="RUSD.Helpers.cs" />
+    <Compile Include="RUSD.Methods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

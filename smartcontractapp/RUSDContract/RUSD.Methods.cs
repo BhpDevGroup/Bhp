@@ -3,9 +3,9 @@ using Bhp.SmartContract.Framework.Services.Bhp;
 using System;
 using System.Numerics;
 
-namespace BRC20
+namespace RUSDContract
 {
-    public partial class BRC20 : SmartContract
+    public partial class RUSD : SmartContract
     {
         /// <summary>
         /// 获取已发行资产

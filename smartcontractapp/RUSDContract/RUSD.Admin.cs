@@ -3,9 +3,9 @@ using Bhp.SmartContract.Framework.Services.Bhp;
 using Bhp.SmartContract.Framework.Services.System;
 using System;
 
-namespace BRC20
+namespace RUSDContract
 {
-    public partial class BRC20 : SmartContract
+    public partial class RUSD : SmartContract
     {
         /// <summary>
         /// 初始化资产

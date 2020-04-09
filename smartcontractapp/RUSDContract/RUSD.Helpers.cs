@@ -1,9 +1,9 @@
 ﻿using Bhp.SmartContract.Framework;
 using Bhp.SmartContract.Framework.Services.Bhp;
 
-namespace BRC20
+namespace RUSDContract
 {
-    public partial class BRC20 : SmartContract
+    public partial class RUSD : SmartContract
     {
         /// <summary>
         /// 地址验证

@@ -4,9 +4,9 @@ using System;
 using System.ComponentModel;
 using System.Numerics;
 
-namespace BRC20
+namespace RUSDContract
 {
-    public partial class BRC20 : SmartContract
+    public partial class RUSD : SmartContract
     {
         #region Asset Settings
         static readonly string Name = "RUSD";//名称

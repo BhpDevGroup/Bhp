@@ -92,42 +92,24 @@ namespace BRC20
             if (!ValidateAddress(sender)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(spender)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(spender)) return false;
-            if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
+
+            if (amount < 0) throw new InvalidOperationException("The parameter amount cannot be less than 0.");
             if (!Runtime.CheckWitness(sender)) return false; //只能自己操作
-
-            StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            BigInteger fromAmount = balances.Get(sender).ToBigInteger();
-
-            if (fromAmount < amount)//可以授权
-            {
-                //do something ...
-                return true;
-            }
-
-            if (amount == 0)//取消授权 
-            {
-                //do something ...
-                return true;
-            }
-
             if (sender == spender) return true; //自己授权自己
 
             StorageMap balancesApprove = Storage.CurrentContext.CreateMap(StoragePrefixApprove);
 
-            //方案一 ，采用from+to作为KEY，存储授权金额，简单
-            //问题，如果多次授权不同的地址时，会有存储空间的浪费，
-            //可借助于另外一个MAP来记录未被授权的余额，在授权时判断可用余额
-            byte[] approveKey = sender.Concat(spender);
-            balancesApprove.Put(approveKey, amount);
-
-            /*
-            //方案二，采用MAP存储
-            //Map序列化是否能正确存储，需要验证             
-            Map<byte[], BigInteger> approveMap = new Map<byte[], BigInteger>();
-            approveMap[to] = amount;            
-            //如果有多次授权，只以最后一次授权金额为准                    
-            balancesApprove.Put(from, approveMap.Serialize());             
-            */
+            if (amount == 0)//取消授权 
+            {
+                balancesApprove.Delete(sender);
+                return true;
+            }
+            else
+            {
+                Map<byte[], BigInteger> spenderMap = new Map<byte[], BigInteger>();
+                spenderMap[spender] = amount;
+                balancesApprove.Put(sender, spenderMap.Serialize());
+            }
 
             //触发事件
             OnApprove(sender, spender, amount);

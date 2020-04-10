@@ -11,7 +11,7 @@ namespace RUSDContract
         /// 获取已发行资产
         /// </summary>
         /// <returns>已发行资产金额</returns>
-        private static BigInteger TotalSupply()
+        public static BigInteger TotalSupply()
         {
             StorageMap contract = Storage.CurrentContext.CreateMap(StoragePrefixContract);
             return contract.Get("totalSupply").ToBigInteger();
@@ -22,7 +22,7 @@ namespace RUSDContract
         /// </summary>
         /// <param name="address">地址</param>
         /// <returns>地址拥有的资产金额</returns>
-        private static BigInteger BalanceOf(byte[] address)
+        public static BigInteger BalanceOf(byte[] address)
         {
             if (!ValidateAddress(address)) throw new FormatException("The parameter 'address' SHOULD be 20-byte addresses.");
 
@@ -37,7 +37,7 @@ namespace RUSDContract
         /// <param name="to">输出地址</param>
         /// <param name="amount">转账金额</param>
         /// <returns>true:转账成功, false:转账失败</returns>
-        private static bool Transfer(byte[] from, byte[] to, BigInteger amount)
+        public static bool Transfer(byte[] from, byte[] to, BigInteger amount)
         {
             if (!ValidateAddress(from)) throw new FormatException("The parameter 'from' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
@@ -74,7 +74,7 @@ namespace RUSDContract
         /// <param name="to">目标地址</param>
         /// <param name="amount">数量</param>
         /// <returns>true:铸币成功, false:铸币失败</returns>
-        private static bool Mint(byte[] to, BigInteger amount)
+        public static bool Mint(byte[] to, BigInteger amount)
         {
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(to)) return false;
@@ -107,7 +107,7 @@ namespace RUSDContract
         /// <param name="spender">被授权者地址</param>
         /// <param name="amount">授权金额</param>
         /// <returns>true:授权成功, false:授权失败</returns>
-        private static bool Approve(byte[] sender, byte[] spender, BigInteger amount)
+        public static bool Approve(byte[] sender, byte[] spender, BigInteger amount)
         {
             if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(spender)) throw new FormatException("The parameters 'spender' SHOULD be 20-byte addresses.");
@@ -133,6 +133,25 @@ namespace RUSDContract
             return true;
         }
 
+        public static object ApprovedAddr(byte[] sender)
+        {
+            if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
+            if (Runtime.CheckWitness(sender)) return false;
+
+            Iterator<string, byte[]> approved = Storage.Find(StoragePrefixApprove);
+            Map<byte[], BigInteger> map = new Map<byte[], BigInteger>();
+            while (approved.Next())
+            {
+                byte[] key = approved.Key.AsByteArray();
+                byte[] key2 = key.Last(40);
+                if (key2.Take(20) == sender)
+                {
+                    map[key2.Last(20)] = approved.Value.ToBigInteger();
+                }
+            }
+            return map;
+        }
+
         /// <summary>
         /// 从授权地址转账
         /// </summary>
@@ -141,7 +160,7 @@ namespace RUSDContract
         /// <param name="to">目的地址</param>
         /// <param name="amount">金额</param>
         /// <returns>true:授权地址转账成功, false:授权地址转账失败</returns>
-        private static bool TransferFrom(byte[] spender, byte[] sender, byte[] to, BigInteger amount)
+        public static bool TransferFrom(byte[] spender, byte[] sender, byte[] to, BigInteger amount)
         {
             if (!ValidateAddress(spender)) throw new FormatException("The parameter 'spender' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");

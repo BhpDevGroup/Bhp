@@ -11,7 +11,7 @@ namespace RUSDContract
         /// 初始化资产
         /// </summary>
         /// <returns>true:初始化成功, false:初始化失败</returns>
-        private static bool Deploy()
+        public static bool Deploy()
         {
             if (!Runtime.CheckWitness(Owner)) return false;
 

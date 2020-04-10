@@ -45,11 +45,12 @@ namespace RUSDContract
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
             if (!Runtime.CheckWitness(from)) return false;
 
+            if (from == to) return true;//无需操作存储区
+
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             BigInteger fromAmount = balances.Get(from).ToBigInteger();
 
             if (fromAmount < amount) return false;//余额不足
-            if (amount == 0 || from == to) return true;//无需操作存储区
 
             if (fromAmount == amount)
             {
@@ -112,26 +113,19 @@ namespace RUSDContract
             if (!ValidateAddress(spender)) throw new FormatException("The parameters 'spender' SHOULD be 20-byte addresses.");
             if (!IsPayable(spender)) return false;
 
+            if (sender == spender) return false;
             if (amount < 0) throw new InvalidOperationException("The parameter amount cannot be less than 0.");
             if (!Runtime.CheckWitness(sender)) return false; //只能自己操作
-            if (sender == spender) return true; //自己授权自己
 
             StorageMap balancesApprove = Storage.CurrentContext.CreateMap(StoragePrefixApprove);
 
             if (amount == 0)//取消授权
             {
-                byte[] fromApprove = balancesApprove.Get(sender);
-                Map<byte[], BigInteger> spenderMap = (Map<byte[], BigInteger>)fromApprove.Deserialize();
-                if (spenderMap.HasKey(spender))
-                {
-                    balancesApprove.Delete(sender);
-                }
+                balancesApprove.Delete(sender.Concat(spender));
             }
             else
             {
-                Map<byte[], BigInteger> newSpenderMap = new Map<byte[], BigInteger>();
-                newSpenderMap[spender] = amount;
-                balancesApprove.Put(sender, newSpenderMap.Serialize());
+                balancesApprove.Put(sender.Concat(spender), amount);
             }
 
             //触发事件
@@ -153,19 +147,14 @@ namespace RUSDContract
             if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(to)) return false;
+
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
             if (!Runtime.CheckWitness(spender)) return false; //只能被授权者才能操作
 
             StorageMap balancesApprove = Storage.CurrentContext.CreateMap(StoragePrefixApprove);
 
-            byte[] fromApprove = balancesApprove.Get(sender);
-            if (fromApprove == null) return false;
-
-            Map<byte[], BigInteger> spenderMap = (Map<byte[], BigInteger>)fromApprove.Deserialize();
-            if (!spenderMap.HasKey(spender)) return false;//只能被授权者才能操作
-
-            BigInteger amountOfApprove = spenderMap[spender];
-            if (amountOfApprove < amount) return false; //授权余额不足
+            BigInteger approvedAmount = balancesApprove.Get(sender.Concat(spender)).ToBigInteger();
+            if (approvedAmount <= 0 || approvedAmount < amount) return false;//授权余额不足                       
 
             //from余额
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
@@ -192,14 +181,13 @@ namespace RUSDContract
             }
 
             //处理授权余额
-            if (amountOfApprove == amount)
+            if (approvedAmount == amount)
             {
-                balancesApprove.Delete(sender);
+                balancesApprove.Delete(sender.Concat(spender));
             }
             else
             {
-                spenderMap[spender] = amountOfApprove - amount;
-                balancesApprove.Put(sender, spenderMap.Serialize());
+                balancesApprove.Put(sender.Concat(spender), approvedAmount - amount);
             }
 
             //触发事件
@@ -216,9 +204,8 @@ namespace RUSDContract
         public static bool DestroyAsset(byte[] destroyAddr, BigInteger amount)
         {
             if (!ValidateAddress(destroyAddr)) throw new FormatException("The parameter 'destroyAddr' SHOULD be 20-byte addresses.");
-            if (!Runtime.CheckWitness(destroyAddr)) return false; //只能自己能操作
-
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
+            if (!Runtime.CheckWitness(destroyAddr)) return false; //只能自己能操作
 
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
             BigInteger ownedAmount = balances.Get(destroyAddr).ToBigInteger();

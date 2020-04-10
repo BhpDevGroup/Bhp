@@ -138,18 +138,19 @@ namespace RUSDContract
             if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
             if (Runtime.CheckWitness(sender)) return false;
 
-            Iterator<string, byte[]> approved = Storage.Find(StoragePrefixApprove);
-            Map<byte[], BigInteger> map = new Map<byte[], BigInteger>();
-            while (approved.Next())
-            {
-                byte[] key = approved.Key.AsByteArray();
-                byte[] key2 = key.Last(40);
-                if (key2.Take(20) == sender)
-                {
-                    map[key2.Last(20)] = approved.Value.ToBigInteger();
-                }
-            }
-            return map;
+            return Storage.Find(StoragePrefixApprove);
+            //Iterator<string, byte[]> approved = Storage.Find(StoragePrefixApprove);
+            //Map<byte[], BigInteger> map = new Map<byte[], BigInteger>();
+            //while (approved.Next())
+            //{
+            //    byte[] key = approved.Key.AsByteArray();
+            //    byte[] key2 = key.Last(40);
+            //    if (key2.Take(20) == sender)
+            //    {
+            //        map[key2.Last(20)] = approved.Value.ToBigInteger();
+            //    }
+            //}
+            //return map;
         }
 
         /// <summary>

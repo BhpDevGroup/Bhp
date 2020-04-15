@@ -176,23 +176,23 @@ namespace RUSDContract
             BigInteger approvedAmount = balancesApprove.Get(sender.Concat(spender)).ToBigInteger();
             if (approvedAmount <= 0 || approvedAmount < amount) return false;//授权余额不足                       
 
-            //from余额
+            //sender余额
             StorageMap balances = Storage.CurrentContext.CreateMap(StoragePrefixBalance);
-            BigInteger fromAmount = balances.Get(sender).ToBigInteger();
+            BigInteger senderAmount = balances.Get(sender).ToBigInteger();
 
-            if (fromAmount < amount) return false;//余额不足                     
+            if (senderAmount < amount) return false;//余额不足                     
 
             //sender==to时，转账给自己不更新自己余额，但更新授权余额
             if (sender != to)
             {
                 //处理from余额
-                if (fromAmount == amount)
+                if (senderAmount == amount)
                 {
                     balances.Delete(sender);
                 }
                 else
                 {
-                    balances.Put(sender, fromAmount - amount);
+                    balances.Put(sender, senderAmount - amount);
                 }
 
                 //处理to余额
@@ -243,6 +243,24 @@ namespace RUSDContract
 
             OnDestroyAsset(destroyAddr, amount);
             return true;
+        }
+
+        /// <summary>
+        /// 查询授权余额（只能源地址或授权地址可查询）
+        /// </summary>
+        /// <param name="sender">源地址</param>
+        /// <param name="spender">授权地址</param>
+        /// <returns>授权地址可操作的源地址的余额</returns>
+        public static BigInteger Allowance(byte[] sender, byte[] spender)
+        {
+            if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
+            if (!ValidateAddress(spender)) throw new FormatException("The parameter 'spender' SHOULD be 20-byte addresses.");
+
+            if (!Runtime.CheckWitness(sender) && !Runtime.CheckWitness(spender)) return 0;
+
+            StorageMap balancesApprove = Storage.CurrentContext.CreateMap(StoragePrefixApprove);
+
+            return balancesApprove.Get(sender.Concat(spender)).ToBigInteger();
         }
     }
 }

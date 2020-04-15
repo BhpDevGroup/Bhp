@@ -77,6 +77,7 @@ namespace RUSDContract
                 if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3]);
                 if (operation == "destroyAsset") return DestroyAsset((byte[])args[0], (BigInteger)args[1]);
+                if (operation == "allowance") return Allowance((byte[])args[0], (byte[])args[1]);
                 #endregion
 
                 #region ADMIN METHODS

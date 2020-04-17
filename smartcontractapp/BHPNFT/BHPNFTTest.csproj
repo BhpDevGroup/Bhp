@@ -46,6 +46,7 @@
     <Compile Include="BHPNFT.Admin.cs" />
     <Compile Include="BHPNFT.Methods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BHPNFT.Helpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

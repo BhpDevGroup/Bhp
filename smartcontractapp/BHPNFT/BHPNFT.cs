@@ -11,12 +11,18 @@ namespace BHPNFT
         static readonly byte[] superAdmin = Helper.ToScriptHash("AWWx2F1Ph9oJtbU8H2mcJGDgDeFDH8geWs");
 
         #region Storage key prefixes
-        static readonly string StoragePrefixSysState = "sysState";
+        static readonly string StoragePrefixContractState = "contractState";
         static readonly string StoragePrefixAsset = "asset";
-        static readonly string StoragePrefixAddrList = "addrNFTlist";
-        static readonly string StoragePrefixApprovedAddrList = "approvedAddrNFTlist";
-        static readonly string StoragePrefixPledgedAddrList = "pledgedAddrNFTlist";
-        static readonly string StoragePrefixMintAddr = "addrApproveMintAddrs";
+        static readonly string StoragePrefixOwnerAddrList = "ownerAddrNFTlist";
+        static readonly string StoragePrefixApprovedAddrNFTList = "approvedAddrNFTlist";
+        static readonly string StoragePrefixPledgedAddrNFTList = "pledgedAddrNFTlist";
+        static readonly string StoragePrefixIssuerAddrNFTList = "issuerAddrNFTlist";
+        static readonly string StoragePrefixMintAddrs = "approveMintAddrs";
+        static readonly string StoragePrefixApproveAll = "approveAll";
+        static readonly string StoragePrefixApproveAsset = "approveAsset";
+
+        static readonly string TotalSupplyMapKey = "totalSupply";
+        static readonly string ApproveMintKeyMapKey = "approveMintKey";
         #endregion
 
         public static object Main(string operation, object[] args)
@@ -55,18 +61,13 @@ namespace BHPNFT
                 #region 转账
                 if (operation == "transfer")
                 {
-                    if (args.Length != 2) return false;
-                    return Transfer((byte[])args[0], (BigInteger)args[1]);
+                    if (args.Length != 3) return false;
+                    return Transfer((byte[])args[0], (BigInteger)args[1],(BigInteger)args[2]);
                 }
                 if (operation == "transferFrom")
                 {
                     if (args.Length != 2) return false;
                     return TransferFrom((byte[])args[0], (BigInteger)args[1]);
-                }
-                if (operation == "transferTo")
-                {
-                    if (args.Length != 2) return false;
-                    return TransferTo((byte[])args[0], (BigInteger)args[1]);
                 }
                 #endregion
 
@@ -85,7 +86,7 @@ namespace BHPNFT
                 if (operation == "pledger")
                 {
                     if (args.Length != 3) return false;
-                    return PledgerNFT((byte[])args[0], (BigInteger)args[1], (bool)args[2]);
+                    return Pledge((byte[])args[0], (BigInteger)args[1], (bool)args[2]);
                 }
                 if (operation == "unpledger")
                 {
@@ -108,7 +109,7 @@ namespace BHPNFT
                     return OwnerOf((BigInteger)args[0]);
                 }
 
-                if (operation == "token")
+                if (operation == "getAsset")
                 {
                     if (args.Length != 1) return false;
                     return GetAsset((BigInteger)args[0]);
@@ -141,7 +142,7 @@ namespace BHPNFT
                 if (operation == "mintToken")
                 {
                     if (args.Length != 15) return false;
-                    return MintToken((byte[])args[0], (byte[])args[1], (BigInteger)args[2], (BigInteger)args[3],
+                    return IssueAsset((byte[])args[0], (byte[])args[1], (BigInteger)args[2], (BigInteger)args[3],
                         (BigInteger)args[4], (BigInteger)args[5], (BigInteger)args[6], (BigInteger)args[7], (BigInteger)args[8],
                         (BigInteger)args[9], (BigInteger)args[10], (BigInteger)args[11], (BigInteger)args[12], (BigInteger)args[13], (BigInteger)args[14]);
                 }
@@ -152,7 +153,7 @@ namespace BHPNFT
                 if (operation == "modifyNFTattribute")
                 {
                     if (args.Length != 3) return false;
-                    return ModifyNFTattribute((BigInteger)args[0], (string)args[1], (object)args[2]);
+                    return ModifyNFTAttribute((BigInteger)args[0], (string)args[1], (object)args[2]);
                 }
                 #endregion
 
@@ -190,19 +191,19 @@ namespace BHPNFT
                 //获取发行地址
                 if (operation == "getApproveMintAddr")
                 {
-                    return GetApproveMintAddr();
+                    return GetIssuers();
                 }
                 //增加发行地址（仅超级管理员）
                 if (operation == "approveMintAddrAdd")
                 {
                     if (args.Length != 1) return false;
-                    return ApproveMintAddrAdd((byte[])args[0]);
+                    return AddIssuer((byte[])args[0]);
                 }
                 //删除发行地址（仅超级管理员）
                 if (operation == "approveMintAddrRemove")
                 {
                     if (args.Length != 1) return false;
-                    return ApproveMintAddrRemove((byte[])args[0]);
+                    return RemoveIssuer((byte[])args[0]);
                 }
                 //判断地址是否为发行地址
                 if (operation == "isMintAddress")
@@ -213,7 +214,26 @@ namespace BHPNFT
 
                 #endregion
 
+                #region 资产分拆、合并
+                
+                //资产拆分
+                if (operation == "splitAsset")
+                {
+                    if (args.Length != 3) return false;
+                    return SplitAsset((BigInteger)args[0],(BigInteger)args[1],(BigInteger)args[2]);
+                }
+                //资产合并
+                if (operation == "mergeAsset")
+                {
+                    if (args.Length != 2) return false;
+                    return MergeAsset((BigInteger)args[0], (BigInteger)args[1]);
+                }
+
+
+                #endregion
+
             }
+           
             return false;
         }
 

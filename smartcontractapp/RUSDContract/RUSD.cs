@@ -13,7 +13,7 @@ namespace RUSDContract
         static readonly string Name = "RUSD";//名称
         static readonly string Symbol = "RUSD";//简称
         static readonly ulong Decimals = 8;//精度
-        static readonly string Version = "v1.0.1.1";//版本
+        static readonly string Version = "v1.0.1.2";//版本
         static readonly ulong InitialSupply = 0;//初始化资产金额
         static readonly byte[] Owner = "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY".ToScriptHash();//管理员地址
         #endregion

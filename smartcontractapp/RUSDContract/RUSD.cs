@@ -1,5 +1,6 @@
 ﻿using Bhp.SmartContract.Framework;
 using Bhp.SmartContract.Framework.Services.Bhp;
+using Bhp.SmartContract.Framework.Services.System;
 using System;
 using System.ComponentModel;
 using System.Numerics;
@@ -60,6 +61,7 @@ namespace RUSDContract
             }
             else if (Runtime.Trigger == TriggerType.Application)
             {
+                byte[] callingScript = ExecutionEngine.CallingScriptHash;
                 #region BAS101 METHODS
                 if (operation == "name") return Name;
                 if (operation == "symbol") return Symbol;
@@ -75,7 +77,7 @@ namespace RUSDContract
                 if (operation == "approve") return Approve((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "approvedAddr") return ApprovedAddr((byte[])args[0]);
                 if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
-                if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3]);
+                if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3], callingScript);
                 if (operation == "destroyAsset") return DestroyAsset((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "allowance") return Allowance((byte[])args[0], (byte[])args[1]);
                 #endregion
@@ -85,7 +87,7 @@ namespace RUSDContract
                 if (operation == "migrate") return Migrate(args);
                 if (operation == "destroy") return Destroy();
                 if (operation == "setMintAddr") return SetMintAddr((byte[])args[0]);
-                #endregion               
+                #endregion
             }
             return false;
         }

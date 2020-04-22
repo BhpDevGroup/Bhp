@@ -152,7 +152,7 @@ namespace RUSDContract
         /// <param name="to">目的地址</param>
         /// <param name="amount">金额</param>
         /// <returns>true:授权地址转账成功, false:授权地址转账失败</returns>
-        public static bool TransferFrom(byte[] spender, byte[] sender, byte[] to, BigInteger amount)
+        public static bool TransferFrom(byte[] spender, byte[] sender, byte[] to, BigInteger amount, byte[] callingScript)
         {
             if (!ValidateAddress(spender)) throw new FormatException("The parameter 'spender' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
@@ -160,7 +160,7 @@ namespace RUSDContract
             if (!IsPayable(to)) return false;
 
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
-            if (!Runtime.CheckWitness(spender)) return false; //只能被授权者才能操作
+            if (!Runtime.CheckWitness(spender) && callingScript.AsBigInteger() != spender.AsBigInteger()) return false; //只能被授权者才能操作
 
             byte[] key = StoragePrefixApprove.AsByteArray().Concat(sender).Concat(spender);
             BigInteger approvedAmount = Storage.Get(key).ToBigInteger();

@@ -76,7 +76,7 @@ namespace RUSDContract
                 if (operation == "mint") return Mint((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "approve") return Approve((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "approvedAddr") return ApprovedAddr((byte[])args[0]);
-                if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
+                if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2], callingScript);
                 if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3], callingScript);
                 if (operation == "destroyAsset") return DestroyAsset((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "allowance") return Allowance((byte[])args[0], (byte[])args[1]);

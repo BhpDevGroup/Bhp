@@ -36,14 +36,15 @@ namespace RUSDContract
         /// <param name="sender">转账地址</param>
         /// <param name="to">收款地址</param>
         /// <param name="amount">转账金额</param>
+        /// <param name="callingScript">调用HASH</param>
         /// <returns>true:转账成功, false:转账失败</returns>
-        public static bool Transfer(byte[] sender, byte[] to, BigInteger amount)
+        public static bool Transfer(byte[] sender, byte[] to, BigInteger amount, byte[] callingScript)
         {
             if (!ValidateAddress(sender)) throw new FormatException("The parameter 'sender' SHOULD be 20-byte addresses.");
             if (!ValidateAddress(to)) throw new FormatException("The parameters 'to' SHOULD be 20-byte addresses.");
             if (!IsPayable(to)) return false;
             if (amount <= 0) throw new InvalidOperationException("The parameter amount MUST be greater than 0.");
-            if (!Runtime.CheckWitness(sender)) return false;
+            if (!Runtime.CheckWitness(sender) && callingScript.AsBigInteger() != sender.AsBigInteger()) return false;
 
             if (sender == to) return true;//无需操作存储区
 
@@ -151,6 +152,7 @@ namespace RUSDContract
         /// <param name="sender">源地址</param>
         /// <param name="to">目的地址</param>
         /// <param name="amount">金额</param>
+        /// <param name="callingScript">调用HASH</param>
         /// <returns>true:授权地址转账成功, false:授权地址转账失败</returns>
         public static bool TransferFrom(byte[] spender, byte[] sender, byte[] to, BigInteger amount, byte[] callingScript)
         {

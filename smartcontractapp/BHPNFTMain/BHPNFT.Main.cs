@@ -56,7 +56,26 @@ namespace BhpHashPowerNFT
                     if (args.Length == 2) return Approve((byte[])args[0], (BigInteger)args[1], false);
                     return Approve((byte[])args[0], (BigInteger)args[1], (bool)args[2]);
                 }
-
+                if (operation == "approveAll")
+                {
+                    if (args.Length != 2) return false;
+                    return SetApprovalForAll((byte[])args[0],(byte[])args[1]);
+                }
+                if (operation == "removeApproveAll")
+                {
+                    if (args.Length != 2) return false;
+                    return RemoveApprovalForAll((byte[])args[0], (byte[])args[1]);
+                }
+                if (operation == "getApproveAllAddrs")
+                {
+                    if (args.Length != 1) return false;
+                    return GetApproveAllAddrs((byte[])args[0]);
+                }
+                if (operation == "getApproveAsset")
+                {
+                    if (args.Length != 2) return false;
+                    return GetApproveAsset((byte[])args[0],(byte[])args[1]);
+                }
                 #endregion
 
                 #region 质押、解质押
@@ -64,7 +83,7 @@ namespace BhpHashPowerNFT
                 if (operation == "pledger")
                 {
                     if (args.Length != 4) return false;
-                    return Pledge((byte[])args[0], (byte[])args[1],(BigInteger)args[3], (bool)args[4]);
+                    return Pledge((byte[])args[0], (byte[])args[1],(BigInteger)args[2], (bool)args[3]);
                 }
                 if (operation == "unpledger")
                 {

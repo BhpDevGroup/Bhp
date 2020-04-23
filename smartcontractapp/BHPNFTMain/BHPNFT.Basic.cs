@@ -144,8 +144,6 @@ namespace BhpHashPowerNFT
 
         #endregion
 
-     
-
         #region 授权发行地址增、减、查询, 判断地址是否为授权发行地址（对外）
 
         /// <summary>
@@ -362,7 +360,21 @@ namespace BhpHashPowerNFT
         }
 
         /// <summary>
-        /// 判断资产是否能转账，判断过期，及是否在锁定期，过期及锁定期内不能转账
+        /// 判断是否销毁
+        /// </summary>
+        /// <param name="asset"></param>
+        /// <returns></returns>
+        private static bool IsDestorey(Asset asset)
+        {
+            if (asset.assetState == 0) 
+            {
+                return true;
+            }
+            return false;
+        }
+      
+        /// <summary>
+        /// 判断资产是否能转账，判断过期，及是否在锁定期，过期及锁定期内不能转账,判断是否销毁
         /// </summary>
         /// <param name="assetId">资产id</param>
         /// <returns></returns>
@@ -375,6 +387,10 @@ namespace BhpHashPowerNFT
             BigInteger currentDate = Blockchain.GetHeader(Blockchain.GetHeight()).Timestamp;
             BigInteger unLockDate = asset.unLockDate;
             if (currentDate <= unLockDate)
+            {
+                return false;
+            }
+            if (IsDestorey(asset))
             {
                 return false;
             }
@@ -446,24 +462,6 @@ namespace BhpHashPowerNFT
 
         #endregion
 
-        ///获取某个账户的总的基础算力    
-        public static BigInteger BalanceOf(byte[] addr)
-        {
-            if (!ValidateAddress(addr)) return 0;
-            Iterator<byte[], byte[]> allOwnerAssets = GetOwnerNFTListByAddr(addr);
-            BigInteger ownerBalance = 0;
-            while (allOwnerAssets.Next())
-            {
-                BigInteger assetId = allOwnerAssets.Value.ToBigInteger();
-                Asset asset = GetAssetByAssetId(assetId);
-                if (IsEffectiveHashPower(asset))
-                {
-                    ownerBalance += asset.basicHashPowerAmount;
-                }
-            }
-            return ownerBalance;
-        }
-
         /// <summary>
         /// 查询所有的owner地址的所有资产
         /// </summary>
@@ -481,6 +479,7 @@ namespace BhpHashPowerNFT
         {
             return Storage.Find(StoragePrefixPledgerNFTList.AsByteArray().Concat(addr));
         }
+      
         /// <summary>
         /// 查询所有的issuerKey下的所有资产
         /// </summary>
@@ -500,40 +499,5 @@ namespace BhpHashPowerNFT
             return Storage.Find(StoragePrefixIssuerAddrs.AsByteArray());
         }
 
-        #region 发行地址及发行地址key-address对操作
-
-        /// <summary>
-        /// 增加发行地址及发行地址key-address对
-        /// </summary>
-        /// <param name="issuerKey"></param>
-        /// <param name="issuer"></param>
-        /// <returns></returns>
-        public static bool AddIssuerKeyAndIssuer(string issuerKey, byte[] issuer)
-        {
-            if (issuerKey.Length < 1) return false;
-            if (!ValidateAddress(issuer)) return false;
-            if (!Runtime.CheckWitness(superAdmin)) return false;
-            AddIssuer(issuer);
-            AddIssuerKey(issuerKey,issuer);
-            return true;
-        }
-
-        /// <summary>
-        /// 删除发行地址及发行地址key-address对
-        /// </summary>
-        /// <param name="issuerKey"></param>
-        /// <param name="issuer"></param>
-        /// <returns></returns>
-        public static bool RemoveIssuerKeyAndIssuer(string issuerKey, byte[] issuer)
-        {
-            if (issuerKey.Length < 1) return false;
-            if (!ValidateAddress(issuer)) return false;
-            if (!Runtime.CheckWitness(superAdmin)) return false;
-            RemoveIssuer(issuer);
-            RemoveIssuerKey(issuerKey);
-            return true;
-        }
-
-        #endregion
     }
 }

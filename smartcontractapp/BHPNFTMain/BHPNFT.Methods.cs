@@ -245,7 +245,10 @@ namespace BhpHashPowerNFT
             if (data.Length > 0)
             {
                 Asset asset = Helper.Deserialize(data) as Asset;
-                if (JudgeJurisdiction(asset.owner, addr, asset.assetId)) return false;
+                //锁定期可以质押资产，只需要判断是否过期及是否销毁
+                if (IsExpire(asset)) return false;
+                if (IsDestorey(asset)) return false;
+                if (!JudgeJurisdiction(asset.owner, addr, asset.assetId)) return false;
 
                 asset.pledger = pledger;
                 asset.assetState = 3; //质押状态
@@ -394,7 +397,7 @@ namespace BhpHashPowerNFT
             {
                 Asset asset1 = Helper.Deserialize(assetData1) as Asset;
                 Asset asset2 = Helper.Deserialize(assetData2) as Asset;
-                if (!IsTransfer(asset1) || IsTransfer(asset2)) return 0;//判断是否过期，是否锁定
+                if (!IsTransfer(asset1) || !IsTransfer(asset2)) return 0;//判断是否过期，是否锁定
                 if (IsPledger(asset1) || IsPledger(asset2)) return 0;
                 if (asset1.owner != asset2.owner) return 0;
                 if (!JudgeJurisdiction(asset1.owner, addr, assetId1)) return 0;
@@ -439,7 +442,6 @@ namespace BhpHashPowerNFT
         }
         #endregion
 
-
         #region 销毁资产
 
         /// <summary>
@@ -475,5 +477,59 @@ namespace BhpHashPowerNFT
 
         #endregion
 
+        #region 发行地址及发行地址key-address对操作
+
+        /// <summary>
+        /// 增加发行地址及发行地址key-address对
+        /// </summary>
+        /// <param name="issuerKey"></param>
+        /// <param name="issuer"></param>
+        /// <returns></returns>
+        public static bool AddIssuerKeyAndIssuer(string issuerKey, byte[] issuer)
+        {
+            if (issuerKey.Length < 1) return false;
+            if (!ValidateAddress(issuer)) return false;
+            if (!Runtime.CheckWitness(superAdmin)) return false;
+            AddIssuer(issuer);
+            AddIssuerKey(issuerKey, issuer);
+            return true;
+        }
+
+        /// <summary>
+        /// 删除发行地址及发行地址key-address对
+        /// </summary>
+        /// <param name="issuerKey"></param>
+        /// <param name="issuer"></param>
+        /// <returns></returns>
+        public static bool RemoveIssuerKeyAndIssuer(string issuerKey, byte[] issuer)
+        {
+            if (issuerKey.Length < 1) return false;
+            if (!ValidateAddress(issuer)) return false;
+            if (!Runtime.CheckWitness(superAdmin)) return false;
+            RemoveIssuer(issuer);
+            RemoveIssuerKey(issuerKey);
+            return true;
+        }
+
+        #endregion
+
+
+        ///获取某个账户的总的基础算力    
+        public static BigInteger BalanceOf(byte[] addr)
+        {
+            if (!ValidateAddress(addr)) return 0;
+            Iterator<byte[], byte[]> allOwnerAssets = GetOwnerNFTListByAddr(addr);
+            BigInteger ownerBalance = 0;
+            while (allOwnerAssets.Next())
+            {
+                BigInteger assetId = allOwnerAssets.Value.ToBigInteger();
+                Asset asset = GetAssetByAssetId(assetId);
+                if (IsEffectiveHashPower(asset))
+                {
+                    ownerBalance += asset.basicHashPowerAmount;
+                }
+            }
+            return ownerBalance;
+        }
     }
 }

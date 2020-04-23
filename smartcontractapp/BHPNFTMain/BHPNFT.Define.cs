@@ -18,7 +18,6 @@ namespace BhpHashPowerNFT
         static readonly string StoragePrefixContractState = "contractState";
         static readonly string StoragePrefixAsset = "asset";
         static readonly string StoragePrefixOwnerNFTList = "ownerNFTList";
-        static readonly string StoragePrefixApprovedNFTList = "approvedNFTList";
         static readonly string StoragePrefixPledgerNFTList = "pledgerNFTList";
         static readonly string StoragePrefixIssuerKeyNFTList = "issuerKeyNFTList";
         static readonly string StoragePrefixIssuerAddrs = "issuerAddrs";
@@ -27,8 +26,7 @@ namespace BhpHashPowerNFT
         static readonly string StoragePrefixIssuerKey = "issuerKey";
 
         static readonly string TotalSupplyMapKey = "totalSupply";
-        static readonly string ApproveMintKeyMapKey = "approveMintKey";
-
+        
         #endregion
 
         #region 初始事件声明

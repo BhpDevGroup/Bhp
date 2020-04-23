@@ -1,5 +1,6 @@
 ﻿using Bhp.SmartContract.Framework;
 using Bhp.SmartContract.Framework.Services.Bhp;
+using Bhp.SmartContract.Framework.Services.System;
 using System;
 using System.ComponentModel;
 using System.Numerics;
@@ -12,7 +13,7 @@ namespace RUSDContract
         static readonly string Name = "RUSD";//名称
         static readonly string Symbol = "RUSD";//简称
         static readonly ulong Decimals = 8;//精度
-        static readonly string Version = "v1.0.1.0";//版本
+        static readonly string Version = "v1.0.1.2";//版本
         static readonly ulong InitialSupply = 0;//初始化资产金额
         static readonly byte[] Owner = "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY".ToScriptHash();//管理员地址
         #endregion
@@ -60,6 +61,7 @@ namespace RUSDContract
             }
             else if (Runtime.Trigger == TriggerType.Application)
             {
+                byte[] callingScript = ExecutionEngine.CallingScriptHash;
                 #region BAS101 METHODS
                 if (operation == "name") return Name;
                 if (operation == "symbol") return Symbol;
@@ -74,8 +76,8 @@ namespace RUSDContract
                 if (operation == "mint") return Mint((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "approve") return Approve((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
                 if (operation == "approvedAddr") return ApprovedAddr((byte[])args[0]);
-                if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2]);
-                if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3]);
+                if (operation == "transfer") return Transfer((byte[])args[0], (byte[])args[1], (BigInteger)args[2], callingScript);
+                if (operation == "transferFrom") return TransferFrom((byte[])args[0], (byte[])args[1], (byte[])args[2], (BigInteger)args[3], callingScript);
                 if (operation == "destroyAsset") return DestroyAsset((byte[])args[0], (BigInteger)args[1]);
                 if (operation == "allowance") return Allowance((byte[])args[0], (byte[])args[1]);
                 #endregion
@@ -85,7 +87,7 @@ namespace RUSDContract
                 if (operation == "migrate") return Migrate(args);
                 if (operation == "destroy") return Destroy();
                 if (operation == "setMintAddr") return SetMintAddr((byte[])args[0]);
-                #endregion               
+                #endregion
             }
             return false;
         }

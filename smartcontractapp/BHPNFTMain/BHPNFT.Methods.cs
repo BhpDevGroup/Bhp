@@ -19,7 +19,7 @@ namespace BhpHashPowerNFT
         /// <param name="to">接收地址</param>
         /// <param name="assetId">资产id</param>
         /// <returns></returns>
-        public static bool Transfer(byte[] to, BigInteger assetId, BigInteger amount)
+        public static bool Transfer(byte[] to, BigInteger assetId, BigInteger amount,byte[] callingScript)
         {
             //判断地址是否合法
             if (!ValidateAddress(to)) return false;
@@ -31,7 +31,7 @@ namespace BhpHashPowerNFT
             {
                 //旧的资产
                 Asset oldAsset = Helper.Deserialize(data) as Asset;
-                if (!Runtime.CheckWitness(oldAsset.owner)) return false;
+                if (!Runtime.CheckWitness(oldAsset.owner) && callingScript.AsBigInteger() != oldAsset.owner.AsBigInteger()) return false;
                 if (oldAsset.assetState != 1) return false;
                 if (!IsTransfer(oldAsset)) return false; //判断是否能转账，过期及锁定期不能转账
                 if (IsPledger(oldAsset)) return false; //判断是否被质押
@@ -79,7 +79,7 @@ namespace BhpHashPowerNFT
         /// <param name="to">接收地址</param>
         /// <param name="assetId">资产id</param>
         /// <returns></returns>
-        public static bool TransferFrom(byte[] from, byte[] to, BigInteger assetId, BigInteger amount)
+        public static bool TransferFrom(byte[] from, byte[] to, BigInteger assetId, BigInteger amount,byte[] callingScript)
         {
             //判断地址是否合法
             if (!ValidateAddress(from)) return false;
@@ -101,7 +101,7 @@ namespace BhpHashPowerNFT
                 {
                     //判断from 是否为授权地址
                     if (!IsApprove(oldAsset.owner, from, assetId)) return false;
-                    if (!Runtime.CheckWitness(from)) return false;
+                    if (!Runtime.CheckWitness(from) && callingScript.AsBigInteger() != from.AsBigInteger()) return false;
                     if (oldAsset.basicHashPowerAmount == amount) //全部转出
                     {
                         var addrFrom = oldAsset.owner;
@@ -137,7 +137,7 @@ namespace BhpHashPowerNFT
                 }
                 if (IsPledger(oldAsset))
                 {
-                    if (!Runtime.CheckWitness(oldAsset.pledger)) return false;
+                    if (!Runtime.CheckWitness(oldAsset.pledger) && callingScript.AsBigInteger() != oldAsset.pledger.AsBigInteger()) return false;
                     if (oldAsset.basicHashPowerAmount == amount) //全部转出
                     {
                         byte[] addrFrom = oldAsset.owner;
@@ -236,7 +236,7 @@ namespace BhpHashPowerNFT
         /// <param name="assetId">资产id</param>
         /// <param name="isIncomePledged">是否质押分币权</param>
         /// <returns></returns>
-        public static bool Pledge(byte[] addr, byte[] pledger, BigInteger assetId, bool isIncomePledged)
+        public static bool Pledge(byte[] addr, byte[] pledger, BigInteger assetId, bool isIncomePledged,byte[] callingScript)
         {
             if (!ValidateAddress(pledger)) return false;
 
@@ -248,7 +248,7 @@ namespace BhpHashPowerNFT
                 //锁定期可以质押资产，只需要判断是否过期及是否销毁
                 if (IsExpire(asset)) return false;
                 if (IsDestorey(asset)) return false;
-                if (!JudgeJurisdiction(asset.owner, addr, asset.assetId)) return false;
+                if (!JudgeJurisdiction(asset.owner, addr, asset.assetId, callingScript)) return false;
 
                 asset.pledger = pledger;
                 asset.assetState = 3; //质押状态
@@ -308,7 +308,7 @@ namespace BhpHashPowerNFT
         /// <param name="remainBalance">分拆后剩余算力</param>
         /// <param name="newBalance">新资产基础算力</param>
         /// <returns></returns>
-        public static BigInteger SplitAsset(byte[] addr, BigInteger assetId, BigInteger remainBalance, BigInteger newBalance)
+        public static BigInteger SplitAsset(byte[] addr, BigInteger assetId, BigInteger remainBalance, BigInteger newBalance, byte[] callingScript)
         {
             StorageMap assetMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
             var data = assetMap.Get(assetId.AsByteArray());
@@ -317,7 +317,7 @@ namespace BhpHashPowerNFT
                 //旧的资产
                 Asset oldAsset = Helper.Deserialize(data) as Asset;
                 //返回0表示资产分拆失败
-                if (!JudgeJurisdiction(oldAsset.owner, addr, assetId)) return 0;
+                if (!JudgeJurisdiction(oldAsset.owner, addr, assetId, callingScript)) return 0;
                 if (!IsTransfer(oldAsset)) return 0;//判断是否过期，是否在锁定期
                 if (IsPledger(oldAsset)) return 0; //质押资产不可分拆
                 if (oldAsset.assetType != 1) return 0;
@@ -387,7 +387,7 @@ namespace BhpHashPowerNFT
         /// <param name="assetId1">资产id1</param>
         /// <param name="assetId2">资产id2</param>
         /// <returns></returns>
-        public static BigInteger MergeAsset(byte[] addr, BigInteger assetId1, BigInteger assetId2)
+        public static BigInteger MergeAsset(byte[] addr, BigInteger assetId1, BigInteger assetId2,byte[] callingScript)
         {
             StorageMap assetMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
 
@@ -400,8 +400,8 @@ namespace BhpHashPowerNFT
                 if (!IsTransfer(asset1) || !IsTransfer(asset2)) return 0;//判断是否过期，是否锁定
                 if (IsPledger(asset1) || IsPledger(asset2)) return 0;
                 if (asset1.owner != asset2.owner) return 0;
-                if (!JudgeJurisdiction(asset1.owner, addr, assetId1)) return 0;
-                if (!JudgeJurisdiction(asset2.owner, addr, assetId2)) return 0;
+                if (!JudgeJurisdiction(asset1.owner, addr, assetId1, callingScript)) return 0;
+                if (!JudgeJurisdiction(asset2.owner, addr, assetId2, callingScript)) return 0;
 
                 //判断其他属性是否一致
                 if (asset1.issuerKey != asset2.issuerKey) return 0;
@@ -512,7 +512,6 @@ namespace BhpHashPowerNFT
         }
 
         #endregion
-
 
         ///获取某个账户的总的基础算力    
         public static BigInteger BalanceOf(byte[] addr)

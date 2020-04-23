@@ -246,6 +246,8 @@ namespace BhpHashPowerNFT
                 if (!revoke) //授权
                 {
                     Storage.Put(StoragePrefixApproveAsset.AsByteArray().Concat(asset.owner).Concat(spender).Concat(assetId.AsByteArray()), assetId);
+                    onApprove(asset.owner,spender,1);
+                    onNFTApprove(asset.owner, spender, assetId);
                 }
                 //取消授权
                 else
@@ -442,17 +444,17 @@ namespace BhpHashPowerNFT
         /// <param name="spender"></param>
         /// <param name="assetId"></param>
         /// <returns></returns>
-        private static bool JudgeJurisdiction(byte[] owner, byte[] spender, BigInteger assetId)
+        private static bool JudgeJurisdiction(byte[] owner, byte[] spender, BigInteger assetId,byte[] callingScript)
         {
             //如果是owner地址，则可以操作
-            if (Runtime.CheckWitness(owner))
+            if (Runtime.CheckWitness(owner) || callingScript.AsBigInteger() == owner.AsBigInteger())
             {
                 return true;
             }
             //如果不是owner地址，必须是授权地址且签名通过才能操作
             else
             {
-                if (IsApprove(owner, spender, assetId) && Runtime.CheckWitness(spender))
+                if ( IsApprove(owner, spender, assetId) && (Runtime.CheckWitness(spender) || callingScript.AsBigInteger() == spender.AsBigInteger()))
                 {
                     return true;
                 }

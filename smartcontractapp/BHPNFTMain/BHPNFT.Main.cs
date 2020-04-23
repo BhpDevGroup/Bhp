@@ -1,5 +1,6 @@
 ﻿using Bhp.SmartContract.Framework;
 using Bhp.SmartContract.Framework.Services.Bhp;
+using Bhp.SmartContract.Framework.Services.System;
 using System;
 using System.Numerics;
 
@@ -16,6 +17,7 @@ namespace BhpHashPowerNFT
             }
             else if (Runtime.Trigger == TriggerType.Application)
             {
+                byte[] callingScript = ExecutionEngine.CallingScriptHash;
                 #region 基础方法
                 //无入参只读类 
                 if (operation == "name")
@@ -40,12 +42,12 @@ namespace BhpHashPowerNFT
                 if (operation == "transfer")
                 {
                     if (args.Length != 3) return false;
-                    return Transfer((byte[])args[0], (BigInteger)args[1], (BigInteger)args[2]);
+                    return Transfer((byte[])args[0], (BigInteger)args[1], (BigInteger)args[2], callingScript);
                 }
                 if (operation == "transferFrom")
                 {
                     if (args.Length != 4) return false;
-                    return TransferFrom((byte[])args[0],(byte[])args[1],(BigInteger)args[2], (BigInteger)args[3]);
+                    return TransferFrom((byte[])args[0],(byte[])args[1],(BigInteger)args[2], (BigInteger)args[3], callingScript);
                 }
                 #endregion
 
@@ -83,7 +85,7 @@ namespace BhpHashPowerNFT
                 if (operation == "pledger")
                 {
                     if (args.Length != 4) return false;
-                    return Pledge((byte[])args[0], (byte[])args[1],(BigInteger)args[2], (bool)args[3]);
+                    return Pledge((byte[])args[0], (byte[])args[1],(BigInteger)args[2], (bool)args[3], callingScript);
                 }
                 if (operation == "unpledger")
                 {
@@ -186,13 +188,13 @@ namespace BhpHashPowerNFT
                 if (operation == "splitAsset")
                 {
                     if (args.Length != 4) return false;
-                    return SplitAsset((byte[])args[0], (BigInteger)args[1], (BigInteger)args[2], (BigInteger)args[3]);
+                    return SplitAsset((byte[])args[0], (BigInteger)args[1], (BigInteger)args[2], (BigInteger)args[3], callingScript);
                 }
                 //资产合并
                 if (operation == "mergeAsset")
                 {
                     if (args.Length != 3) return false;
-                    return MergeAsset((byte[])args[0], (BigInteger)args[1], (BigInteger)args[2]);
+                    return MergeAsset((byte[])args[0], (BigInteger)args[1], (BigInteger)args[2], callingScript);
                 }
                 if (operation == "destoreyAsset")
                 {

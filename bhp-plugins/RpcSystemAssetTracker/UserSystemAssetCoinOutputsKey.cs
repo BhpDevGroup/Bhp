@@ -1,10 +1,87 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Bhp.IO;
 
 namespace Bhp.Plugins
 {
+    //by bhp
+    public class UserSystemAssetCoinOutputsKey : IComparable<UserSystemAssetCoinOutputsKey>, IEquatable<UserSystemAssetCoinOutputsKey>,
+        ISerializable
+    {
+        public readonly UInt256 AssetId;
+        public readonly UInt160 UserAddress;
+        public readonly UInt256 TxHash;
+
+        public int Size => AssetId.Size + UserAddress.Size + TxHash.Size;
+
+        public bool Equals(UserSystemAssetCoinOutputsKey other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(AssetId, other.AssetId) && Equals(UserAddress, other.UserAddress) && Equals(TxHash, other.TxHash);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (!(obj is UserSystemAssetCoinOutputsKey b)) return false;
+            return Equals(b);
+        }
+
+        public int CompareTo(UserSystemAssetCoinOutputsKey other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            var userAssetIdComparison = AssetId.CompareTo(other.AssetId);
+            if (userAssetIdComparison != 0) return userAssetIdComparison;
+            var userAddressComparison = Comparer<UInt160>.Default.Compare(UserAddress, other.UserAddress);
+            if (userAddressComparison != 0) return userAddressComparison;
+            return Comparer<UInt256>.Default.Compare(TxHash, other.TxHash);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = AssetId != null ? AssetId.GetHashCode() : 0;
+                hashCode = (hashCode * 397) ^ (UserAddress != null ? UserAddress.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (TxHash != null ? TxHash.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        public UserSystemAssetCoinOutputsKey()
+        {
+            AssetId = new UInt256();
+            UserAddress = new UInt160();
+            TxHash = new UInt256();
+        }
+
+        public UserSystemAssetCoinOutputsKey(UInt256 assetId, UInt160 userAddress, UInt256 txHash)
+        {
+            AssetId = assetId;
+            UserAddress = userAddress;
+            TxHash = txHash;
+        }
+
+        public void Serialize(BinaryWriter writer)
+        {
+            writer.Write(AssetId);
+            writer.Write(UserAddress.ToArray());
+            writer.Write(TxHash.ToArray());
+        }
+
+        public void Deserialize(BinaryReader reader)
+        {
+            ((ISerializable)AssetId).Deserialize(reader);
+            ((ISerializable)UserAddress).Deserialize(reader);
+            ((ISerializable)TxHash).Deserialize(reader);
+        }
+    }
+    /*
     public class UserSystemAssetCoinOutputsKey : IComparable<UserSystemAssetCoinOutputsKey>, IEquatable<UserSystemAssetCoinOutputsKey>,
         ISerializable
     {
@@ -78,4 +155,5 @@ namespace Bhp.Plugins
             ((ISerializable) TxHash).Deserialize(reader);
         }
     }
+*/
 }

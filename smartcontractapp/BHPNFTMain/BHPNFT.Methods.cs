@@ -317,10 +317,9 @@ namespace BhpHashPowerNFT
                 //旧的资产
                 Asset oldAsset = Helper.Deserialize(data) as Asset;
                 //返回0表示资产分拆失败
-                if (!JudgeJurisdiction(oldAsset.owner, addr, assetId, callingScript)) return 0;
+                if (!IsSplitAsset(oldAsset.owner, addr, oldAsset, callingScript)) return 0;
                 if (!IsTransfer(oldAsset)) return 0;//判断是否过期，是否在锁定期
-                if (IsPledger(oldAsset)) return 0; //质押资产不可分拆
-                if (oldAsset.assetType != 1) return 0;
+                if (oldAsset.assetType != 1 || oldAsset.assetType != 3) return 0; //资产状态为正常，或者质押都可以拆分
                 if (remainBalance < 0 || newBalance < 0) return 0;
                 if (remainBalance == 0 || newBalance == 0) return oldAsset.assetId;
                 if ((remainBalance + newBalance) != oldAsset.basicHashPowerAmount) return 0; //分拆数量不正确
@@ -367,6 +366,10 @@ namespace BhpHashPowerNFT
                 AddOwnerNFTList(newAsset.owner, newAsset.assetId);
                 //增加发行地址key NFT索引
                 AddIssuerKeyNFTList(newAsset.issuerKey, newAsset.assetId);
+                if (oldAsset.assetState == 3)
+                {
+                    AddPledgerNFTList(newAsset.pledger,newAsset.assetId);
+                }
 
                 onMint(oldAsset.owner, 1);
                 onNFTMint(oldAsset.owner, newAsset.assetId, newAsset);

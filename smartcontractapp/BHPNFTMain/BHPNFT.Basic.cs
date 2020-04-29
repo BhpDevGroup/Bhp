@@ -462,13 +462,53 @@ namespace BhpHashPowerNFT
             return false;
         }
 
-        #endregion
 
         /// <summary>
-        /// 查询所有的owner地址的所有资产
+        /// 是否能值拆分
         /// </summary>
+        /// <param name="owner">owner地址</param>
+        /// <param name="addr">质押拆分为质押地址，授权拆分为授权地址</param>
+        /// <param name="asset"></param>
+        /// <param name="callingScript"></param>
         /// <returns></returns>
-        public static Iterator<byte[], byte[]> GetOwnerNFTListByAddr(byte[] addr)
+        private static bool IsSplitAsset(byte[] owner, byte[] addr, Asset asset, byte[] callingScript) 
+        {
+            if (IsPledger(asset))
+            {
+                if (addr != asset.pledger) return false;
+                if (Runtime.CheckWitness(addr) || callingScript.AsBigInteger() == asset.pledger.AsBigInteger())
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (asset.owner == addr)
+                {
+                    if (Runtime.CheckWitness(addr) || callingScript.AsBigInteger() == owner.AsBigInteger())
+                    {
+                        return true;
+                    }
+                }
+                if (IsApprove(owner, addr, asset.assetId))
+                {
+                    if (Runtime.CheckWitness(addr) || callingScript.AsBigInteger() == addr.AsBigInteger()) 
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+    #endregion
+
+    /// <summary>
+    /// 查询所有的owner地址的所有资产
+    /// </summary>
+    /// <returns></returns>
+    public static Iterator<byte[], byte[]> GetOwnerNFTListByAddr(byte[] addr)
         {
             return Storage.Find(StoragePrefixOwnerNFTList.AsByteArray().Concat(addr));
         }

@@ -287,8 +287,8 @@ namespace BhpHashPowerNFT
                 //删除质押地址的资产索引
                 RemovePledgerNFTList(pledgerAddr, assetId);
 
-                onPledged(asset.owner, asset.pledger, 1);
-                onNFTPledged(asset.owner, asset.pledger, assetId);
+                unPledged(asset.pledger, 1);
+                onNFTunPledged(asset.pledger, assetId);
                 return true;
             }
             return false;

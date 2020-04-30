@@ -67,7 +67,15 @@ namespace BhpHashPowerNFT
         public delegate void deleNFTTransfer(byte[] from, byte[] to, BigInteger asset, BigInteger amount);
         [DisplayName("NFTtransfer")]
         public static event deleNFTTransfer onNFTTransfer;
- 
+
+        //解质押事件
+        public delegate void deleUnpledged(byte[] pledger, BigInteger amount);
+        [DisplayName("unpledged")]
+        public static event deleUnpledged unPledged;
+        public delegate void deleNFTUnpledged(byte[] pledger, BigInteger assetId);
+        [DisplayName("NFTunPledgede")]
+        public static event deleNFTUnpledged onNFTunPledged;
+
         #endregion        
 
         #region  asset 定义

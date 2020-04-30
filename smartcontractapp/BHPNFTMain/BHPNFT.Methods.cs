@@ -267,7 +267,7 @@ namespace BhpHashPowerNFT
         }
 
         //解除质押
-        public static bool UnPledge(BigInteger assetId)
+        public static bool UnPledge(BigInteger assetId, byte[] callingScript)
         {
 
             StorageMap assetMap = Storage.CurrentContext.CreateMap(StoragePrefixAsset);
@@ -276,7 +276,7 @@ namespace BhpHashPowerNFT
             {
                 Asset asset = Helper.Deserialize(data) as Asset;
                 byte[] pledgerAddr = asset.pledger;
-                if (!Runtime.CheckWitness(asset.pledger)) return false;
+                if (!Runtime.CheckWitness(asset.pledger) && callingScript.AsBigInteger() != asset.pledger.AsBigInteger()) return false;
 
                 asset.pledger = new byte[0]; //质押地址置空
                 asset.isIncomePledged = false;

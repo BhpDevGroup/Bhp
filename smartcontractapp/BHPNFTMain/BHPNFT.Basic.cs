@@ -22,7 +22,7 @@ namespace BhpHashPowerNFT
 
         public static BigInteger Decimals()
         {
-            return 4;
+            return 8;
         }
 
         public static string[] SupportedStandards()

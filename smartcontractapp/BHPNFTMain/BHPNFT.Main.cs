@@ -90,7 +90,7 @@ namespace BhpHashPowerNFT
                 if (operation == "unpledger")
                 {
                     if (args.Length != 1) return false;
-                    return UnPledge((BigInteger)args[0]);
+                    return UnPledge((BigInteger)args[0], callingScript);
                 }
 
                 #endregion

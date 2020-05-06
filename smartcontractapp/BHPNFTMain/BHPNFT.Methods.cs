@@ -215,7 +215,7 @@ namespace BhpHashPowerNFT
             newAsset.incomePercent = oldAsset.incomePercent; //分币比例
             newAsset.isIncomePledged = oldAsset.isIncomePledged; //是否质押分币权,如果是，则分币到质押地址
             newAsset.assetType = oldAsset.assetType; //算力类型，1，单挖；2,双挖; 3，高波
-            newAsset.assetState = oldAsset.assetState; //Normal, //1：正常状态，可转让、可质押
+            newAsset.assetState = 1; //Normal, //1：正常状态，可转让、可质押
 
             contractStateMap.Put(TotalSupplyMapKey, newAsset.assetId); //回写资产id
 

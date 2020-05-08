@@ -12,7 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static Bhp.Network.RPC.RpcServer;
 
 namespace Bhp.UI
 {
@@ -24,7 +23,6 @@ namespace Bhp.UI
         private ContractParameter[] parameters;
         private ContractParameter[] parameters_abi;
 
-        private static readonly Fixed8 net_fee = Fixed8.FromDecimal(0.001m);
         private List<TransactionAttributeWrapper> temp_signatures = new List<TransactionAttributeWrapper>();
         /// <summary>
         /// invoke 随机数
@@ -68,21 +66,7 @@ namespace Bhp.UI
             });
         }
 
-        public InvocationTransaction GetTransaction()
-        {
-            Fixed8 fee = tx.Gas.Equals(Fixed8.Zero) ? net_fee : Fixed8.Zero;
-            return Program.CurrentWallet.MakeTransaction(new InvocationTransaction
-            {
-                Version = tx.Version,
-                Script = tx.Script,
-                Gas = tx.Gas,
-                Attributes = tx.Attributes,
-                Inputs = tx.Inputs,
-                Outputs = tx.Outputs
-            }, fee: fee);
-        }
-
-        public InvocationTransaction GetTransaction(UInt160 change_address, Fixed8 fee)
+        public InvocationTransaction GetTransaction(UInt160 change_address = null, Fixed8 fee = default)
         {
             return Program.CurrentWallet.MakeTransaction(new InvocationTransaction
             {
@@ -215,9 +199,7 @@ namespace Bhp.UI
                 textBox7.Text = sb.ToString();
                 if (!engine.State.HasFlag(VMState.FAULT))
                 {
-                    tx.Gas = engine.GasConsumed - Fixed8.FromDecimal(10);
-                    if (tx.Gas < Fixed8.Zero) tx.Gas = Fixed8.Zero;
-                    tx.Gas = tx.Gas.Ceiling();
+                    tx.Gas = InvocationTransaction.GetGas(engine.GasConsumed);
                     label7.Text = tx.Gas + " gas";
                     button3.Enabled = true;
                 }

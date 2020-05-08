@@ -51,8 +51,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_abi = new System.Windows.Forms.TabPage();
-            this.combo_witnessAbi = new System.Windows.Forms.ComboBox();
-            this.lbl_witnessAbi = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -62,12 +60,14 @@
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.tabPage_func = new System.Windows.Forms.TabPage();
-            this.combo_witnessFunc = new System.Windows.Forms.ComboBox();
-            this.lbl_witnessFunc = new System.Windows.Forms.Label();
             this.tabPage_custom = new System.Windows.Forms.TabPage();
+            this.combo_sign = new System.Windows.Forms.ComboBox();
+            this.lbl_sign = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
+            this.btn_clear = new System.Windows.Forms.Button();
+            this.btn_add = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage_abi.SuspendLayout();
             this.tabPage_func.SuspendLayout();
@@ -205,8 +205,6 @@
             // 
             // tabPage_abi
             // 
-            this.tabPage_abi.Controls.Add(this.combo_witnessAbi);
-            this.tabPage_abi.Controls.Add(this.lbl_witnessAbi);
             this.tabPage_abi.Controls.Add(this.button8);
             this.tabPage_abi.Controls.Add(this.textBox9);
             this.tabPage_abi.Controls.Add(this.label10);
@@ -218,18 +216,6 @@
             resources.ApplyResources(this.tabPage_abi, "tabPage_abi");
             this.tabPage_abi.Name = "tabPage_abi";
             this.tabPage_abi.UseVisualStyleBackColor = true;
-            // 
-            // combo_witnessAbi
-            // 
-            this.combo_witnessAbi.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.combo_witnessAbi.FormattingEnabled = true;
-            resources.ApplyResources(this.combo_witnessAbi, "combo_witnessAbi");
-            this.combo_witnessAbi.Name = "combo_witnessAbi";
-            // 
-            // lbl_witnessAbi
-            // 
-            resources.ApplyResources(this.lbl_witnessAbi, "lbl_witnessAbi");
-            this.lbl_witnessAbi.Name = "lbl_witnessAbi";
             // 
             // button8
             // 
@@ -282,8 +268,6 @@
             // 
             // tabPage_func
             // 
-            this.tabPage_func.Controls.Add(this.combo_witnessFunc);
-            this.tabPage_func.Controls.Add(this.lbl_witnessFunc);
             this.tabPage_func.Controls.Add(this.button2);
             this.tabPage_func.Controls.Add(this.label1);
             this.tabPage_func.Controls.Add(this.textBox5);
@@ -300,18 +284,6 @@
             this.tabPage_func.Name = "tabPage_func";
             this.tabPage_func.UseVisualStyleBackColor = true;
             // 
-            // combo_witnessFunc
-            // 
-            this.combo_witnessFunc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.combo_witnessFunc.FormattingEnabled = true;
-            resources.ApplyResources(this.combo_witnessFunc, "combo_witnessFunc");
-            this.combo_witnessFunc.Name = "combo_witnessFunc";
-            // 
-            // lbl_witnessFunc
-            // 
-            resources.ApplyResources(this.lbl_witnessFunc, "lbl_witnessFunc");
-            this.lbl_witnessFunc.Name = "lbl_witnessFunc";
-            // 
             // tabPage_custom
             // 
             this.tabPage_custom.Controls.Add(this.button6);
@@ -319,6 +291,18 @@
             resources.ApplyResources(this.tabPage_custom, "tabPage_custom");
             this.tabPage_custom.Name = "tabPage_custom";
             this.tabPage_custom.UseVisualStyleBackColor = true;
+            // 
+            // combo_sign
+            // 
+            this.combo_sign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.combo_sign.FormattingEnabled = true;
+            resources.ApplyResources(this.combo_sign, "combo_sign");
+            this.combo_sign.Name = "combo_sign";
+            // 
+            // lbl_sign
+            // 
+            resources.ApplyResources(this.lbl_sign, "lbl_sign");
+            this.lbl_sign.Name = "lbl_sign";
             // 
             // groupBox1
             // 
@@ -338,13 +322,31 @@
             this.openFileDialog2.DefaultExt = "abi.json";
             resources.ApplyResources(this.openFileDialog2, "openFileDialog2");
             // 
+            // btn_clear
+            // 
+            resources.ApplyResources(this.btn_clear, "btn_clear");
+            this.btn_clear.Name = "btn_clear";
+            this.btn_clear.UseVisualStyleBackColor = true;
+            this.btn_clear.Click += new System.EventHandler(this.btn_clear_Click);
+            // 
+            // btn_add
+            // 
+            resources.ApplyResources(this.btn_add, "btn_add");
+            this.btn_add.Name = "btn_add";
+            this.btn_add.UseVisualStyleBackColor = true;
+            this.btn_add.Click += new System.EventHandler(this.btn_add_Click);
+            // 
             // InvokeContractDialog
             // 
             this.AcceptButton = this.button3;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button4;
+            this.Controls.Add(this.btn_add);
+            this.Controls.Add(this.btn_clear);
+            this.Controls.Add(this.combo_sign);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.lbl_sign);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.label7);
@@ -406,9 +408,9 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label lbl_witnessFunc;
-        private System.Windows.Forms.ComboBox combo_witnessFunc;
-        private System.Windows.Forms.ComboBox combo_witnessAbi;
-        private System.Windows.Forms.Label lbl_witnessAbi;
+        private System.Windows.Forms.ComboBox combo_sign;
+        private System.Windows.Forms.Label lbl_sign;
+        private System.Windows.Forms.Button btn_clear;
+        private System.Windows.Forms.Button btn_add;
     }
 }

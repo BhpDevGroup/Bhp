@@ -220,10 +220,7 @@
   <data name="$this.Text" xml:space="preserve">
     <value>调用合约</value>
   </data>
-  <data name="lbl_witnessFunc.Text" xml:space="preserve">
-    <value>见证者：</value>
-  </data>
-  <data name="lbl_witnessAbi.Text" xml:space="preserve">
-    <value>见证者：</value>
+  <data name="lbl_sign.Text" xml:space="preserve">
+    <value>签名：</value>
   </data>
 </root>

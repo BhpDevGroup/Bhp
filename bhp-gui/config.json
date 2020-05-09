@@ -14,9 +14,9 @@
       "WsPort": 20556
     },
     "Urls": {
-      "AddressUrl": "https://exp.bhpa.io/address?address={0}",
-      "AssetUrl": "https://exp.bhpa.io/asset?id={0}",
-      "TransactionUrl": "https://exp.bhpa.io/txContent?txid={0}"
+      "AddressUrl": "https://exp.bhpa.io/#/registerAdd?registerAdd={0}",
+      "AssetUrl": "https://exp.bhpa.io/#/assetInfo?assetInfo={0}",
+      "TransactionUrl": "https://exp.bhpa.io/#/detailsTran?detailsTran={0}"
     },
     "UnlockWallet": {
       "IsBhpFee": false

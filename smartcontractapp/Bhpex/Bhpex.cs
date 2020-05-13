@@ -31,40 +31,40 @@ namespace Bhpex
 
         public struct Order
         {
-            public byte[] MakerAddress;
-            public byte[] TakerAddress;
-            public byte[] FeeRecipientAddress;
-            public BigInteger MakerAssetAmount;
-            public BigInteger TakerAssetAmount;
-            public BigInteger MakerFee;
-            public BigInteger TakerFee;
-            public BigInteger ExpirationTimeSeconds;
-            public BigInteger Salt;
-            public byte[] MakerAssetData;
-            public byte[] TakerAssetData;
+            public byte[] makerAddress;
+            public byte[] takerAddress;
+            public byte[] feeRecipientAddress;
+            public BigInteger makerAssetAmount;
+            public BigInteger takerAssetAmount;
+            public BigInteger makerFee;
+            public BigInteger takerFee;
+            public BigInteger expirationTimeSeconds;
+            public BigInteger salt;
+            public byte[] makerAssetData;
+            public byte[] takerAssetData;
         }
 
         public struct OrderInfo
         {
-            public byte[] OrderHash;
-            public BigInteger OrderTakerAssetFilledAmount;
+            public byte[] orderHash;
+            public BigInteger orderTakerAssetFilledAmount;
             //订单状态：1：可填充; 2:全部成交; 3:已过期, 4:已撤销
-            public BigInteger OrderStatus;
+            public BigInteger orderStatus;
         }
 
         public struct FilledResult
         {
-            public BigInteger TakerAssetFilledAmount;
-            public BigInteger MakerAssetFilledAmount;
-            public BigInteger TakerFeePaid;
-            public BigInteger MakerFeePaid;
+            public BigInteger takerAssetFilledAmount;
+            public BigInteger makerAssetFilledAmount;
+            public BigInteger takerFeePaid;
+            public BigInteger makerFeePaid;
         }
 
-        static readonly byte[] Owner = "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY".ToScriptHash();//管理员地址
+        static readonly byte[] owner = "ATe3wDE9MPQXZuvhgPREdQNYkiCBF7JShY".ToScriptHash();//管理员地址
 
         //支付手续费的资产地址，改为RBHP的合约地址
         private static byte[] FeeAssetDataKey() => "feeAssetData".AsByteArray();
-        private static byte[] AllowedAssetKey(byte[] assetAddress, byte[] orderHash) => "allowedAsset".AsByteArray().Concat(orderHash);
+        private static byte[] AllowedAssetKey(byte[] assetAddress, byte[] orderHash) => "allowedAsset".AsByteArray().Concat(assetAddress).Concat(orderHash);
         private static byte[] FilledKey(byte[] orderHash) => "filled".AsByteArray().Concat(orderHash);
         private static byte[] CanceledKey(byte[] orderHash) => "canceled".AsByteArray().Concat(orderHash);
         private static byte[] OrderEpochKey(byte[] makerAddress) => "orderEpoch".AsByteArray().Concat(makerAddress);
@@ -74,11 +74,11 @@ namespace Bhpex
         private static byte[] DeleteData(byte[] key) => Storage.Get(Storage.CurrentContext, key);
 
 
-        public static object Main(string operation, params object[] args)
+        public static object Main(string operation, object[] args)
         {
-            if (Runtime.Trigger == TriggerType.Verification)
+            if (Runtime.Trigger == TriggerType.Verification || Runtime.Trigger == TriggerType.VerificationR)
             {
-                return Runtime.CheckWitness(Owner);
+                return false;
             }
             else if (Runtime.Trigger == TriggerType.Application)
             {
@@ -87,17 +87,17 @@ namespace Bhpex
                 {
 
                     Order order = new Order {
-                        MakerAddress = (byte[])args[0],
-                        TakerAddress = (byte[])args[1],
-                        FeeRecipientAddress = (byte[])args[2],
-                        MakerAssetAmount = (BigInteger)args[3],
-                        TakerAssetAmount = (BigInteger)args[4],
-                        MakerFee = (BigInteger)args[5],
-                        TakerFee = (BigInteger)args[6],
-                        ExpirationTimeSeconds = (BigInteger)args[7],
-                        Salt = (BigInteger)args[8],
-                        MakerAssetData = (byte[])args[9],
-                        TakerAssetData = (byte[])args[10]
+                        makerAddress = (byte[])args[0],
+                        takerAddress = (byte[])args[1],
+                        feeRecipientAddress = (byte[])args[2],
+                        makerAssetAmount = (BigInteger)args[3],
+                        takerAssetAmount = (BigInteger)args[4],
+                        makerFee = (BigInteger)args[5],
+                        takerFee = (BigInteger)args[6],
+                        expirationTimeSeconds = (BigInteger)args[7],
+                        salt = (BigInteger)args[8],
+                        makerAssetData = (byte[])args[9],
+                        takerAssetData = (byte[])args[10]
                     };
 
                     return FillOrder(order, (byte[])args[11], (BigInteger)args[12], (byte[])args[13],(byte[])args[14]);
@@ -107,17 +107,17 @@ namespace Bhpex
                 {
                     Order order = new Order
                     {
-                        MakerAddress = (byte[])args[0],
-                        TakerAddress = (byte[])args[1],
-                        FeeRecipientAddress = (byte[])args[2],
-                        MakerAssetAmount = (BigInteger)args[3],
-                        TakerAssetAmount = (BigInteger)args[4],
-                        MakerFee = (BigInteger)args[5],
-                        TakerFee = (BigInteger)args[6],
-                        ExpirationTimeSeconds = (BigInteger)args[7],
-                        Salt = (BigInteger)args[8],
-                        MakerAssetData = (byte[])args[9],
-                        TakerAssetData = (byte[])args[10]
+                        makerAddress = (byte[])args[0],
+                        takerAddress = (byte[])args[1],
+                        feeRecipientAddress = (byte[])args[2],
+                        makerAssetAmount = (BigInteger)args[3],
+                        takerAssetAmount = (BigInteger)args[4],
+                        makerFee = (BigInteger)args[5],
+                        takerFee = (BigInteger)args[6],
+                        expirationTimeSeconds = (BigInteger)args[7],
+                        salt = (BigInteger)args[8],
+                        makerAssetData = (byte[])args[9],
+                        takerAssetData = (byte[])args[10]
                     };
                     return CancelOrder(order);
                 }
@@ -125,17 +125,17 @@ namespace Bhpex
                 {
                     Order order = new Order
                     {
-                        MakerAddress = (byte[])args[0],
-                        TakerAddress = (byte[])args[1],
-                        FeeRecipientAddress = (byte[])args[2],
-                        MakerAssetAmount = (BigInteger)args[3],
-                        TakerAssetAmount = (BigInteger)args[4],
-                        MakerFee = (BigInteger)args[5],
-                        TakerFee = (BigInteger)args[6],
-                        ExpirationTimeSeconds = (BigInteger)args[7],
-                        Salt = (BigInteger)args[8],
-                        MakerAssetData = (byte[])args[9],
-                        TakerAssetData = (byte[])args[10]
+                        makerAddress = (byte[])args[0],
+                        takerAddress = (byte[])args[1],
+                        feeRecipientAddress = (byte[])args[2],
+                        makerAssetAmount = (BigInteger)args[3],
+                        takerAssetAmount = (BigInteger)args[4],
+                        makerFee = (BigInteger)args[5],
+                        takerFee = (BigInteger)args[6],
+                        expirationTimeSeconds = (BigInteger)args[7],
+                        salt = (BigInteger)args[8],
+                        makerAssetData = (byte[])args[9],
+                        takerAssetData = (byte[])args[10]
                     };
                     return GetOrderInfo(order);
                 }
@@ -164,7 +164,7 @@ namespace Bhpex
         public static bool SetFeeAsset(byte[] feeAssetData)
         {
             if (!ValidateAddress(feeAssetData)) ThrowException("INVALID_Address");
-            if (!Runtime.CheckWitness(Owner)) ThrowException("OWNER_ONLY");
+            if (!Runtime.CheckWitness(owner)) ThrowException("OWNER_ONLY");
             PutData(FeeAssetDataKey(), feeAssetData);
             return true;
         }
@@ -177,7 +177,7 @@ namespace Bhpex
         public static bool AddAllowedAsset(byte[] assetAddress, byte[] orderHash)
         {
             if (!ValidateAddress(assetAddress)) ThrowException("INVALID_Address");
-            if (!Runtime.CheckWitness(Owner)) ThrowException("OWNER_ONLY");
+            if (!Runtime.CheckWitness(owner)) ThrowException("OWNER_ONLY");
             PutData(AllowedAssetKey(assetAddress, orderHash), new byte [] { 1 });
             return true;
         }
@@ -192,7 +192,7 @@ namespace Bhpex
         public static bool DeletAllowedAsset(byte[] assetAddress,byte[] orderHash)
         {
             if (!ValidateAddress(assetAddress)) ThrowException("INVALID_Address");
-            if (!Runtime.CheckWitness(Owner)) ThrowException("OWNER_ONLY");
+            if (!Runtime.CheckWitness(owner)) ThrowException("OWNER_ONLY");
             if (GetData(AllowedAssetKey(assetAddress,orderHash))!=null)
             {
                 DeleteData(AllowedAssetKey(assetAddress,orderHash));
@@ -223,7 +223,7 @@ namespace Bhpex
         /// <returns>true:升级成功, false:升级失败</returns>
         public static bool Migrate(object[] args)
         {
-            if (!Runtime.CheckWitness(Owner))
+            if (!Runtime.CheckWitness(owner))
                 return false;
 
             if (args.Length < 9) return false;
@@ -272,31 +272,31 @@ namespace Bhpex
             //OrderInfo orderInfo = GetOrderInfo(order);
 
             // An order can only be filled if its status is FILLABLE.
-            if (orderInfo.OrderStatus != 1) ThrowException("ORDER_UNFILLABLE");
+            if (orderInfo.orderStatus != 1) ThrowException("ORDER_UNFILLABLE");
 
-            if (!ValidateAddress(takerAddress)) ThrowException("INVALID_MAKER");
+            if (!ValidateAddress(takerAddress)) ThrowException("INVALID_TAKER");
 
             // Validate taker is allowed to fill this order
-            if (order.TakerAddress != null)
+            if (order.takerAddress != null)
             {
-                if (!(Runtime.CheckWitness(takerAddress) && (order.TakerAddress == takerAddress)))
+                if (!(Runtime.CheckWitness(takerAddress) && (order.takerAddress == takerAddress)))
                 {
                     ThrowException("INVALID_TAKER");
                 }
             }
 
             // Validate Maker signature (check only if first time seen)
-            if (orderInfo.OrderTakerAssetFilledAmount == 0)
+            if (orderInfo.orderTakerAssetFilledAmount == 0)
             {
                 //这里应传入pubKey    
-                if (!VerifySignature(orderInfo.OrderHash, signature, pubkey))
+                if (!VerifySignature(orderInfo.orderHash, signature, pubkey))
                 {
                     ThrowException("INVALID_ORDER_SIGNATURE");
                 }
             }
 
             // Get amount of takerAsset to fill
-            BigInteger remainingTakerAssetAmount = order.TakerAssetAmount - orderInfo.OrderTakerAssetFilledAmount;
+            BigInteger remainingTakerAssetAmount = order.takerAssetAmount - orderInfo.orderTakerAssetFilledAmount;
             BigInteger takerAssetFilledAmount = BigInteger.Min(takerAssetFillAmount, remainingTakerAssetAmount);
 
             // Validate context
@@ -312,7 +312,7 @@ namespace Bhpex
             // Make sure order is not overfilled
             // NOTE: This assertion should never fail, it is here
             //       as an extra defence against potential bugs.
-            if (orderInfo.OrderTakerAssetFilledAmount + takerAssetFilledAmount <= order.TakerAssetAmount) ThrowException("ORDER_OVERFILL");
+            if (orderInfo.orderTakerAssetFilledAmount + takerAssetFilledAmount <= order.takerAssetAmount) ThrowException("ORDER_OVERFILL");
 
             // Compute proportional fill amounts
             FilledResult filledResult = CalculateFillResults(order, takerAssetFilledAmount);
@@ -321,8 +321,8 @@ namespace Bhpex
             UpdateFilledState(
                 order,
                 takerAddress,
-                orderInfo.OrderHash,
-                orderInfo.OrderTakerAssetFilledAmount,
+                orderInfo.orderHash,
+                orderInfo.orderTakerAssetFilledAmount,
                 filledResult
             );
 
@@ -339,16 +339,16 @@ namespace Bhpex
 
         private static void ValidateOrderValues(Order order,OrderInfo orderInfo)
         {
-            if (!ValidateAddress(order.MakerAddress)) ThrowException("INVALID_MAKER");
-            if (order.TakerAddress != null & !ValidateAddress(order.MakerAddress)) ThrowException("INVALID_TAKER");
-            if (!ValidateAddress(order.FeeRecipientAddress)) ThrowException("INVALID_MAKER");
-            if (order.MakerAssetAmount <= 0) ThrowException("INVALID_MakerAssetAmount");
-            if (order.TakerAssetAmount <= 0) ThrowException("INVALID_TakerAssetAmount");
-            if (order.MakerFee < 0) ThrowException("INVALID_MakerFee");
-            if (order.TakerFee < 0) ThrowException("INVALID_TakerFee");
+            if (!ValidateAddress(order.makerAddress)) ThrowException("INVALID_MAKER");
+            if (order.takerAddress == null || !ValidateAddress(order.makerAddress)) ThrowException("INVALID_TAKER");
+            if (!ValidateAddress(order.feeRecipientAddress)) ThrowException("INVALID_MAKER");
+            if (order.makerAssetAmount <= 0) ThrowException("INVALID_MakerAssetAmount");
+            if (order.takerAssetAmount <= 0) ThrowException("INVALID_TakerAssetAmount");
+            if (order.makerFee < 0) ThrowException("INVALID_MakerFee");
+            if (order.takerFee < 0) ThrowException("INVALID_TakerFee");
             //验证资产类型
-            if (!CheckAllowedAsset(order.MakerAssetData.Take(20), orderInfo.OrderHash)) ThrowException("MAKER_ASSET_NOT_ALLOWED");
-            if (!CheckAllowedAsset(order.TakerAssetData.Take(20), orderInfo.OrderHash)) ThrowException("TAKER_ASSET_NOT_ALLOWED");
+            if (!CheckAllowedAsset(order.makerAssetData.Take(20), orderInfo.orderHash)) ThrowException("MAKER_ASSET_NOT_ALLOWED");
+            if (!CheckAllowedAsset(order.takerAssetData.Take(20), orderInfo.orderHash)) ThrowException("TAKER_ASSET_NOT_ALLOWED");
             if (!ValidateAddress(GetFeeAsset())) ThrowException("IVALID_FeeAsset");
         }
 
@@ -377,26 +377,26 @@ namespace Bhpex
 
             // Fetch current order status
             OrderInfo orderInfo = GetOrderInfo(order);
-            if (orderInfo.OrderStatus == 1)
+            if (orderInfo.orderStatus == 1)
             {
                 ThrowException("ORDER_UNFILLABLE");
             }
 
             // Validate sender is allowed to cancel this order
-            if (!Runtime.CheckWitness(order.MakerAddress))
+            if (!Runtime.CheckWitness(order.makerAddress))
             {
                 ThrowException("INVALID_CALLER");
             }
 
-            //PutData(CanceledKey(orderInfo.OrderHash), true);
-            Storage.Put(Storage.CurrentContext, CanceledKey(orderInfo.OrderHash), 1);
+            PutData(CanceledKey(orderInfo.orderHash), new byte[] { 1 });
+            //Storage.Put(Storage.CurrentContext, CanceledKey(orderInfo.OrderHash), 1);
             // Log cancel
             OnCanceled(
-                order.MakerAddress,
-                order.FeeRecipientAddress,
-                orderInfo.OrderHash,
-                order.MakerAssetData,
-                order.TakerAssetData
+                order.makerAddress,
+                order.feeRecipientAddress,
+                orderInfo.orderHash,
+                order.makerAssetData,
+                order.takerAssetData
             );
             return true;
         }
@@ -404,22 +404,22 @@ namespace Bhpex
         private static void SettleOrder(Order order, byte[] takerAddress, FilledResult fillResults)
         {
             TransferFrom(
-                order.MakerAssetData,
-                order.MakerAddress,
+                order.makerAssetData,
+                order.makerAddress,
                 takerAddress,
-                fillResults.MakerAssetFilledAmount
+                fillResults.makerAssetFilledAmount
             );
             TransferFrom(
-                order.TakerAssetData,
+                order.takerAssetData,
                 takerAddress,
-                order.MakerAddress,
-                fillResults.MakerAssetFilledAmount
+                order.makerAddress,
+                fillResults.makerAssetFilledAmount
             );
             TransferFrom(
                 GetFeeAsset(),
-                order.MakerAddress,
-                order.FeeRecipientAddress,
-                fillResults.MakerFeePaid
+                order.makerAddress,
+                order.feeRecipientAddress,
+                fillResults.makerFeePaid
             );
             //dispatchTransferFrom(
             //    GetFeeAsset(),
@@ -431,79 +431,78 @@ namespace Bhpex
         private static FilledResult CalculateFillResults(Order order, BigInteger takerAssetFilledAmount)
         {
             FilledResult filledResult = new FilledResult();
-            filledResult.TakerAssetFilledAmount = takerAssetFilledAmount;
-            filledResult.MakerAssetFilledAmount = takerAssetFilledAmount * order.MakerAssetAmount / order.TakerAssetAmount;
-            filledResult.MakerFeePaid = filledResult.MakerAssetFilledAmount * order.MakerFee / filledResult.MakerAssetFilledAmount;
-            filledResult.TakerFeePaid = takerAssetFilledAmount * order.TakerFee / filledResult.TakerAssetFilledAmount;
+            filledResult.takerAssetFilledAmount = takerAssetFilledAmount;
+            filledResult.makerAssetFilledAmount = takerAssetFilledAmount * order.makerAssetAmount / order.takerAssetAmount;
+            filledResult.makerFeePaid = filledResult.makerAssetFilledAmount * order.makerFee / filledResult.makerAssetFilledAmount;
+            filledResult.takerFeePaid = takerAssetFilledAmount * order.takerFee / filledResult.takerAssetFilledAmount;
             return filledResult;
         }
 
         private static void UpdateFilledState(Order order, byte[] takerAddress, byte[] orderHash, BigInteger orderTakerAssetFilledAmount, FilledResult fillResults)
         {
             // Update state
-            BigInteger filledAmount = orderTakerAssetFilledAmount + fillResults.TakerAssetFilledAmount;
+            BigInteger filledAmount = orderTakerAssetFilledAmount + fillResults.takerAssetFilledAmount;
             PutData(FilledKey(orderHash), filledAmount.AsByteArray());
             // Log order
             OnFilled(
-                order.MakerAddress,
-                order.FeeRecipientAddress,
+                order.makerAddress,
+                order.feeRecipientAddress,
                 takerAddress,
-                fillResults.MakerAssetFilledAmount,
-                fillResults.TakerAssetFilledAmount,
-                fillResults.MakerFeePaid,
-                fillResults.TakerFeePaid,
+                fillResults.makerAssetFilledAmount,
+                fillResults.takerAssetFilledAmount,
+                fillResults.makerFeePaid,
+                fillResults.takerFeePaid,
                 orderHash,
-                order.MakerAssetData,
-                order.TakerAssetData
+                order.makerAssetData,
+                order.takerAssetData
             );
         }
 
         private static OrderInfo GetOrderInfo(Order order)
         {
             OrderInfo info = new OrderInfo();
-            info.OrderHash = HashOrder(order);
-            info.OrderTakerAssetFilledAmount = GetData(FilledKey(info.OrderHash)).AsBigInteger();
+            info.orderHash = HashOrder(order);
+            info.orderTakerAssetFilledAmount = GetData(FilledKey(info.orderHash)).AsBigInteger();
 
-            if (info.OrderTakerAssetFilledAmount >= order.TakerAssetAmount)
+            if (info.orderTakerAssetFilledAmount >= order.takerAssetAmount)
             {
-                info.OrderStatus = 2;
+                info.orderStatus = 2;
                 return info;
             }
-            if (Runtime.Time >= order.ExpirationTimeSeconds)
+            if (Runtime.Time >= order.expirationTimeSeconds)
             {
-                info.OrderStatus = 3;
+                info.orderStatus = 3;
                 return info;
             }
-            if (GetData(CanceledKey(info.OrderHash))!= null)
+            if (GetData(CanceledKey(info.orderHash))!= null)
             {
-                info.OrderStatus = 4;
+                info.orderStatus = 4;
                 return info;
             }
-            if (GetData(OrderEpochKey(order.MakerAddress)).AsBigInteger() > order.Salt)
+            if (GetData(OrderEpochKey(order.makerAddress)).AsBigInteger() > order.salt)
             {
-                info.OrderStatus = 4;
+                info.orderStatus = 4;
                 return info;
             }
 
-            info.OrderStatus = 1;
+            info.orderStatus = 1;
             return info;
         }
 
 
         private static byte[] HashOrder(Order o)
         {
-            var bytes = o.MakerAddress
-                .Concat(o.TakerAddress)
-                .Concat(o.FeeRecipientAddress)
-                .Concat(o.MakerAssetAmount.AsByteArray())
-                .Concat(o.TakerAssetAmount.AsByteArray())
-                .Concat(o.MakerFee.AsByteArray())
-                .Concat(o.TakerFee.AsByteArray())
-                .Concat(o.ExpirationTimeSeconds.AsByteArray())
-                .Concat(o.TakerAssetAmount.AsByteArray())
-                .Concat(o.Salt.AsByteArray())
-                .Concat(o.MakerAssetData)
-                .Concat(o.TakerAssetData);
+            var bytes = o.makerAddress
+                .Concat(o.takerAddress)
+                .Concat(o.feeRecipientAddress)
+                .Concat(o.makerAssetAmount.AsByteArray())
+                .Concat(o.takerAssetAmount.AsByteArray())
+                .Concat(o.makerFee.AsByteArray())
+                .Concat(o.takerFee.AsByteArray())
+                .Concat(o.expirationTimeSeconds.AsByteArray())
+                .Concat(o.salt.AsByteArray())
+                .Concat(o.makerAssetData)
+                .Concat(o.takerAssetData);
             return Hash256(bytes);
         }
 

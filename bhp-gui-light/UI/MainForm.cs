@@ -36,7 +36,7 @@ namespace Bhp.UI
 
         private DateTime persistence_time = DateTime.MinValue;
 
-        Dictionary<UInt256, AssetState> Assets = new Dictionary<UInt256, AssetState>();
+        public Dictionary<UInt256, AssetState> Assets = new Dictionary<UInt256, AssetState>();
         public Dictionary<UInt256, Fixed8> CurrentBalances = new Dictionary<UInt256, Fixed8>();
         public MainForm(XDocument xdoc = null)
         {
@@ -233,13 +233,12 @@ namespace Bhp.UI
                     }
                     else
                     {
-                        string asset_name = Assets[asset.Key].Name;
                         listView2.Items.Add(new ListViewItem(new[]
                         {
                             new ListViewItem.ListViewSubItem
                             {
                                 Name = "name",
-                                Text = Assets[asset.Key].Name
+                                Text = Assets[asset.Key].GetName()
                             },
                             new ListViewItem.ListViewSubItem
                             {

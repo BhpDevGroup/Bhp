@@ -1,4 +1,5 @@
 ﻿using Bhp.Properties;
+using Bhp.Server;
 using Bhp.Wallets;
 using System;
 using System.Linq;
@@ -8,21 +9,21 @@ namespace Bhp.UI
 {
     internal partial class PayToDialog : Form
     {
-        public PayToDialog(AssetDescriptor asset = null, UInt160 scriptHash = null)
+        public PayToDialog(WalletAssetDescriptor asset = null, UInt160 scriptHash = null)
         {
             InitializeComponent();
             if (asset == null)
             {
                 foreach (var balance in Program.MainForm.CurrentBalances)
                 {
-                    comboBox1.Items.Add(new AssetDescriptor(balance.Key));
+                    comboBox1.Items.Add(new WalletAssetDescriptor(balance.Key));
                 }
                 foreach (string s in Settings.Default.BRC20Watched)
                 {
                     UInt160 asset_id = UInt160.Parse(s);
                     try
                     {
-                        comboBox1.Items.Add(new AssetDescriptor(asset_id));
+                        comboBox1.Items.Add(new WalletAssetDescriptor(asset_id));
                     }
                     catch (ArgumentException)
                     {
@@ -45,7 +46,7 @@ namespace Bhp.UI
 
         public TxOutListBoxItem GetOutput()
         {
-            AssetDescriptor asset = (AssetDescriptor)comboBox1.SelectedItem;
+            WalletAssetDescriptor asset = (WalletAssetDescriptor)comboBox1.SelectedItem;
             return new TxOutListBoxItem
             {
                 AssetName = asset.AssetName,
@@ -57,7 +58,7 @@ namespace Bhp.UI
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedItem is AssetDescriptor asset)
+            if (comboBox1.SelectedItem is WalletAssetDescriptor asset)
             {
                 textBox3.Text = Program.MainForm.CurrentBalances[(UInt256)asset.AssetId].ToString();
             }
@@ -84,7 +85,7 @@ namespace Bhp.UI
                 button1.Enabled = false;
                 return;
             }
-            AssetDescriptor asset = (AssetDescriptor)comboBox1.SelectedItem;
+            WalletAssetDescriptor asset = (WalletAssetDescriptor)comboBox1.SelectedItem;
             if (!BigDecimal.TryParse(textBox2.Text, asset.Decimals, out BigDecimal amount))
             {
                 button1.Enabled = false;

@@ -1,6 +1,7 @@
 ﻿using Bhp.IO.Caching;
 using Bhp.Ledger;
 using Bhp.Network.P2P.Payloads;
+using Bhp.Server;
 using Bhp.Wallets;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Bhp.UI
     {
         public event EventHandler ItemsChanged;
 
-        public AssetDescriptor Asset { get; set; }
+        public WalletAssetDescriptor Asset { get; set; }
 
         public int ItemCount => listBox1.Items.Count;
 

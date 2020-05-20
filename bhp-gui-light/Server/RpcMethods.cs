@@ -90,31 +90,11 @@ namespace Bhp.Server
                 {
                     return null;
                 }
-                string n = string.Empty;
-                if (assetId == Blockchain.GoverningToken.Hash.ToString())
-                {
-                    n = "BHP";
-                }
-                else if (assetId == Blockchain.UtilityToken.Hash.ToString())
-                {
-                    n = "BHPGas";
-                }
-                else
-                {
-                    JArray names = (JArray)result2["name"];
-                    foreach (JObject name in names)
-                    {
-                        if (name["lang"].AsString() == "zh-CN")
-                        {
-                            n = name["name"].AsString();
-                        }
-                    }
-                }
                 AssetState assetState = new AssetState()
                 {
                     AssetId = UInt256.Parse(assetId.ToString()),
                     AssetType = (AssetType)Enum.Parse(typeof(AssetType), result2["type"].AsString()),
-                    Name = n,
+                    Name = result2["name"].ToString(),
                     Amount = Fixed8.Parse(result2["amount"].AsString()),
                     Available = Fixed8.Parse(result2["available"].AsString()),
                     Precision = byte.Parse(result2["precision"].AsString()),

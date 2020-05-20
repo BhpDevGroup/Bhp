@@ -1,4 +1,5 @@
 ﻿using Bhp.Properties;
+using Bhp.Server;
 using Bhp.Wallets;
 using System;
 using System.Linq;
@@ -8,21 +9,21 @@ namespace Bhp.UI
 {
     internal partial class BulkPayDialog : Form
     {
-        public BulkPayDialog(AssetDescriptor asset = null)
+        public BulkPayDialog(WalletAssetDescriptor asset = null)
         {
             InitializeComponent();
             if (asset == null)
             {
                 foreach (UInt256 asset_id in Program.CurrentWallet.FindUnspentCoins().Select(p => p.Output.AssetId).Distinct())
                 {
-                    combo_asset.Items.Add(new AssetDescriptor(asset_id));
+                    combo_asset.Items.Add(new WalletAssetDescriptor(asset_id));
                 }
                 foreach (string s in Settings.Default.BRC20Watched)
                 {
                     UInt160 asset_id = UInt160.Parse(s);
                     try
                     {
-                        combo_asset.Items.Add(new AssetDescriptor(asset_id));
+                        combo_asset.Items.Add(new WalletAssetDescriptor(asset_id));
                     }
                     catch (ArgumentException)
                     {
@@ -40,7 +41,7 @@ namespace Bhp.UI
 
         public TxOutListBoxItem[] GetOutputs()
         {
-            AssetDescriptor asset = (AssetDescriptor)combo_asset.SelectedItem;
+            WalletAssetDescriptor asset = (WalletAssetDescriptor)combo_asset.SelectedItem;
             return txt_payto.Lines.Where(p => !string.IsNullOrWhiteSpace(p)).Select(p =>
             {
                 string[] line = p.Split(new[] { ' ', '\t', ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -56,7 +57,7 @@ namespace Bhp.UI
 
         private void combo_asset_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (combo_asset.SelectedItem is AssetDescriptor asset)
+            if (combo_asset.SelectedItem is WalletAssetDescriptor asset)
             {
                 txt_balance.Text = Program.CurrentWallet.GetAvailable(asset.AssetId).ToString();
             }

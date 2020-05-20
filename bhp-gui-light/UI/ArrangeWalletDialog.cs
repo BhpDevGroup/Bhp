@@ -5,6 +5,7 @@ using Bhp.Ledger;
 using Bhp.Network.P2P;
 using Bhp.Network.P2P.Payloads;
 using Bhp.Properties;
+using Bhp.Server;
 using Bhp.SmartContract;
 using Bhp.Wallets;
 using System;
@@ -22,14 +23,14 @@ namespace Bhp.UI
             InitializeComponent();
             foreach (UInt256 asset_id in Program.CurrentWallet.FindUnspentCoins().Select(p => p.Output.AssetId).Distinct())
             {
-                combo_asset.Items.Add(new AssetDescriptor(asset_id));
+                combo_asset.Items.Add(new WalletAssetDescriptor(asset_id));
             }
             foreach (string s in Properties.Settings.Default.BRC20Watched)
             {
                 UInt160 asset_id = UInt160.Parse(s);
                 try
                 {
-                    combo_asset.Items.Add(new AssetDescriptor(asset_id));
+                    combo_asset.Items.Add(new WalletAssetDescriptor(asset_id));
                 }
                 catch (ArgumentException)
                 {
@@ -203,7 +204,7 @@ namespace Bhp.UI
             }
         }
 
-        AssetDescriptor asset = null;
+        WalletAssetDescriptor asset = null;
         private void combo_asset_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (combo_asset.SelectedIndex < 0)
@@ -213,7 +214,7 @@ namespace Bhp.UI
             }
             else
             {
-                asset = (AssetDescriptor)combo_asset.SelectedItem;
+                asset = (WalletAssetDescriptor)combo_asset.SelectedItem;
                 btn_arrange.Enabled = true;
             }
         }

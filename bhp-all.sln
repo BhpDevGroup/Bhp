@@ -81,6 +81,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IteratorProcessingContract"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bhpex", "smartcontractapp\Bhpex\Bhpex.csproj", "{09DEFAD2-328B-498E-946D-29C062B4C8BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bhp-gui-light", "bhp-gui-light\bhp-gui-light.csproj", "{33CADD30-C14C-4DD8-9D3E-2C06FA7E6FAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -219,6 +221,10 @@ Global
 		{09DEFAD2-328B-498E-946D-29C062B4C8BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09DEFAD2-328B-498E-946D-29C062B4C8BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09DEFAD2-328B-498E-946D-29C062B4C8BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33CADD30-C14C-4DD8-9D3E-2C06FA7E6FAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CADD30-C14C-4DD8-9D3E-2C06FA7E6FAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CADD30-C14C-4DD8-9D3E-2C06FA7E6FAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CADD30-C14C-4DD8-9D3E-2C06FA7E6FAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

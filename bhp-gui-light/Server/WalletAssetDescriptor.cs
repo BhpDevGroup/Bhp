@@ -32,7 +32,7 @@ namespace Bhp.Server
             }
             else
             {
-                AssetState state = Program.MainForm.Assets[(UInt256)asset_id];
+                AssetState state = Program.MainForm.CurrentAssets[(UInt256)asset_id];
                 this.AssetId = state.AssetId;
                 this.AssetName = state.GetName();
                 this.Decimals = state.Precision;

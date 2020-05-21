@@ -36,7 +36,7 @@ namespace Bhp.UI
 
         private DateTime persistence_time = DateTime.MinValue;
 
-        public Dictionary<UInt256, AssetState> Assets = new Dictionary<UInt256, AssetState>();
+        public Dictionary<UInt256, AssetState> CurrentAssets = new Dictionary<UInt256, AssetState>();
         public Dictionary<UInt256, Fixed8> CurrentBalances = new Dictionary<UInt256, Fixed8>();
         public MainForm(XDocument xdoc = null)
         {
@@ -205,10 +205,10 @@ namespace Bhp.UI
                             {
                                 balances[balance.Key] = balance.Value;
                             }
-                            if (!Assets.ContainsKey(balance.Key))
+                            if (!CurrentAssets.ContainsKey(balance.Key))
                             {
                                 AssetState asset = RpcMethods.GetAssetState(balance.Key.ToString());
-                                Assets[balance.Key] = asset;
+                                CurrentAssets[balance.Key] = asset;
                             }
                         }
                     }
@@ -238,12 +238,12 @@ namespace Bhp.UI
                             new ListViewItem.ListViewSubItem
                             {
                                 Name = "name",
-                                Text = Assets[asset.Key].GetName()
+                                Text = CurrentAssets[asset.Key].GetName()
                             },
                             new ListViewItem.ListViewSubItem
                             {
                                 Name = "type",
-                                Text = Assets[asset.Key].AssetType.ToString()
+                                Text = CurrentAssets[asset.Key].AssetType.ToString()
                             },
                             new ListViewItem.ListViewSubItem
                             {
@@ -254,12 +254,12 @@ namespace Bhp.UI
                             {
                                 ForeColor = Color.Gray,
                                 Name = "issuer",
-                                Text = $"{Strings.UnknownIssuer}[{Assets[asset.Key].Owner}]"
+                                Text = $"{Strings.UnknownIssuer}[{CurrentAssets[asset.Key].Owner}]"
                             }
                         }, -1, listView2.Groups["unchecked"])
                         {
-                            Name = Assets[asset.Key].AssetId.ToString(),
-                            Tag = Assets[asset.Key],
+                            Name = CurrentAssets[asset.Key].AssetId.ToString(),
+                            Tag = CurrentAssets[asset.Key],
                             UseItemStyleForSubItems = false
                         });
                     }

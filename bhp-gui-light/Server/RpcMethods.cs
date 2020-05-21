@@ -3,6 +3,7 @@ using Bhp.IO.Json;
 using Bhp.Ledger;
 using Bhp.Network.P2P.Payloads;
 using Bhp.Wallets;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,33 +125,35 @@ namespace Bhp.Server
 
             try
             {
-                JObject result2 = JObject.Parse(result)["result"];
+                Newtonsoft.Json.Linq.JObject jsons = (Newtonsoft.Json.Linq.JObject)JsonConvert.DeserializeObject(result);
+
+                Newtonsoft.Json.Linq.JObject result2 = (Newtonsoft.Json.Linq.JObject)jsons["result"];
                 if (result2 == null)
                 {
                     return null;
                 }
-                JArray balances = (JArray)result2["balance"];
+                Newtonsoft.Json.Linq.JArray balances = (Newtonsoft.Json.Linq.JArray)result2["balance"];
 
                 UInt160 script_hash = address.ToScriptHash();
                 UInt256 asset_id = UInt256.Parse(assetId.ToString());
                 List<Coin> coins = new List<Coin>();
-                Coin coin = new Coin();
-                coin.Reference = new CoinReference();
-                coin.Output = new TransactionOutput();
-                foreach (JObject balance in balances)
+                foreach (Newtonsoft.Json.Linq.JObject balance in balances)
                 {
-                    JArray unspents = (JArray)balance["unspent"];
-                    amount = Fixed8.Parse(balance["amount"].AsString());
-                    foreach (JObject unspent in unspents)
+                    Newtonsoft.Json.Linq.JArray unspents = (Newtonsoft.Json.Linq.JArray)balance["unspent"];
+                    amount = Fixed8.Parse(balance["amount"].ToString());
+                    foreach (Newtonsoft.Json.Linq.JObject unspent in unspents)
                     {
-                        coin.Reference.PrevHash = UInt256.Parse(unspent["txid"].AsString());
-                        coin.Reference.PrevIndex = ushort.Parse(unspent["n"].AsString());
+                        Coin coin = new Coin();
+                        coin.Reference = new CoinReference();
+                        coin.Output = new TransactionOutput();
+                        coin.Reference.PrevHash = UInt256.Parse(unspent["txid"].ToString());
+                        coin.Reference.PrevIndex = ushort.Parse(unspent["n"].ToString());
                         coin.Output.AssetId = asset_id;
-                        coin.Output.Value = Fixed8.Parse(unspent["value"].AsString());
+                        coin.Output.Value = Fixed8.Parse(unspent["value"].ToString());
                         coin.Output.ScriptHash = script_hash;
                         coin.State = CoinState.Confirmed;
+                        coins.Add(coin);
                     }
-                    coins.Add(coin);
                 }
                 return coins;
             }

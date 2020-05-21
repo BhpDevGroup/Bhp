@@ -75,6 +75,7 @@ namespace Bhp.UI
                 }
                 else
                 {
+                    result = $"{result}\r\ntxHex : {tx.ToArray().ToHexString()}\r\ntxId : {tx.Hash}";
                     InformationBox.Show(result, Strings.ErrorMessage, Strings.SendTxFailTitle);
                 }
             }

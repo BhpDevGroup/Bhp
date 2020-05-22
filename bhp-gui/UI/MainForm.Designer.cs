@@ -126,6 +126,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
+            this.资产续费ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -276,6 +277,7 @@
             this.requestCertificateToolStripMenuItem,
             this.注册资产RToolStripMenuItem,
             this.资产分发IToolStripMenuItem,
+            this.资产续费ToolStripMenuItem,
             this.toolStripSeparator8,
             this.deployContractToolStripMenuItem,
             this.invokeContractToolStripMenuItem,
@@ -801,6 +803,12 @@
             this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
             this.backgroundWorker2.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
             // 
+            // 资产续费ToolStripMenuItem
+            // 
+            resources.ApplyResources(this.资产续费ToolStripMenuItem, "资产续费ToolStripMenuItem");
+            this.资产续费ToolStripMenuItem.Name = "资产续费ToolStripMenuItem";
+            this.资产续费ToolStripMenuItem.Click += new System.EventHandler(this.资产续费ToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -927,6 +935,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem showTransactionHistoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem signZipToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 资产续费ToolStripMenuItem;
     }
 }
 

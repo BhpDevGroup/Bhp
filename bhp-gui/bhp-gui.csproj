@@ -106,6 +106,12 @@
     <Compile Include="UI\AssetRegisterDialog.Designer.cs">
       <DependentUpon>AssetRegisterDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\AssetRenewDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AssetRenewDialog.Designer.cs">
+      <DependentUpon>AssetRenewDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\BulkPayDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -391,6 +397,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\AssetRegisterDialog.zh-Hans.resx">
       <DependentUpon>AssetRegisterDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AssetRenewDialog.resx">
+      <DependentUpon>AssetRenewDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\AssetRenewDialog.zh-Hans.resx">
+      <DependentUpon>AssetRenewDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\BulkPayDialog.es-ES.resx">
       <DependentUpon>BulkPayDialog.cs</DependentUpon>

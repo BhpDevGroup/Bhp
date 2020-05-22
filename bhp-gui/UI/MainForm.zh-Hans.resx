@@ -549,4 +549,7 @@
   <data name="signZipToolStripMenuItem.Text" xml:space="preserve">
     <value>压缩包签名</value>
   </data>
+  <data name="资产续费ToolStripMenuItem.Text" xml:space="preserve">
+    <value>资产续费</value>
+  </data>
 </root>

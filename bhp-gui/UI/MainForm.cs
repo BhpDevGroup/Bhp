@@ -217,6 +217,7 @@ namespace Bhp.UI
             requestCertificateToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             注册资产RToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             资产分发IToolStripMenuItem.Enabled = Program.CurrentWallet != null;
+            资产续费ToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             deployContractToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             invokeContractToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             选举EToolStripMenuItem.Enabled = Program.CurrentWallet != null;
@@ -754,6 +755,22 @@ namespace Bhp.UI
                 if (dialog.ShowDialog() != DialogResult.OK) return;
                 Helper.SignAndShowInformation(dialog.GetTransaction());
             }
+        }
+
+        private void 资产续费ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InvocationTransaction tx;
+            using (AssetRenewDialog dialog = new AssetRenewDialog())
+            {
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+                tx = dialog.GetTransaction();
+            }
+            using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
+            {
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+                tx = dialog.GetTransaction();
+            }
+            Helper.SignAndShowInformation(tx);
         }
 
         private void deployContractToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1493,7 +1510,7 @@ namespace Bhp.UI
 
         private void signZipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using(SignZipDialog dialog = new SignZipDialog())
+            using (SignZipDialog dialog = new SignZipDialog())
             {
                 dialog.ShowDialog();
             }

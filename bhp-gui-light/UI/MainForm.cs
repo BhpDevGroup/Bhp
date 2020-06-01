@@ -27,6 +27,7 @@ using System.Xml.Linq;
 using Settings = Bhp.Properties.Settings;
 using VMArray = Bhp.VM.Types.Array;
 using Bhp.Server;
+using System.Threading;
 
 namespace Bhp.UI
 {
@@ -53,6 +54,8 @@ namespace Bhp.UI
                 }
             }
         }
+
+        List<string> Addresses = new List<string>();
 
         private void AddAccount(WalletAccount account, bool selected = false)
         {
@@ -90,6 +93,9 @@ namespace Bhp.UI
                 });
             }
             item.Selected = selected;
+
+            //add address
+            Addresses.Add(account.Address);
         }
 
         private void ChangeWallet(Wallet wallet)
@@ -129,6 +135,7 @@ namespace Bhp.UI
             零钱规整AToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             */
             listView1.Items.Clear();
+            Addresses.Clear();
             if (Program.CurrentWallet != null)
             {
                 foreach (WalletAccount account in Program.CurrentWallet.GetAccounts().ToArray())
@@ -137,7 +144,8 @@ namespace Bhp.UI
                 }
             }
 
-            timer1_Tick(null, null);
+            GetAssetState();
+            //timer1_Tick(null, null);
         }
 
         //by bhp
@@ -169,13 +177,8 @@ namespace Bhp.UI
             }
         }
 
-        bool timer1Showing = false;
-        private void timer1_Tick(object sender, EventArgs e)
+        private void GetAssetState()
         {
-            if (timer1Showing) return;
-
-            timer1Showing = true;
-
             int blockHeight = RpcMethods.GetBlockCount();
             if (blockHeight != -1)
             {
@@ -210,6 +213,7 @@ namespace Bhp.UI
                                 AssetState asset = RpcMethods.GetAssetState(balance.Key.ToString());
                                 CurrentAssets[balance.Key] = asset;
                             }
+                            Application.DoEvents();
                         }
                     }
                 }
@@ -263,6 +267,7 @@ namespace Bhp.UI
                             UseItemStyleForSubItems = false
                         });
                     }
+                    Application.DoEvents();
                 }
                 foreach (ListViewItem item in listView2.Groups["unchecked"].Items.OfType<ListViewItem>().ToArray())
                 {
@@ -313,6 +318,7 @@ namespace Bhp.UI
                                 break;
                         }
                     }
+                    Application.DoEvents();
                 }
 
                 // listview2 brc20
@@ -381,8 +387,19 @@ namespace Bhp.UI
                             UseItemStyleForSubItems = false
                         });
                     }
+                    Application.DoEvents();
                 }
             }
+        }
+
+        bool timer1Showing = false;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (timer1Showing) return;
+
+            timer1Showing = true;
+
+           
 
             timer1Showing = false;
         }
@@ -497,6 +514,8 @@ namespace Bhp.UI
 
         private void 转账TToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            GetAssetState();
+
             Transaction tx;
             UInt160 change_address;
             Fixed8 fee;
@@ -559,7 +578,7 @@ namespace Bhp.UI
             using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
             {
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
+                tx = dialog.GetTransaction(null,Fixed8.Zero);
             }
             Helper.SignAndShowInformation(tx);
         }
@@ -584,7 +603,7 @@ namespace Bhp.UI
             using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
             {
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
+                tx = dialog.GetTransaction(null, Fixed8.Zero);
             }
             Helper.SignAndShowInformation(tx);
         }
@@ -925,7 +944,7 @@ namespace Bhp.UI
         private void listView2_DoubleClick(object sender, EventArgs e)
         {
             if (listView2.SelectedIndices.Count == 0) return;
-            string url = string.Format(Settings.Default.Urls.AssetUrl, listView2.SelectedItems[0].Name.Substring(2));
+            string url = string.Format(Settings.Default.Urls.AssetUrl, "0x" + listView2.SelectedItems[0].Name.Substring(2));
             Process.Start(url);
         }
 
@@ -1189,6 +1208,12 @@ namespace Bhp.UI
                 }
             }
             */
+
+            while ((sender as BackgroundWorker).CancellationPending == false)
+            {
+
+                Thread.Sleep(60000);
+            }
         }
 
         bool showingWalletInfo = false;
@@ -1227,6 +1252,11 @@ namespace Bhp.UI
             {
                 dialog.ShowDialog();
             }
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //show
         }
     }
 }

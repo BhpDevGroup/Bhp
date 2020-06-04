@@ -39,6 +39,8 @@ namespace Bhp.UI
 
         public Dictionary<UInt256, AssetState> CurrentAssets = new Dictionary<UInt256, AssetState>();
         public Dictionary<UInt256, Fixed8> CurrentBalances = new Dictionary<UInt256, Fixed8>();
+        private Dictionary<string, AccountState> CurrentAccountStates = new Dictionary<string, AccountState>();
+
         public MainForm(XDocument xdoc = null)
         {
             InitializeComponent();
@@ -54,8 +56,6 @@ namespace Bhp.UI
                 }
             }
         }
-
-        List<string> Addresses = new List<string>();
 
         private void AddAccount(WalletAccount account, bool selected = false)
         {
@@ -93,14 +93,12 @@ namespace Bhp.UI
                 });
             }
             item.Selected = selected;
-
-            //add address
-            Addresses.Add(account.Address);
         }
 
         private void ChangeWallet(Wallet wallet)
         {
             CurrentBalances.Clear();
+            CurrentAccountStates.Clear();
 
             if (Program.CurrentWallet != null)
             {
@@ -111,14 +109,15 @@ namespace Bhp.UI
 
             交易TToolStripMenuItem.Enabled = Program.CurrentWallet != null;
 
-            /*
+
             if (Program.CurrentWallet != null)
             {
                 if (backgroundWorker1.IsBusy == false)
                 {
                     backgroundWorker1.RunWorkerAsync();
-                }                
+                }
             }
+            /*
             修改密码CToolStripMenuItem.Enabled = Program.CurrentWallet is UserWallet;
             交易TToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             提取BHP币CToolStripMenuItem.Enabled = Program.CurrentWallet != null;
@@ -135,7 +134,6 @@ namespace Bhp.UI
             零钱规整AToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             */
             listView1.Items.Clear();
-            Addresses.Clear();
             if (Program.CurrentWallet != null)
             {
                 foreach (WalletAccount account in Program.CurrentWallet.GetAccounts().ToArray())
@@ -144,8 +142,7 @@ namespace Bhp.UI
                 }
             }
 
-            GetAssetState();
-            //timer1_Tick(null, null);
+            timer1_Tick(null, null);
         }
 
         //by bhp
@@ -177,8 +174,13 @@ namespace Bhp.UI
             }
         }
 
-        private void GetAssetState()
+        bool timer1Showing = false;
+        private void timer1_Tick(object sender, EventArgs e)
         {
+            if (timer1Showing) return;
+
+            timer1Showing = true;
+
             int blockHeight = RpcMethods.GetBlockCount();
             if (blockHeight != -1)
             {
@@ -186,48 +188,27 @@ namespace Bhp.UI
             }
             if (Program.CurrentWallet != null)
             {
-                Dictionary<UInt256, Fixed8> balances = new Dictionary<UInt256, Fixed8>();
-
                 // listview1 address
                 foreach (ListViewItem item in listView1.Items)
                 {
-                    AccountState accountState = RpcMethods.GetAccountState(item.Name);
-                    if (accountState != null)
+                    if (CurrentAccountStates != null && CurrentAccountStates.Count > 0 && CurrentAccountStates.ContainsKey(item.Name))
                     {
-                        Fixed8 ans = accountState.Balances.ContainsKey(Blockchain.GoverningToken.Hash) ? accountState.Balances[Blockchain.GoverningToken.Hash] : Fixed8.Zero;
-                        Fixed8 anc = accountState.Balances.ContainsKey(Blockchain.UtilityToken.Hash) ? accountState.Balances[Blockchain.UtilityToken.Hash] : Fixed8.Zero;
+                        Fixed8 ans = CurrentAccountStates[item.Name].Balances.ContainsKey(Blockchain.GoverningToken.Hash) ? CurrentAccountStates[item.Name].Balances[Blockchain.GoverningToken.Hash] : Fixed8.Zero;
+                        Fixed8 anc = CurrentAccountStates[item.Name].Balances.ContainsKey(Blockchain.UtilityToken.Hash) ? CurrentAccountStates[item.Name].Balances[Blockchain.UtilityToken.Hash] : Fixed8.Zero;
                         item.SubItems["ans"].Text = ans.ToString();
                         item.SubItems["anc"].Text = anc.ToString();
-                        foreach (var balance in accountState.Balances)
-                        {
-                            if (balances.ContainsKey(balance.Key))
-                            {
-                                balances[balance.Key] += balance.Value;
-                            }
-                            else
-                            {
-                                balances[balance.Key] = balance.Value;
-                            }
-                            if (!CurrentAssets.ContainsKey(balance.Key))
-                            {
-                                AssetState asset = RpcMethods.GetAssetState(balance.Key.ToString());
-                                CurrentAssets[balance.Key] = asset;
-                            }
-                            Application.DoEvents();
-                        }
                     }
                 }
-                CurrentBalances = balances;
 
                 // listview2 asset
                 foreach (AssetState asset in listView2.Items.OfType<ListViewItem>().Select(p => p.Tag as AssetState).Where(p => p != null).ToArray())
                 {
-                    if (!balances.ContainsKey(asset.AssetId))
+                    if (!CurrentBalances.ContainsKey(asset.AssetId))
                     {
                         listView2.Items.RemoveByKey(asset.AssetId.ToString());
                     }
                 }
-                foreach (var asset in balances)
+                foreach (var asset in CurrentBalances)
                 {
                     //string value_text = asset.Value.ToString() + (asset.Key.Equals(Blockchain.UtilityToken.Hash) ? $"+({asset.Claim})" : "");
                     string value_text = asset.Value.ToString();
@@ -267,7 +248,6 @@ namespace Bhp.UI
                             UseItemStyleForSubItems = false
                         });
                     }
-                    Application.DoEvents();
                 }
                 foreach (ListViewItem item in listView2.Groups["unchecked"].Items.OfType<ListViewItem>().ToArray())
                 {
@@ -318,7 +298,6 @@ namespace Bhp.UI
                                 break;
                         }
                     }
-                    Application.DoEvents();
                 }
 
                 // listview2 brc20
@@ -387,19 +366,8 @@ namespace Bhp.UI
                             UseItemStyleForSubItems = false
                         });
                     }
-                    Application.DoEvents();
                 }
             }
-        }
-
-        bool timer1Showing = false;
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (timer1Showing) return;
-
-            timer1Showing = true;
-
-           
 
             timer1Showing = false;
         }
@@ -514,8 +482,6 @@ namespace Bhp.UI
 
         private void 转账TToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetAssetState();
-
             Transaction tx;
             UInt160 change_address;
             Fixed8 fee;
@@ -578,7 +544,7 @@ namespace Bhp.UI
             using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
             {
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction(null,Fixed8.Zero);
+                tx = dialog.GetTransaction();
             }
             Helper.SignAndShowInformation(tx);
         }
@@ -603,7 +569,7 @@ namespace Bhp.UI
             using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
             {
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction(null, Fixed8.Zero);
+                tx = dialog.GetTransaction();
             }
             Helper.SignAndShowInformation(tx);
         }
@@ -944,7 +910,7 @@ namespace Bhp.UI
         private void listView2_DoubleClick(object sender, EventArgs e)
         {
             if (listView2.SelectedIndices.Count == 0) return;
-            string url = string.Format(Settings.Default.Urls.AssetUrl, "0x" + listView2.SelectedItems[0].Name.Substring(2));
+            string url = string.Format(Settings.Default.Urls.AssetUrl, listView2.SelectedItems[0].Name);
             Process.Start(url);
         }
 
@@ -970,259 +936,56 @@ namespace Bhp.UI
         IEnumerable<Coin> coins;
         Fixed8 bonus_unavailable = Fixed8.Zero;
         Fixed8 bonus_available = Fixed8.Zero;
-        /*
-        private void ShowWalletInfo()
-        {
-            int blockHeight = RpcMethods.GetBlockCount();
-            if (blockHeight != -1)
-            {
-                lbl_blockHeight.Text = $"{blockHeight - 1}";
-            }
-
-            TimeSpan persistence_span = DateTime.UtcNow - persistence_time;
-            if (persistence_span < TimeSpan.Zero) persistence_span = TimeSpan.Zero;
-
-            if (Program.CurrentWallet != null)
-            {
-                if (Program.CurrentWallet.WalletHeight <= Blockchain.Singleton.Height + 1)
-                {
-                    //if (balance_changed)
-                    {
-                        using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
-                        {
-                            Fixed8 bonus = bonus_available + bonus_unavailable;
-                            var assets = coins.GroupBy(p => p.Output.AssetId, (k, g) => new
-                            {
-                                Asset = snapshot.Assets.TryGet(k),
-                                Value = g.Sum(p => p.Output.Value),
-                                Claim = k.Equals(Blockchain.UtilityToken.Hash) ? bonus : Fixed8.Zero
-                            }).ToDictionary(p => p.Asset.AssetId);
-                            if (bonus != Fixed8.Zero && !assets.ContainsKey(Blockchain.UtilityToken.Hash))
-                            {
-                                assets[Blockchain.UtilityToken.Hash] = new
-                                {
-                                    Asset = snapshot.Assets.TryGet(Blockchain.UtilityToken.Hash),
-                                    Value = Fixed8.Zero,
-                                    Claim = bonus
-                                };
-                            }
-                            var balance_ans = coins.Where(p => p.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)).GroupBy(p => p.Output.ScriptHash).ToDictionary(p => p.Key, p => p.Sum(i => i.Output.Value));
-                            var balance_anc = coins.Where(p => p.Output.AssetId.Equals(Blockchain.UtilityToken.Hash)).GroupBy(p => p.Output.ScriptHash).ToDictionary(p => p.Key, p => p.Sum(i => i.Output.Value));
-                            foreach (ListViewItem item in listView1.Items)
-                            {
-                                UInt160 script_hash = item.Name.ToScriptHash();
-                                Fixed8 ans = balance_ans.ContainsKey(script_hash) ? balance_ans[script_hash] : Fixed8.Zero;
-                                Fixed8 anc = balance_anc.ContainsKey(script_hash) ? balance_anc[script_hash] : Fixed8.Zero;
-                                item.SubItems["ans"].Text = ans.ToString();
-                                item.SubItems["anc"].Text = anc.ToString();
-                            }
-                            foreach (AssetState asset in listView2.Items.OfType<ListViewItem>().Select(p => p.Tag as AssetState).Where(p => p != null).ToArray())
-                            {
-                                if (!assets.ContainsKey(asset.AssetId))
-                                {
-                                    listView2.Items.RemoveByKey(asset.AssetId.ToString());
-                                }
-                            }
-                            foreach (var asset in assets.Values)
-                            {
-                                string value_text = asset.Value.ToString() + (asset.Asset.AssetId.Equals(Blockchain.UtilityToken.Hash) ? $"+({asset.Claim})" : "");
-                                if (listView2.Items.ContainsKey(asset.Asset.AssetId.ToString()))
-                                {
-                                    listView2.Items[asset.Asset.AssetId.ToString()].SubItems["value"].Text = value_text;
-                                }
-                                else
-                                {
-                                    string asset_name = asset.Asset.AssetType == AssetType.GoverningToken ? "BHP" :
-                                                        asset.Asset.AssetType == AssetType.UtilityToken ? "BHPGas" :
-                                                        asset.Asset.GetName();
-                                    listView2.Items.Add(new ListViewItem(new[]
-                                    {
-                                        new ListViewItem.ListViewSubItem
-                                        {
-                                            Name = "name",
-                                            Text = asset_name
-                                        },
-                                        new ListViewItem.ListViewSubItem
-                                        {
-                                            Name = "type",
-                                            Text = asset.Asset.AssetType.ToString()
-                                        },
-                                        new ListViewItem.ListViewSubItem
-                                        {
-                                            Name = "value",
-                                            Text = value_text
-                                        },
-                                        new ListViewItem.ListViewSubItem
-                                        {
-                                            ForeColor = Color.Gray,
-                                            Name = "issuer",
-                                            Text = $"{Strings.UnknownIssuer}[{asset.Asset.Owner}]"
-                                        }
-                                    }, -1, listView2.Groups["unchecked"])
-                                    {
-                                        Name = asset.Asset.AssetId.ToString(),
-                                        Tag = asset.Asset,
-                                        UseItemStyleForSubItems = false
-                                    });
-                                }
-                            }
-                            //balance_changed = false;
-                        }
-                    }
-                    foreach (ListViewItem item in listView2.Groups["unchecked"].Items.OfType<ListViewItem>().ToArray())
-                    {
-                        ListViewItem.ListViewSubItem subitem = item.SubItems["issuer"];
-                        AssetState asset = (AssetState)item.Tag;
-                        CertificateQueryResult result;
-                        if (asset.AssetType == AssetType.GoverningToken || asset.AssetType == AssetType.UtilityToken)
-                        {
-                            result = new CertificateQueryResult { Type = CertificateQueryResultType.System };
-                        }
-                        else
-                        {
-                            result = CertificateQueryService.Query(asset.Owner);
-                        }
-                        using (result)
-                        {
-                            subitem.Tag = result.Type;
-                            switch (result.Type)
-                            {
-                                case CertificateQueryResultType.Querying:
-                                case CertificateQueryResultType.QueryFailed:
-                                    break;
-                                case CertificateQueryResultType.System:
-                                    subitem.ForeColor = Color.Green;
-                                    subitem.Text = Strings.SystemIssuer;
-                                    break;
-                                case CertificateQueryResultType.Invalid:
-                                    subitem.ForeColor = Color.Red;
-                                    subitem.Text = $"[{Strings.InvalidCertificate}][{asset.Owner}]";
-                                    break;
-                                case CertificateQueryResultType.Expired:
-                                    subitem.ForeColor = Color.Yellow;
-                                    subitem.Text = $"[{Strings.ExpiredCertificate}]{result.Certificate.Subject}[{asset.Owner}]";
-                                    break;
-                                case CertificateQueryResultType.Good:
-                                    subitem.ForeColor = Color.Black;
-                                    subitem.Text = $"{result.Certificate.Subject}[{asset.Owner}]";
-                                    break;
-                            }
-                            switch (result.Type)
-                            {
-                                case CertificateQueryResultType.System:
-                                case CertificateQueryResultType.Missing:
-                                case CertificateQueryResultType.Invalid:
-                                case CertificateQueryResultType.Expired:
-                                case CertificateQueryResultType.Good:
-                                    item.Group = listView2.Groups["checked"];
-                                    break;
-                            }
-                        }
-                    }
-                }
-                //if (check_brc20_balance && persistence_span > TimeSpan.FromSeconds(2))
-                {
-                    UInt160[] addresses = Program.CurrentWallet.GetAccounts().Select(p => p.ScriptHash).ToArray();
-                    foreach (string s in Settings.Default.BRC20Watched)
-                    {
-                        UInt160 script_hash = UInt160.Parse(s);
-                        byte[] script;
-                        using (ScriptBuilder sb = new ScriptBuilder())
-                        {
-                            foreach (UInt160 address in addresses)
-                                sb.EmitAppCall(script_hash, "balanceOf", address);
-                            sb.Emit(OpCode.DEPTH, OpCode.PACK);
-                            sb.EmitAppCall(script_hash, "decimals");
-                            sb.EmitAppCall(script_hash, "name");
-                            script = sb.ToArray();
-                        }
-                        string name = string.Empty;
-                        string value_text = string.Empty;
-                        using (ApplicationEngine engine = ApplicationEngine.Run(script))
-                        {
-                            if (engine.State.HasFlag(VMState.FAULT)) continue;
-                            name = engine.ResultStack.Pop().GetString();
-                            byte decimals = (byte)engine.ResultStack.Pop().GetBigInteger();
-                            BigInteger amount = ((VMArray)engine.ResultStack.Pop()).Aggregate(BigInteger.Zero, (x, y) => x + y.GetBigInteger());
-                            if (amount == 0)
-                            {
-                                listView2.Items.RemoveByKey(script_hash.ToString());
-                                continue;
-                            }
-                            BigDecimal balance = new BigDecimal(amount, decimals);
-                            value_text = balance.ToString();
-                        }
-                        if (listView2.Items.ContainsKey(script_hash.ToString()))
-                        {
-                            listView2.Items[script_hash.ToString()].SubItems["value"].Text = value_text;
-                        }
-                        else
-                        {
-                            listView2.Items.Add(new ListViewItem(new[]
-                            {
-                                new ListViewItem.ListViewSubItem
-                                {
-                                    Name = "name",
-                                    Text = name
-                                },
-                                new ListViewItem.ListViewSubItem
-                                {
-                                    Name = "type",
-                                    Text = "BRC20"
-                                },
-                                new ListViewItem.ListViewSubItem
-                                {
-                                    Name = "value",
-                                    Text = value_text
-                                },
-                                new ListViewItem.ListViewSubItem
-                                {
-                                    ForeColor = Color.Gray,
-                                    Name = "issuer",
-                                    Text = $"ScriptHash:{script_hash}"
-                                }
-                            }, -1, listView2.Groups["checked"])
-                            {
-                                Name = script_hash.ToString(),
-                                UseItemStyleForSubItems = false
-                            });
-                        }
-                    }
-                    //check_brc20_balance = false;
-                }
-            }
-        }
-        */
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            /*
             while (IsDisposed == false && WindowsClosed == false)
             {
+                Dictionary<UInt256, Fixed8> balances = new Dictionary<UInt256, Fixed8>();
+                // listview1 address
+                foreach (WalletAccount item in Program.CurrentWallet.GetAccounts())
+                {
+                    AccountState accountState = RpcMethods.GetAccountState(item.Address);
+                    if (accountState != null)
+                    {
+                        foreach (var balance in accountState.Balances)
+                        {
+                            if (balances.ContainsKey(balance.Key))
+                            {
+                                balances[balance.Key] += balance.Value;
+                            }
+                            else
+                            {
+                                balances[balance.Key] = balance.Value;
+                            }
+                            if (!CurrentAssets.ContainsKey(balance.Key))
+                            {
+                                AssetState asset = RpcMethods.GetAssetState(balance.Key.ToString());
+                                CurrentAssets[balance.Key] = asset;
+                            }
+                        }
+                    }
+                    CurrentAccountStates[item.Address] = accountState;
+                }
+                CurrentBalances = balances;
+                Thread.Sleep(10000);
+
+                /*
                 using (Snapshot snapshot = Blockchain.Singleton.GetSnapshot())
                 {
                     coins = Program.CurrentWallet?.GetCoins().Where(p => !p.State.HasFlag(CoinState.Spent)) ?? Enumerable.Empty<Coin>();
                     bonus_available = snapshot.CalculateBonus(Program.CurrentWallet.GetUnclaimedCoins().Select(p => p.Reference));
                     bonus_unavailable = snapshot.CalculateBonus(coins.Where(p => p.State.HasFlag(CoinState.Confirmed) && p.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)).Select(p => p.Reference), snapshot.Height + 1);
                     Thread.Sleep(2000);
-                }
+                }*/
             }
-            */
 
-            while ((sender as BackgroundWorker).CancellationPending == false)
-            {
-
-                Thread.Sleep(60000);
-            }
         }
-
-        bool showingWalletInfo = false;
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
             timer1_Tick(null, null);
-            /*
-            ShowWalletInfo();
+            /*            
             高级AToolStripMenuItem.Visible = "1".Equals(Settings.Default.Configs.Development);
             */
         }
@@ -1252,11 +1015,6 @@ namespace Bhp.UI
             {
                 dialog.ShowDialog();
             }
-        }
-
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //show
         }
     }
 }

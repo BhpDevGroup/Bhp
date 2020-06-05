@@ -191,7 +191,7 @@ namespace Bhp.UI
                 // listview1 address
                 foreach (ListViewItem item in listView1.Items)
                 {
-                    if (CurrentAccountStates != null && CurrentAccountStates.Count > 0 && CurrentAccountStates.ContainsKey(item.Name))
+                    if (CurrentAccountStates != null && CurrentAccountStates.Count > 0 && CurrentAccountStates.ContainsKey(item.Name) && CurrentAccountStates[item.Name] != null)
                     {
                         Fixed8 ans = CurrentAccountStates[item.Name].Balances.ContainsKey(Blockchain.GoverningToken.Hash) ? CurrentAccountStates[item.Name].Balances[Blockchain.GoverningToken.Hash] : Fixed8.Zero;
                         Fixed8 anc = CurrentAccountStates[item.Name].Balances.ContainsKey(Blockchain.UtilityToken.Hash) ? CurrentAccountStates[item.Name].Balances[Blockchain.UtilityToken.Hash] : Fixed8.Zero;

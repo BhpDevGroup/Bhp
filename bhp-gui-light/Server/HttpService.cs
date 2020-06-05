@@ -24,15 +24,23 @@ namespace Bhp.Server
                 req.Timeout = 10000;
                 req.ContentType = "application/json";
                 req.ContentLength = bs.Length;
-                using (Stream reqStream = req.GetRequestStream())
+                Task<Stream> rsa = req.GetRequestStreamAsync();
+                if (rsa.AsyncState == null)
                 {
-                    reqStream.Write(bs, 0, bs.Length);
-                    reqStream.Close();
+                    return null;
                 }
-                HttpWebResponse hwr = req.GetResponse() as HttpWebResponse;
-                using (StreamReader myreader = new StreamReader(hwr.GetResponseStream(), Encoding.UTF8))
+                else
                 {
-                    responseText = myreader.ReadToEnd();
+                    using (Stream reqStream = rsa.Result)
+                    {
+                        reqStream.Write(bs, 0, bs.Length);
+                        reqStream.Close();
+                    }
+                    HttpWebResponse hwr = req.GetResponse() as HttpWebResponse;
+                    using (StreamReader myreader = new StreamReader(hwr.GetResponseStream(), Encoding.UTF8))
+                    {
+                        responseText = myreader.ReadToEnd();
+                    }
                 }
                 return responseText;
             }

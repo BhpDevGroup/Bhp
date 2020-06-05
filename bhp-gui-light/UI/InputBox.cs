@@ -24,7 +24,7 @@ namespace Bhp.UI
 
                 if (!string.IsNullOrEmpty(dialog.textBox7.Text)) 
                 {
-                    return "cipertext" + dialog.textBox7.Text;
+                    return "ciphertext" + dialog.textBox7.Text;
                 }
                 return dialog.textBox1.Text;
             }
@@ -48,6 +48,11 @@ namespace Bhp.UI
             if (key.Length != 8)
             {
                 MessageBox.Show("密钥必须为八位字符！");
+                return;
+            }
+            if (stringToEncrypt.Length > 200) 
+            {
+                MessageBox.Show("备注不能超过200个字符长度限制！");
                 return;
             }
 

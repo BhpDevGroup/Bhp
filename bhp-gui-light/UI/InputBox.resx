@@ -219,21 +219,6 @@
   <data name="&gt;&gt;button2.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <data name="txt_key.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="txt_key.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 19</value>
-  </data>
-  <data name="txt_key.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="txt_key.Size" type="System.Drawing.Size, System.Drawing">
-    <value>390, 29</value>
-  </data>
-  <data name="txt_key.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
   <data name="&gt;&gt;txt_key.Name" xml:space="preserve">
     <value>txt_key</value>
   </data>
@@ -270,19 +255,31 @@
   <data name="&gt;&gt;groupBox2.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="textBox7.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+  <data name="txt_key.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="textBox7.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="txt_key.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 19</value>
   </data>
-  <data name="textBox7.Multiline" type="System.Boolean, mscorlib">
+  <data name="txt_key.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="textBox7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>390, 104</value>
+  <data name="txt_key.Size" type="System.Drawing.Size, System.Drawing">
+    <value>390, 29</value>
   </data>
-  <data name="textBox7.TabIndex" type="System.Int32, mscorlib">
+  <data name="txt_key.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;txt_key.Name" xml:space="preserve">
+    <value>txt_key</value>
+  </data>
+  <data name="&gt;&gt;txt_key.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txt_key.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;txt_key.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="&gt;&gt;textBox7.Name" xml:space="preserve">
@@ -320,6 +317,33 @@
   </data>
   <data name="&gt;&gt;groupBox3.ZOrder" xml:space="preserve">
     <value>4</value>
+  </data>
+  <data name="textBox7.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="textBox7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 19</value>
+  </data>
+  <data name="textBox7.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="textBox7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>390, 104</value>
+  </data>
+  <data name="textBox7.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;textBox7.Name" xml:space="preserve">
+    <value>textBox7</value>
+  </data>
+  <data name="&gt;&gt;textBox7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox7.Parent" xml:space="preserve">
+    <value>groupBox3</value>
+  </data>
+  <data name="&gt;&gt;textBox7.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="button3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>

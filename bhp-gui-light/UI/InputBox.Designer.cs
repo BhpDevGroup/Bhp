@@ -107,7 +107,7 @@
             // label1
             // 
             resources.ApplyResources(this.label1, "label1");
-            this.label1.ForeColor = System.Drawing.Color.Red;
+            this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Name = "label1";
             // 
             // button4
@@ -120,7 +120,7 @@
             // label2
             // 
             resources.ApplyResources(this.label2, "label2");
-            this.label2.ForeColor = System.Drawing.Color.Red;
+            this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Name = "label2";
             // 
             // InputBox

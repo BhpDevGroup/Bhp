@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using Bhp.Properties;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Bhp.UI
 {
@@ -30,6 +32,12 @@ namespace Bhp.UI
         {
             textBox1.SelectAll();
             textBox1.Copy();
+        }
+
+        private void button3_Click(object sender, System.EventArgs e)
+        {
+            string url = string.Format(Settings.Default.Urls.TransactionUrl, textBox1.Text);
+            Process.Start(url);
         }
     }
 }

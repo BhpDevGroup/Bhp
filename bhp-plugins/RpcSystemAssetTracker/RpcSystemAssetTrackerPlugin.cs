@@ -25,7 +25,7 @@ namespace Bhp.Plugins
         private bool _shouldTrackUnclaimed;
         private DataCache<UserSystemAssetCoinOutputsKey, UserSystemAssetCoinOutputs> _userSpentUnclaimedCoinsBhp;
         private WriteBatch _writeBatch;
-        private int _rpcMaxUnspents;
+        private int _rpcMaxCount;
         private uint _lastPersistedBlock;
         private bool _shouldPersistBlock;
         private Bhp.IO.Data.LevelDB.Snapshot _levelDbSnapshot;
@@ -48,7 +48,8 @@ namespace Bhp.Plugins
                     _lastPersistedBlock = 0;
                 }
             }
-            _rpcMaxUnspents = int.Parse(GetConfiguration().GetSection("MaxReturnedUnspents").Value ?? "0");
+            _rpcMaxCount = int.Parse(GetConfiguration().GetSection("MaxReturnedCount").Value ?? "1");
+            if (_rpcMaxCount < 1) _rpcMaxCount = 1;
         }
 
         private void ResetBatch()
@@ -232,7 +233,7 @@ namespace Bhp.Plugins
                      (startHeight == 0 ? 0 : GetSysFeeAmountForHeight(snapshot.Blocks, startHeight - 1)));
         }
 
-        private bool AddClaims(JArray claimableOutput, ref Fixed8 runningTotal, int maxClaims,
+        private bool AddClaims(JArray claimableOutput, ref Fixed8 runningTotal,
             Snapshot snapshot, DataCache<UInt256, SpentCoinState> storeSpentCoins,
             KeyValuePair<UserSystemAssetCoinOutputsKey, UserSystemAssetCoinOutputs> claimableInTx)
         {
@@ -256,7 +257,7 @@ namespace Bhp.Plugins
                 utxo["unclaimed"] = (double)(decimal)unclaimed;
                 runningTotal += unclaimed;
                 claimableOutput.Add(utxo);
-                if (claimableOutput.Count > maxClaims)
+                if (claimableOutput.Count >= _rpcMaxCount)
                     return false;
             }
 
@@ -280,7 +281,7 @@ namespace Bhp.Plugins
                 var storeSpentCoins = snapshot.SpentCoins;
                 byte[] prefix = Blockchain.GoverningToken.Hash.ToArray().Concat(scriptHash.ToArray()).ToArray();
                 foreach (var claimableInTx in dbCache.Find(prefix))
-                    if (!AddClaims(claimable, ref totalUnclaimed, _rpcMaxUnspents, snapshot, storeSpentCoins,
+                    if (!AddClaims(claimable, ref totalUnclaimed, snapshot, storeSpentCoins,
                         claimableInTx))
                         break;
             }
@@ -352,7 +353,7 @@ namespace Bhp.Plugins
                 runningTotal += unspent.Value;
 
                 unspents.Add(utxo);
-                if (unspents.Count > _rpcMaxUnspents)
+                if (unspents.Count >= _rpcMaxCount)
                     return false;
             }
             return true;

@@ -109,7 +109,9 @@ namespace Bhp.UI
 
             交易TToolStripMenuItem.Enabled = Program.CurrentWallet != null;
 
-
+            WalletRefresh();
+            timer1_Tick(null, null);
+            /*
             if (Program.CurrentWallet != null)
             {
                 if (backgroundWorker1.IsBusy == false)
@@ -117,7 +119,7 @@ namespace Bhp.UI
                     backgroundWorker1.RunWorkerAsync();
                 }
             }
-            /*
+            
             修改密码CToolStripMenuItem.Enabled = Program.CurrentWallet is UserWallet;
             交易TToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             提取BHP币CToolStripMenuItem.Enabled = Program.CurrentWallet != null;
@@ -175,13 +177,14 @@ namespace Bhp.UI
         }
 
         bool timer1Showing = false;
+        int blockHeight = -1;
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (timer1Showing) return;
 
             timer1Showing = true;
 
-            int blockHeight = RpcMethods.GetBlockCount();
+            //int blockHeight = RpcMethods.GetBlockCount();
             if (blockHeight != -1)
             {
                 lbl_blockHeight.Text = $"{blockHeight - 1}";
@@ -482,6 +485,9 @@ namespace Bhp.UI
 
         private void 转账TToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            WalletRefresh();
+            timer1_Tick(null, null);
+
             Transaction tx;
             UInt160 change_address;
             Fixed8 fee;
@@ -941,33 +947,7 @@ namespace Bhp.UI
         {
             while (IsDisposed == false && WindowsClosed == false)
             {
-                Dictionary<UInt256, Fixed8> balances = new Dictionary<UInt256, Fixed8>();
-                // listview1 address
-                foreach (WalletAccount item in Program.CurrentWallet.GetAccounts())
-                {
-                    AccountState accountState = RpcMethods.GetAccountState(item.Address);
-                    if (accountState != null)
-                    {
-                        foreach (var balance in accountState.Balances)
-                        {
-                            if (balances.ContainsKey(balance.Key))
-                            {
-                                balances[balance.Key] += balance.Value;
-                            }
-                            else
-                            {
-                                balances[balance.Key] = balance.Value;
-                            }
-                            if (!CurrentAssets.ContainsKey(balance.Key))
-                            {
-                                AssetState asset = RpcMethods.GetAssetState(balance.Key.ToString());
-                                CurrentAssets[balance.Key] = asset;
-                            }
-                        }
-                    }
-                    CurrentAccountStates[item.Address] = accountState;
-                }
-                CurrentBalances = balances;
+                WalletRefresh();
                 Thread.Sleep(10000);
 
                 /*
@@ -980,6 +960,38 @@ namespace Bhp.UI
                 }*/
             }
 
+        }
+
+        private void WalletRefresh()
+        {
+            blockHeight = RpcMethods.GetBlockCount();
+            Dictionary<UInt256, Fixed8> balances = new Dictionary<UInt256, Fixed8>();
+            // listview1 address
+            foreach (WalletAccount item in Program.CurrentWallet.GetAccounts())
+            {
+                AccountState accountState = RpcMethods.GetAccountState(item.Address);
+                if (accountState != null)
+                {
+                    foreach (var balance in accountState.Balances)
+                    {
+                        if (balances.ContainsKey(balance.Key))
+                        {
+                            balances[balance.Key] += balance.Value;
+                        }
+                        else
+                        {
+                            balances[balance.Key] = balance.Value;
+                        }
+                        if (!CurrentAssets.ContainsKey(balance.Key))
+                        {
+                            AssetState asset = RpcMethods.GetAssetState(balance.Key.ToString());
+                            CurrentAssets[balance.Key] = asset;
+                        }
+                    }
+                }
+                CurrentAccountStates[item.Address] = accountState;
+            }
+            CurrentBalances = balances;
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

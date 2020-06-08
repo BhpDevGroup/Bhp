@@ -362,6 +362,7 @@
             this.columnHeader1,
             this.columnHeader4,
             this.columnHeader11});
+            this.listView1.ContextMenuStrip = this.contextMenuStrip1;
             resources.ApplyResources(this.listView1, "listView1");
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;

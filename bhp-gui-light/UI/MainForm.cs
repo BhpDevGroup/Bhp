@@ -111,6 +111,10 @@ namespace Bhp.UI
 
             WalletRefresh();
             timer1_Tick(null, null);
+
+            导入私钥IToolStripMenuItem.Enabled = Program.CurrentWallet != null;
+            创建新地址NToolStripMenuItem.Enabled = Program.CurrentWallet != null;
+
             /*
             if (Program.CurrentWallet != null)
             {
@@ -966,6 +970,10 @@ namespace Bhp.UI
         {
             blockHeight = RpcMethods.GetBlockCount();
             Dictionary<UInt256, Fixed8> balances = new Dictionary<UInt256, Fixed8>();
+            if (Program.CurrentWallet == null)
+            {
+                return;
+            }
             // listview1 address
             foreach (WalletAccount item in Program.CurrentWallet.GetAccounts())
             {

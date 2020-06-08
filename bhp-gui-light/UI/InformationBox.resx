@@ -238,7 +238,7 @@
     <value>4</value>
   </data>
   <data name="button3.Text" xml:space="preserve">
-    <value>查看交易</value>
+    <value>view</value>
   </data>
   <data name="&gt;&gt;button3.Name" xml:space="preserve">
     <value>button3</value>

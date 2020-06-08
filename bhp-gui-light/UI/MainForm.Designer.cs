@@ -74,6 +74,7 @@
             this.创建新地址NToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.导入私钥IToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importWIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.importWatchOnlyAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.创建智能合约SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,8 +106,6 @@
             this.viewCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除DToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.importCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
-            this.刷新余额ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -363,7 +362,6 @@
             this.columnHeader1,
             this.columnHeader4,
             this.columnHeader11});
-            this.listView1.ContextMenuStrip = this.contextMenuStrip1;
             resources.ApplyResources(this.listView1, "listView1");
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
@@ -401,16 +399,15 @@
             this.viewContractToolStripMenuItem,
             this.voteToolStripMenuItem,
             this.复制到剪贴板CToolStripMenuItem,
-            this.删除DToolStripMenuItem,
-            this.刷新余额ToolStripMenuItem});
+            this.删除DToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // 创建新地址NToolStripMenuItem
             // 
-            this.创建新地址NToolStripMenuItem.Name = "创建新地址NToolStripMenuItem";
             resources.ApplyResources(this.创建新地址NToolStripMenuItem, "创建新地址NToolStripMenuItem");
+            this.创建新地址NToolStripMenuItem.Name = "创建新地址NToolStripMenuItem";
             this.创建新地址NToolStripMenuItem.Click += new System.EventHandler(this.创建新地址NToolStripMenuItem_Click);
             // 
             // 导入私钥IToolStripMenuItem
@@ -420,14 +417,20 @@
             this.importCertificateToolStripMenuItem,
             this.toolStripSeparator10,
             this.importWatchOnlyAddressToolStripMenuItem});
-            this.导入私钥IToolStripMenuItem.Name = "导入私钥IToolStripMenuItem";
             resources.ApplyResources(this.导入私钥IToolStripMenuItem, "导入私钥IToolStripMenuItem");
+            this.导入私钥IToolStripMenuItem.Name = "导入私钥IToolStripMenuItem";
             // 
             // importWIFToolStripMenuItem
             // 
             this.importWIFToolStripMenuItem.Name = "importWIFToolStripMenuItem";
             resources.ApplyResources(this.importWIFToolStripMenuItem, "importWIFToolStripMenuItem");
             this.importWIFToolStripMenuItem.Click += new System.EventHandler(this.importWIFToolStripMenuItem_Click);
+            // 
+            // importCertificateToolStripMenuItem
+            // 
+            this.importCertificateToolStripMenuItem.Name = "importCertificateToolStripMenuItem";
+            resources.ApplyResources(this.importCertificateToolStripMenuItem, "importCertificateToolStripMenuItem");
+            this.importCertificateToolStripMenuItem.Click += new System.EventHandler(this.importCertificateToolStripMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
@@ -635,18 +638,6 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             // 
-            // importCertificateToolStripMenuItem
-            // 
-            this.importCertificateToolStripMenuItem.Name = "importCertificateToolStripMenuItem";
-            resources.ApplyResources(this.importCertificateToolStripMenuItem, "importCertificateToolStripMenuItem");
-            this.importCertificateToolStripMenuItem.Click += new System.EventHandler(this.importCertificateToolStripMenuItem_Click);
-            // 
-            // 刷新余额ToolStripMenuItem
-            // 
-            this.刷新余额ToolStripMenuItem.Name = "刷新余额ToolStripMenuItem";
-            resources.ApplyResources(this.刷新余额ToolStripMenuItem, "刷新余额ToolStripMenuItem");
-            this.刷新余额ToolStripMenuItem.Click += new System.EventHandler(this.刷新余额ToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -720,6 +711,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ToolStripMenuItem importWIFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importCertificateToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem 提取BHP币CToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
@@ -750,8 +742,6 @@
         private System.Windows.Forms.ToolStripMenuItem claToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem destroyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 零钱规整AToolStripMenuItem;
-        private System.Windows.Forms.ToolStripComboBox importCertificateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 刷新余额ToolStripMenuItem;
     }
 }
 

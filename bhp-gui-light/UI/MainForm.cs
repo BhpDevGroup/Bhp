@@ -1258,5 +1258,10 @@ namespace Bhp.UI
         {
             //show
         }
+
+        private void 刷新余额ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetAssetState();
+        }
     }
 }

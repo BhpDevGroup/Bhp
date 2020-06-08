@@ -17,6 +17,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using Snapshot = Bhp.Persistence.Snapshot;
+using Bhp.Network.P2P;
 
 namespace Bhp.Plugins
 {
@@ -42,6 +43,7 @@ namespace Bhp.Plugins
             if (_db == null)
             {
                 var dbPath = GetConfiguration().GetSection("DBPath").Value ?? "Brc20BalanceData";
+                dbPath = string.Format(dbPath, Message.Magic.ToString("X8"));
                 _db = DB.Open(Path.GetFullPath(dbPath), new Options { CreateIfMissing = true });
             }
             _shouldTrackHistory = (GetConfiguration().GetSection("TrackHistory").Value ?? true.ToString()) != false.ToString();

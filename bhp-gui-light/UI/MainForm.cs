@@ -107,15 +107,9 @@ namespace Bhp.UI
             }
             Program.CurrentWallet = wallet;
 
-            交易TToolStripMenuItem.Enabled = Program.CurrentWallet != null;
+            //WalletRefresh();
+            //timer1_Tick(null, null);
 
-            WalletRefresh();
-            timer1_Tick(null, null);
-
-            导入私钥IToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-            创建新地址NToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-
-            /*
             if (Program.CurrentWallet != null)
             {
                 if (backgroundWorker1.IsBusy == false)
@@ -123,7 +117,12 @@ namespace Bhp.UI
                     backgroundWorker1.RunWorkerAsync();
                 }
             }
-            
+
+            交易TToolStripMenuItem.Enabled = Program.CurrentWallet != null;
+            创建新地址NToolStripMenuItem.Enabled = Program.CurrentWallet != null;
+            导入私钥IToolStripMenuItem.Enabled = Program.CurrentWallet != null;
+
+            /*
             修改密码CToolStripMenuItem.Enabled = Program.CurrentWallet is UserWallet;
             交易TToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             提取BHP币CToolStripMenuItem.Enabled = Program.CurrentWallet != null;
@@ -139,6 +138,7 @@ namespace Bhp.UI
             创建智能合约SToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             零钱规整AToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             */
+
             listView1.Items.Clear();
             if (Program.CurrentWallet != null)
             {
@@ -147,8 +147,6 @@ namespace Bhp.UI
                     AddAccount(account);
                 }
             }
-
-            timer1_Tick(null, null);
         }
 
         //by bhp
@@ -489,8 +487,8 @@ namespace Bhp.UI
 
         private void 转账TToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WalletRefresh();
-            timer1_Tick(null, null);
+            //WalletRefresh();
+            //timer1_Tick(null, null);
 
             Transaction tx;
             UInt160 change_address;
@@ -974,10 +972,12 @@ namespace Bhp.UI
             {
                 return;
             }
+
+            WalletAccount[] walletAccounts = Program.CurrentWallet.GetAccounts().ToArray();
             // listview1 address
-            foreach (WalletAccount item in Program.CurrentWallet.GetAccounts())
+            for (int i = 0; i < walletAccounts.Length; i++)
             {
-                AccountState accountState = RpcMethods.GetAccountState(item.Address);
+                AccountState accountState = RpcMethods.GetAccountState(walletAccounts[i].Address);
                 if (accountState != null)
                 {
                     foreach (var balance in accountState.Balances)
@@ -997,7 +997,7 @@ namespace Bhp.UI
                         }
                     }
                 }
-                CurrentAccountStates[item.Address] = accountState;
+                CurrentAccountStates[walletAccounts[i].Address] = accountState;
             }
             CurrentBalances = balances;
         }

@@ -69,7 +69,7 @@ namespace Bhp.Plugins
 
         private bool ProcessBlock(Snapshot snapshot, Block block)
         {
-            if (block.Transactions.Length <= 1)
+            if (block.Transactions.Length < 1)
             {
                 _lastPersistedBlock = block.Index;
                 return false;

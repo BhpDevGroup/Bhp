@@ -153,7 +153,7 @@ namespace Bhp.Plugins
             for (uint blockIndex = _lastPersistedBlock + 1; blockIndex < snapshot.PersistingBlock.Index; blockIndex++)
             {
                 var skippedBlock = Blockchain.Singleton.Store.GetBlock(blockIndex);
-                if (skippedBlock.Transactions.Length <= 1)
+                if (skippedBlock.Transactions.Length < 1)
                 {
                     _lastPersistedBlock = skippedBlock.Index;
                     continue;

@@ -398,7 +398,10 @@ namespace Bhp.Plugins
                 if (method == "getclaimable") return ProcessGetClaimableSpents(parameters);
                 if (method == "getunclaimed") return ProcessGetUnclaimed(parameters);
             }
-            return method != "getunspents" ? null : ProcessGetUnspents(parameters);
+
+            if (method == "getunspents") return ProcessGetUnspents(parameters);
+            if (method == "getlastsysassetpersistedblock") return _lastPersistedBlock;
+            return null;
         }
 
         public void PostProcess(HttpContext context, string method, JArray _params, JObject result)
